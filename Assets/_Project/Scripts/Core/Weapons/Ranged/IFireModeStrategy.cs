@@ -48,7 +48,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         protected virtual IEnumerator FireCoroutine(RangedWeaponStats stats, Action fireAction)
         {
             fireAction?.Invoke();
-            yield return new WaitForSeconds(1 / stats.AttackSpeed);
+            yield break;
         }
     }
     
