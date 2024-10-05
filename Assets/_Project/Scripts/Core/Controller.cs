@@ -6,7 +6,7 @@ public abstract class Controller : MonoBehaviour
 {
     protected InputHandler inputHandler;
 
-    public abstract void HandleInput();
+    public abstract void HandleMovementInput();
 
     protected void SetInputHandler(InputHandler handler)
     {
