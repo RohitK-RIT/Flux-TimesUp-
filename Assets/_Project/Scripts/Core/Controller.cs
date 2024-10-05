@@ -1,16 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using _Project.Scripts.Core.PlayerMovement;
 using UnityEngine;
 
-public abstract class Controller : MonoBehaviour
+namespace _Project.Scripts.Core
 {
-    protected InputHandler inputHandler;
-
-    public abstract void HandleMovementInput();
-
-    protected void SetInputHandler(InputHandler handler)
+    public abstract class Controller : MonoBehaviour
     {
-        inputHandler = handler;
+        // Reference to the InputHandler which will manage and process the player's input.
+        protected PlayerInputHandler InputHandler;
+        
     }
-    
 }

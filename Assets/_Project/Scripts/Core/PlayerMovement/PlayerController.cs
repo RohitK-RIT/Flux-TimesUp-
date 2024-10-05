@@ -1,67 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : Controller
+namespace _Project.Scripts.Core.PlayerMovement
 {
-    PlayerInput playerInput;
-    Vector2 moveInput;
-    private bool _moving;
-
-
-    void Start()
+    public class PlayerController : Controller
     {
-        playerInput = new PlayerInput();
-        inputHandler = GetComponent<PlayerMovement>();
-    }
-
-    void Update()
-    {
-        if (_moving)
-            HandleMovementInput();
-    }
-
-    public override void HandleMovementInput()
-    {
-        if (inputHandler != null)
+        void Start()
         {
-            inputHandler.ProcessMovement(moveInput.x, moveInput.y);
+            // Get the input handler which now includes all input handling
+            InputHandler = GetComponent<CharacterMovement>();
         }
-    }
 
-    void onMovementInputStarted(InputAction.CallbackContext context)
-    {
-        moveInput = context.ReadValue<Vector2>();
-        _moving = true;
-    }
-    
-    void onMovementInput(InputAction.CallbackContext context)
-    {
-        moveInput = context.ReadValue<Vector2>();
-    }
-
-    void onMovementInputCancelled(InputAction.CallbackContext context)
-    {
-        _moving = false;
-        moveInput = Vector2.zero;
-    }
-
-    void OnEnable()
-    {
-        playerInput.PlayerControl.Enable();
-
-        playerInput.PlayerControl.Move.started += onMovementInputStarted;
-        playerInput.PlayerControl.Move.performed += onMovementInput;
-        playerInput.PlayerControl.Move.canceled += onMovementInputCancelled;
-    }
-
-    void OnDisable()
-    {
-        playerInput.PlayerControl.Disable();
-
-        playerInput.PlayerControl.Move.started -= onMovementInputStarted;
-        playerInput.PlayerControl.Move.performed -= onMovementInput;
-        playerInput.PlayerControl.Move.canceled -= onMovementInputCancelled;
+        void Update()
+        {
+            // Delegate input handling to InputHandler
+            if (InputHandler)
+            {
+                InputHandler.HandleMovementInput();
+            }
+        }
     }
 }
