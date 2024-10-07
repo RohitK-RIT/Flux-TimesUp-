@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4fc3311e76f4111a7ecdc958de43ff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponStats: {fileID: 11400000, guid: 22bbb6c749db0db488c411f36c9e466c, type: 2}
+  stats: {fileID: 11400000, guid: 22bbb6c749db0db488c411f36c9e466c, type: 2}
   muzzle: {fileID: 1619547666470843636}
   projectilePrefab: {fileID: 6575655906530598078, guid: c39fd58944b6e84408374377beb87977,
     type: 3}

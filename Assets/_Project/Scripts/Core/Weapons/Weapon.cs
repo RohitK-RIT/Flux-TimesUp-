@@ -1,12 +1,11 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Weapons
 {
     public abstract class Weapon<T> : MonoBehaviour where T: WeaponStats
     {
-        [FormerlySerializedAs("weaponStats")] [SerializeField] protected T stats;
+        [SerializeField] protected T stats;
 
         protected Coroutine AttackingCoroutine;
         
