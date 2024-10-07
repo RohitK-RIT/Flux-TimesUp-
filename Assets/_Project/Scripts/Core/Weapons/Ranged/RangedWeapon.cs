@@ -12,7 +12,6 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         [SerializeField] private Projectile projectilePrefab;
 
         private int _magazineCount;
-        private Coroutine _strategyCoroutine;
         private FireModes _currentFireMode;
 
         private Dictionary<FireModes, IFireModeStrategy> _fireModeStrategies;
@@ -38,12 +37,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         protected override IEnumerator AttackCoroutine()
         {
             if (_fireModeStrategies.TryGetValue(_currentFireMode, out var strategy))
-            {
-                _strategyCoroutine = StartCoroutine(strategy.Fire(stats, FireBullet));
-                yield return _strategyCoroutine;
-
-                AttackEnd();
-            }
+                yield return strategy.Fire(stats, FireBullet);
             else
                 Debug.LogError($"No fire mode set for {stats.WeaponName}", stats);
         }
@@ -53,10 +47,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             var projectile = Instantiate(projectilePrefab, muzzle.position, muzzle.rotation);
             projectile.Init(stats.WeaponID);
 
-            if (--_magazineCount != 0)
-                return;
+            if (--_magazineCount != 0) return;
 
-            StopCoroutine(_strategyCoroutine);
+            AttackEnd();
 
             StartCoroutine(ReloadCoroutine());
         }
