@@ -4,11 +4,23 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons.Ranged
 {
+    /// <summary>
+    /// Interface for fire mode strategies.
+    /// </summary>
     public interface IFireModeStrategy
     {
-        public FireModes FireMode { get; }
+        /// <summary>
+        /// Fire the weapon.
+        /// </summary>
+        /// <param name="stats">stats of the weapon</param>
+        /// <param name="fireAction">the function that fires the bullet</param>
         public IEnumerator Fire(RangedWeaponStats stats, Action fireAction);
 
+        /// <summary>
+        /// Get the fire mode strategy based on the fire mode.
+        /// </summary>
+        /// <param name="mode">fire mode</param>
+        /// <returns>strategy based on the fire mode</returns>
         public static IFireModeStrategy GetFireModeStrategy(FireModes mode)
         {
             return mode switch
@@ -21,10 +33,16 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         }
     }
 
+    /// <summary>
+    /// Single fire mode strategy.
+    /// </summary>
     public class SingleFireMode : IFireModeStrategy
     {
-        public FireModes FireMode => FireModes.Single;
-
+        /// <summary>
+        /// Fire the weapon.
+        /// </summary>
+        /// <param name="stats">stats of the weapon</param>
+        /// <param name="fireAction">the function that fires the bullet</param>
         public IEnumerator Fire(RangedWeaponStats stats, Action fireAction)
         {
             fireAction?.Invoke();
@@ -32,12 +50,19 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         }
     }
 
+    /// <summary>
+    /// Auto fire mode strategy.
+    /// </summary>
     public class AutoFireMode : IFireModeStrategy
     {
-        public virtual FireModes FireMode => FireModes.Auto;
-
+        /// <summary>
+        /// Fire the weapon.
+        /// </summary>
+        /// <param name="stats">stats of the weapon</param>
+        /// <param name="fireAction">the function that fires the bullet</param>
         public IEnumerator Fire(RangedWeaponStats stats, Action fireAction)
         {
+            // Keep on firing until the coroutine is stopped.
             while (true)
             {
                 yield return FireCoroutine(stats, fireAction);
@@ -45,6 +70,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             }
         }
 
+        /// <summary>
+        /// What happens when the weapon is fired.
+        /// </summary>
+        /// <param name="stats">stats of the weapon</param>
+        /// <param name="fireAction">the function that fires the bullet</param>
         protected virtual IEnumerator FireCoroutine(RangedWeaponStats stats, Action fireAction)
         {
             fireAction?.Invoke();
@@ -52,12 +82,19 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         }
     }
     
+    /// <summary>
+    /// Burst fire mode strategy.
+    /// </summary>
     public class BurstFireMode : AutoFireMode
     {
-        public override FireModes FireMode => FireModes.Burst;
-
+        /// <summary>
+        /// What happens when the weapon is fired.
+        /// </summary>
+        /// <param name="stats">stats of the weapon</param>
+        /// <param name="fireAction">the function that fires the bullet</param>
         protected override IEnumerator FireCoroutine(RangedWeaponStats stats, Action fireAction)
         {
+            // Fire the weapon for the amount of bursts.
             for (var burstNumber = 0; burstNumber < stats.BurstAmount; burstNumber++)
             {
                 fireAction?.Invoke();

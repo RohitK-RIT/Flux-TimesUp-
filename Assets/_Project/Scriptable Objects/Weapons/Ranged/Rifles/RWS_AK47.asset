@@ -19,8 +19,8 @@ MonoBehaviour:
   attackSpeed: 10
   fireModes: 0200000001000000
   reloadTime: 3.5
-  spread: 0
-  recoil: 0
+  spread: 0.05
+  recoil: 0.01
   magazineSize: 30
   burstAmount: 3
   burstDuration: 0.01

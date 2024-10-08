@@ -3,31 +3,58 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons
 {
-    public abstract class Weapon<T> : MonoBehaviour where T: WeaponStats
+    /// <summary>
+    /// Base class for all weapons.
+    /// </summary>
+    /// <typeparam name="T">struct for weapon stats</typeparam>
+    public abstract class Weapon<T> : MonoBehaviour where T : WeaponStats
     {
+        /// <summary>
+        /// Stats of the weapon.
+        /// </summary>
         [SerializeField] protected T stats;
 
-        protected Coroutine AttackingCoroutine;
-        
-        public virtual float GetDamage() => stats.Damage;
+        /// <summary>
+        /// Coroutine for attacking.
+        /// </summary>
+        protected Coroutine AttackCoroutine;
 
-        public void AttackBeing()
+        /// <summary>
+        /// Is the weapon currently attacking.
+        /// </summary>
+        protected bool Attacking { get; private set; }
+
+        /// <summary>
+        /// Start attacking.
+        /// </summary>
+        public virtual void BeginAttack()
         {
             // End the previous attack if it's still running
-            AttackEnd();
+            EndAttack();
+            
+            Attacking = true;
+            
             // Start the new attack
-            AttackingCoroutine = StartCoroutine(AttackCoroutine());
+            AttackCoroutine = StartCoroutine(OnAttack());
         }
 
-        public void AttackEnd()
+        /// <summary>
+        /// End attacking.
+        /// </summary>
+        public virtual void EndAttack()
         {
             // End the previous attack if it's still running
-            if(AttackingCoroutine != null)
-                StopCoroutine(AttackingCoroutine);
+            if (AttackCoroutine != null)
+                StopCoroutine(AttackCoroutine);
 
-            AttackingCoroutine = null;
+            AttackCoroutine = null;
+
+            Attacking = false;
         }
-        
-        protected abstract IEnumerator AttackCoroutine();
+
+        /// <summary>
+        /// Coroutine for attacking.
+        /// </summary>
+        protected abstract IEnumerator OnAttack();
     }
 }

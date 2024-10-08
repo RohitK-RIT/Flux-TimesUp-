@@ -17,14 +17,14 @@ namespace _Project.Scripts.Gameplay.Test
             if(!_buttonDown && Input.GetMouseButtonDown(0))
             {
                 _buttonDown = true;
-                _weapon.AttackBeing();
+                _weapon.BeginAttack();
                 
             }
             
             if(_buttonDown && Input.GetMouseButtonUp(0))
             {
                 _buttonDown = false;
-                _weapon.AttackEnd();
+                _weapon.EndAttack();
             }
 
             if (Input.GetMouseButton(1))

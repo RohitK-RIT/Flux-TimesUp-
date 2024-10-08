@@ -3,19 +3,29 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons.Melee
 {
+    /// <summary>
+    /// Melee weapon class.
+    /// </summary>
     public class MeleeWeapon : Weapon<MeleeWeaponStats>
     {
-        protected override IEnumerator AttackCoroutine()
+        /// <summary>
+        /// Coroutine for attacking.
+        /// </summary>
+        protected override IEnumerator OnAttack()
         {
+            // Attack until the attack ends
             while (true)
             {
-                Attack();
+                Slash();
                 
                 yield return new WaitForSeconds(1 / stats.AttackSpeed);
             }
         }
 
-        private void Attack()
+        /// <summary>
+        /// Do the attack.
+        /// </summary>
+        private void Slash()
         {
             // Do the attack
             // Check if the attack hit something
