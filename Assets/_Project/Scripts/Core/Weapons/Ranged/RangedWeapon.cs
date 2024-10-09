@@ -26,7 +26,15 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Number of bullets in the magazine.
         /// </summary>
         private int _magazineCount;
+        
+        /// <summary>
+        /// Is the weapon currently reloading.
+        /// </summary>
+        private bool _reloading;
 
+        /// <summary>
+        /// Recoil factor.
+        /// </summary>
         private float _recoilFactor;
 
         /// <summary>
@@ -69,6 +77,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         public override void BeginAttack()
         {
+            // If the weapon is reloading, don't start attacking.
+            if(_reloading) return;
+            
             base.BeginAttack();
 
             // Reset the recoil factor.
@@ -120,7 +131,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             // Decrease the magazine count and reload if it's empty.
             if (--_magazineCount != 0) return;
 
-            StopCoroutine(AttackCoroutine);
+            if (AttackCoroutine != null)
+                StopCoroutine(AttackCoroutine);
             StartCoroutine(ReloadCoroutine());
         }
 
@@ -129,8 +141,10 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private IEnumerator ReloadCoroutine()
         {
+            _reloading = true;
             yield return new WaitForSeconds(stats.ReloadTime);
             _magazineCount = stats.MagazineSize;
+            _reloading = false;
 
             if (Attacking)
                 BeginAttack();
