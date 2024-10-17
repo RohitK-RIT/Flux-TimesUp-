@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace _Project.Scripts.Core.Character
 {
@@ -8,13 +9,14 @@ namespace _Project.Scripts.Core.Character
     /// Can be used for any numeric type (int, float, etc.).
     /// </summary>
     /// <typeparam name="T">The type of the stat (e.g., int, float).</typeparam>
+    [Serializable]
     public class Stat<T> where T : struct, IComparable<T>
     {
         // The base value of the stat.
         private T baseValue;
 
         // The maximum possible value for this stat.
-        public T MaxValue;
+        [SerializeField] private T MaxValue;
         // Events to notify other parts of the system when changes occur.
         public event Action<T> OnValueChanged;
         public event Action OnDeath;
@@ -137,16 +139,29 @@ namespace _Project.Scripts.Core.Character
         /// <returns>The clamped value.</returns>
         private T Clamp(T value, T min, T max)
         {
-            dynamic val = value, minValue = min, maxValue = max;
+            if (typeof(T) == typeof(int))
+            {
+                int val = (int)(object)value;
+                int minValue = (int)(object)min;
+                int maxValue = (int)(object)max;
+                return (T)(object)Mathf.Clamp(val, minValue, maxValue);
+            }
+            if (typeof(T) == typeof(float))
+            {
+                float val = (float)(object)value;
+                float minValue = (float)(object)min;
+                float maxValue = (float)(object)max;
+                return (T)(object)Mathf.Clamp(val, minValue, maxValue);
+            }
+            if (typeof(T) == typeof(double))
+            {
+                double val = (double)(object)value;
+                double minValue = (double)(object)min;
+                double maxValue = (double)(object)max;
+                return (T)(object)Math.Clamp(val, minValue, maxValue);
+            }
 
-            // If the value is less than the minimum, return the minimum.
-            if (val.CompareTo(minValue) < 0) return min;
-
-            // If the value is greater than the maximum, return the maximum.
-            if (val.CompareTo(maxValue) > 0) return max;
-
-            // Otherwise, return the original value.
-            return value;
+            throw new InvalidOperationException("Unsupported type");
         }
     }
 }
