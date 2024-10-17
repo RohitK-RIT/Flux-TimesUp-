@@ -16,7 +16,7 @@ namespace _Project.Scripts.Core.Character
         private T baseValue;
 
         // The maximum possible value for this stat.
-        [SerializeField] private T MaxValue;
+        [SerializeField] private T maxValue;
         // Events to notify other parts of the system when changes occur.
         public event Action<T> OnValueChanged;
         public event Action OnDeath;
@@ -32,7 +32,7 @@ namespace _Project.Scripts.Core.Character
         public Stat(T baseValue, T maxValue)
         {
             this.baseValue = baseValue;
-            this.MaxValue = maxValue;
+            this.maxValue = maxValue;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace _Project.Scripts.Core.Character
             }
 
             // Clamp the value to ensure it doesn't go below 0 or exceed MaxValue.
-            return Clamp(finalValue, default(T), MaxValue);
+            return Clamp(finalValue, default(T), maxValue);
         }
 
         /// <summary>
