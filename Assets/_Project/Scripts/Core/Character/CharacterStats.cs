@@ -9,8 +9,8 @@ namespace _Project.Scripts.Core.Character
     [CreateAssetMenu(fileName = "NewCharacterStats", menuName = "Stats/CharacterStats")]
     public class CharacterStats : ScriptableObject
     {
-        [SerializeField] private int maxHealth = 100;
-        [SerializeField] private float currentHealth;
+        [SerializeField] internal int maxHealth = 100;
+        [SerializeField] internal float currentHealth;
         public float movementSpeed;
         public float reloadSpeed;
         public float aimAccuracy;
