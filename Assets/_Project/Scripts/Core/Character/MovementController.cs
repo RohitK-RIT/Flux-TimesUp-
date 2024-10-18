@@ -37,7 +37,6 @@ namespace _Project.Scripts.Core.Character
         {
             // Handle movement and look.
             HandleMovement();
-            PlayerLookAtMouse();
         }
 
         /// <summary>
@@ -74,29 +73,24 @@ namespace _Project.Scripts.Core.Character
             transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, RotationFactorPerFrame * Time.deltaTime);
             
         }
-        
-        private void PlayerLookAtMouse()
-        {
-            // Ground plane at y = 0
-            var groundPlane = new Plane(Vector3.up, Vector3.zero); 
 
+        public void PlayerLookAtMouse(Vector2 mousePosition)
+        {
             if (Camera.main)
             {
-                // Ray from the camera to the mouse cursor position
-                Ray ray = Camera.main.ScreenPointToRay(UnityEngine.Input.mousePosition);
+                // Convert mouse position to a ray from the camera
+                Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+        
+                // Use a fixed distance for the target point
+                float distanceToGround = 10f; // You can adjust this value as needed
+                Vector3 targetPoint = ray.GetPoint(distanceToGround);
 
-                // Variable to store the distance from the camera to the intersection point on the plane
-                if (groundPlane.Raycast(ray, out var rayDistance))
-                {
-                    // Get the point where the ray intersects the ground plane (mouse world position)
-                    Vector3 hitPoint = ray.GetPoint(rayDistance);
+                // Calculate the direction to look at
+                Vector3 directionToLook = targetPoint - transform.position;
+                directionToLook.y = 0; // Ignore the vertical component
 
-                    // Calculate the direction to look at from the player's position
-                    var directionToLook = hitPoint - transform.position;
-
-                    // Instead of immediately zeroing the y component, pass the full direction to HandleLook
-                    HandleLook(new Vector3(directionToLook.x, directionToLook.y, directionToLook.z));
-                }
+                // Pass the direction to HandleLook
+                HandleLook(directionToLook);
             }
         }
     }
