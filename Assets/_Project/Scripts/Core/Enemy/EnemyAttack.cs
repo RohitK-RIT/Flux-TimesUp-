@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Ranged;
 using UnityEngine;
 
 public class EnemyAttack : MonoBehaviour
 {
-    [SerializeField] private Weapon<RangedWeaponStats> weapon; // Reference to the weapon
+     [SerializeField] private Weapon weapon; // Reference to the weapon
      [SerializeField] private float attackRange = 5f; // Attack range
      [SerializeField] private float attackCooldown = 5f; // Cooldown time between attacks
 
@@ -20,7 +19,7 @@ public class EnemyAttack : MonoBehaviour
      {
          if (weapon == null)
          {
-             weapon = GetComponentInChildren<Weapon<RangedWeaponStats>>();
+             weapon = GetComponentInChildren<Weapon>();
          }
      }
      
