@@ -8,8 +8,7 @@ public class AIInputHandler : MonoBehaviour
 {
     private PlayerDetection _playerDetection; // Reference to the PlayerDetection component
 
-    private CharacterMovement
-        _characterMovement; // Reference to CharacterMovement for HandleLook and in future HandleMovement
+    private MovementController _characterMovement; // Reference to CharacterMovement for HandleLook and in future HandleMovement
 
     private EnemyAttack _enemyAttack; // Reference to EnemyAttack for handling attacks
 
@@ -19,7 +18,7 @@ public class AIInputHandler : MonoBehaviour
     {
         // Get references to necessary components
         _playerDetection = GetComponent<PlayerDetection>();
-        _characterMovement = GetComponent<CharacterMovement>();
+        _characterMovement = GetComponent<MovementController>();
         _enemyAttack = GetComponent<EnemyAttack>();
     }
 
