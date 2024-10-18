@@ -1,4 +1,5 @@
 using _Project.Scripts.Core.Character;
+using _Project.Scripts.Core.Weapons.Melee;
 using _Project.Scripts.Core.Weapons.Ranged;
 using TMPro;
 using UnityEngine;
@@ -15,8 +16,7 @@ namespace _Project.Scripts.UI
         [SerializeField] public Slider healthBar;
         [SerializeField] public TMP_Text currAmmo;
         [SerializeField] public TMP_Text maxAmmo;
-        [SerializeField] private CharacterStats characterStats;
-        [SerializeField] private RangedWeaponStats weaponStats;
+        [SerializeField] public PlayerController player;
         
         private void Start()
         {
@@ -35,15 +35,23 @@ namespace _Project.Scripts.UI
         // Updates the health bar based on the player's current and max health
         private void UpdateHealthBar()
         {
-            healthBar.value = characterStats.currentHealth;
-            healthBar.maxValue = characterStats.maxHealth;
+            healthBar.value = player.characterStats.currentHealth;
+            healthBar.maxValue = player.characterStats.maxHealth;
         }
 
         // Updates the ammo display based on the player's current and total ammo
         private void UpdateAmmoDisplay()
         {
-            currAmmo.text = weaponStats.MagazineSize.ToString();
-            maxAmmo.text = weaponStats.MagazineSize.ToString();
+            if (player._weaponController = typeof(MeleeWeapon))
+            {
+                currAmmo.gameObject.SetActive(false); 
+                maxAmmo.gameObject.SetActive(false);
+            }
+            if (player._weaponController = typeof(RangedWeapon))
+            {
+                currAmmo.text = player._weaponController.MagazineCount.ToString();
+                maxAmmo.text = player._weaponController.stats.MagazineSize.ToString();
+            }
         }
     }
 }

@@ -21,7 +21,10 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Projectile prefab.
         /// </summary>
         [SerializeField] private Projectile projectilePrefab;
-
+        /// <summary>
+        /// Current Magazine size of the weapon.
+        /// </summary>
+        public int MagazineCount => _magazineCount;
         /// <summary>
         /// Number of bullets in the magazine.
         /// </summary>
