@@ -47,7 +47,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         [ContextMenu("Take Damage")]
         public void TakeDamage()
         {
-            CharacterStats.TakeDamage(10);
+            TakeDamage(10);
         }  
 #endif
     }
