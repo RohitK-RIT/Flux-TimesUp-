@@ -9,13 +9,10 @@ using UnityEngine;
 public class EnemyController : PlayerController
 {
     private EnemyInputController _enemyInputController;
-    private EnemyAttack _enemyAttack;
 
     protected override void Awake()
     {
         base.Awake();
-        
-        _enemyAttack = GetComponent<EnemyAttack>();
         var playerDetection = GetComponent<PlayerDetection>();
 
         _enemyInputController = GetComponent<EnemyInputController>();
