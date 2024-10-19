@@ -15,6 +15,11 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         public override event Action<Vector2> OnMoveInputUpdated;
 
         /// <summary>
+        /// Event that is called when the player looks around.
+        /// </summary>
+        public override event Action<Vector2> OnLookInputUpdated;
+
+        /// <summary>
         /// Event that is called when the player starts attacking.
         /// </summary>
         public override event Action OnAttackInputBegan;
@@ -27,53 +32,61 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         /// <summary>
         /// Component that handles player input Unity API calls.
         /// </summary>
-        private readonly PlayerInput _playerInput = new();
+        private PlayerInput _playerInput;
 
-        /// <summary>
-        /// Enables the input controller.
-        /// </summary>
-        public void Enable()
+        private void Awake()
         {
-            // Enable the PlayerInput component
-            _playerInput.PlayerControl.Enable();
+            _playerInput = new PlayerInput();
+        }
 
+        public void OnEnable()
+        {
             // Subscribe to input events
             // Move Input Events
-            _playerInput.PlayerControl.Move.started += OnMovementInputUpdated;
-            _playerInput.PlayerControl.Move.performed += OnMovementInputUpdated;
-            _playerInput.PlayerControl.Move.canceled += OnMovementInputUpdated;
+            _playerInput.PlayerControl.Move.started += OnMoveInputReceived;
+            _playerInput.PlayerControl.Move.performed += OnMoveInputReceived;
+            _playerInput.PlayerControl.Move.canceled += OnMoveInputReceived;
 
             // Attack Input Events
             _playerInput.PlayerControl.Attack.started += OnAttackInputStarted;
             _playerInput.PlayerControl.Attack.canceled += OnAttackInputCancelled;
+
+            // Look Input Events
+            _playerInput.PlayerControl.Look.performed += OnLookInputReceived;
+            _playerInput.PlayerControl.Look.canceled += OnLookInputReceived;
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            // Enable the PlayerInput component
+            _playerInput.PlayerControl.Enable();
         }
 
-        /// <summary>
-        /// Disables the input controller.
-        /// </summary>
-        public void Disable()
+        public void OnDisable()
         {
             // Unsubscribe from input events
             // Move Input Events
-            _playerInput.PlayerControl.Move.started -= OnMovementInputUpdated;
-            _playerInput.PlayerControl.Move.performed -= OnMovementInputUpdated;
-            _playerInput.PlayerControl.Move.canceled -= OnMovementInputUpdated;
+            _playerInput.PlayerControl.Move.started -= OnMoveInputReceived;
+            _playerInput.PlayerControl.Move.performed -= OnMoveInputReceived;
+            _playerInput.PlayerControl.Move.canceled -= OnMoveInputReceived;
 
             // Attack Input Events
             _playerInput.PlayerControl.Attack.started -= OnAttackInputStarted;
             _playerInput.PlayerControl.Attack.canceled -= OnAttackInputCancelled;
 
+            // Look Input Events
+            _playerInput.PlayerControl.Look.performed -= OnLookInputReceived;
+            _playerInput.PlayerControl.Look.canceled -= OnLookInputReceived;
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
             // Disable the PlayerInput component
             _playerInput.PlayerControl.Disable();
         }
 
-        /// <summary>
-        /// Destructor that disables the input controller.
-        /// </summary>
-        ~LocalInputController()
+        private void OnDestroy()
         {
-            Disable();
-
             _playerInput.Dispose();
         }
 
@@ -85,7 +98,7 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         /// This method is called when the player is moving the character.
         /// </summary>
         /// <param name="context">struct that holds the movement input</param>
-        private void OnMovementInputUpdated(InputAction.CallbackContext context)
+        private void OnMoveInputReceived(InputAction.CallbackContext context)
         {
             // Invoke the OnMoveInputUpdated event with the input value.
             OnMoveInputUpdated?.Invoke(context.ReadValue<Vector2>());
@@ -113,6 +126,20 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         {
             // Invoke the OnAttackInputEnded event.
             OnAttackInputEnded?.Invoke();
+        }
+
+        #endregion
+
+        #region Look Input
+
+        /// <summary>
+        /// This method is called when the player is looking around.
+        /// </summary>
+        /// <param name="context">struct that hold the action context</param>
+        private void OnLookInputReceived(InputAction.CallbackContext context)
+        {
+            // Invoke the OnLookInputUpdated event with the input value.
+            OnLookInputUpdated?.Invoke(context.ReadValue<Vector2>());
         }
 
         #endregion
