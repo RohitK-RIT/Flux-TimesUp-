@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
 {
+    /// <summary>
+    /// Base class for player controllers.
+    /// </summary>
     [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(CharacterStats))]
     public abstract class PlayerController : MonoBehaviour
     {
@@ -11,6 +14,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Player's current health.
         /// </summary>
         public float currentHealth;
+
         /// <summary>
         /// Component that handles movement.
         /// </summary>
@@ -19,12 +23,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Property to access the weapon controller.
         /// </summary>
-        public WeaponController WeaponController => _weaponController;
-
-        /// <summary>
-        /// Component that handles weapons.
-        /// </summary>
-        private WeaponController _weaponController;
+        public WeaponController WeaponController { get; private set; }
 
         /// <summary>
         /// Property to access the char stats.
@@ -41,7 +40,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             // Get the CharacterMovement and CharacterWeaponController component attached to the player
             _movementController = GetComponent<MovementController>();
-            _weaponController = GetComponent<WeaponController>();
+            WeaponController = GetComponent<WeaponController>();
             currentHealth = CharacterStats.maxHealth;
         }
 
@@ -59,7 +58,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// </summary>
         protected void BeginAttack()
         {
-            _weaponController.BeginAttack();
+            WeaponController.BeginAttack();
         }
 
         /// <summary>
@@ -67,8 +66,9 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// </summary>
         protected void EndAttack()
         {
-            _weaponController.EndAttack();
+            WeaponController.EndAttack();
         }
+
         /// <summary>
         /// Function to take damage by reducing the stat's value.
         /// </summary>
@@ -81,17 +81,18 @@ namespace _Project.Scripts.Core.Player_Controllers
             {
                 Die();
             }
-            
         }
+
         /// <summary>
         /// Function to heal character's health by increasing the stat's value.
         /// </summary>
         /// <param name="healAmount"></param>
-        public void Heal(int healAmount)
+        protected void Heal(int healAmount)
         {
             currentHealth += healAmount;
             currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
         }
+
         /// <summary>
         /// Function to handle the character's death.
         /// </summary>

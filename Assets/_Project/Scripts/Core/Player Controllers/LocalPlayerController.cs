@@ -28,7 +28,6 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnMoveInputUpdated += UpdateMoveDirection;
             _localInputController.OnAttackInputBegan += BeginAttack;
             _localInputController.OnAttackInputEnded += EndAttack;
-            
         }
 
         private void OnDisable()
@@ -48,7 +47,13 @@ namespace _Project.Scripts.Core.Player_Controllers
         public void TakeDamage()
         {
             TakeDamage(10);
-        }  
+        }
+
+        [ContextMenu("Heal")]
+        public void Heal()
+        {
+            Heal(10);
+        }
 #endif
     }
 }

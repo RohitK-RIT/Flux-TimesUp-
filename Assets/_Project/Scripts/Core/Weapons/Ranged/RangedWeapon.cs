@@ -34,12 +34,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// <summary>
         /// Property to access current number of bullets in the magazine.
         /// </summary>
-        public int MagazineCount => _magazineCount;
-
-        /// <summary>
-        /// Number of bullets in the magazine.
-        /// </summary>
-        private int _magazineCount;
+        public int MagazineCount { get; private set; }
 
         /// <summary>
         /// Is the weapon currently reloading.
@@ -72,7 +67,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
 
             // Set the default fire mode and magazine count.
             _currentFireMode = _fireModeStrategies.First().Key;
-            _magazineCount = stats.MagazineSize;
+            MagazineCount = stats.MagazineSize;
 
             // Initialize the trail renderer pool.
             _trailRendererPool = new ObjectPool<TrailRenderer>(CreateTrail);
@@ -161,7 +156,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             }
 
             // Decrease the magazine count and reload if it's empty.
-            if (--_magazineCount != 0) return;
+            if (--MagazineCount != 0) return;
 
             if (AttackCoroutine != null)
                 StopCoroutine(AttackCoroutine);
@@ -211,7 +206,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             // Wait for the reload time and then refill the magazine.
             _reloading = true;
             yield return new WaitForSeconds(stats.ReloadTime);
-            _magazineCount = stats.MagazineSize;
+            MagazineCount = stats.MagazineSize;
             _reloading = false;
 
             if (Attacking)
