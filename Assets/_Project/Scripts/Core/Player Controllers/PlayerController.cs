@@ -10,18 +10,18 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Component that handles movement.
         /// </summary>
-        private MovementController _movementController;
+        protected MovementController MovementController { get; private set; }
 
         /// <summary>
         /// Component that handles weapons.
         /// </summary>
-        private WeaponController _weaponController;
+        protected WeaponController WeaponController { get; private set; }
 
         protected virtual void Awake()
         {
             // Get the CharacterMovement and CharacterWeaponController component attached to the player
-            _movementController = GetComponent<MovementController>();
-            _weaponController = GetComponent<WeaponController>();
+            MovementController = GetComponent<MovementController>();
+            WeaponController = GetComponent<WeaponController>();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <param name="direction">direction in which player should move</param>
         protected void UpdateMoveDirection(Vector2 direction)
         {
-            _movementController.moveDirection = direction;
+            MovementController.moveDirection = direction;
         }
 
         /// <summary>
@@ -38,15 +38,21 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// </summary>
         protected void BeginAttack()
         {
-            _weaponController.BeginAttack();
+            WeaponController.BeginAttack();
         }
-        
+
         /// <summary>
         /// End the player's attack.
         /// </summary>
         protected void EndAttack()
         {
-            _weaponController.EndAttack();
+            WeaponController.EndAttack();
         }
+
+        /// <summary>
+        /// Update the player's look direction.
+        /// </summary>
+        /// <param name="lookInput">Look input</param>
+        protected abstract void LookInputUpdated(Vector2 lookInput);
     }
 }

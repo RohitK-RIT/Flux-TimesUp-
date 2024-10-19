@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using _Project.Scripts.Core.Enemy;
 using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
@@ -13,7 +10,6 @@ public class EnemyController : PlayerController
     protected override void Awake()
     {
         base.Awake();
-        var playerDetection = GetComponent<PlayerDetection>();
 
         _enemyInputController = GetComponent<EnemyInputController>();
     }
@@ -22,13 +18,21 @@ public class EnemyController : PlayerController
     {
         _enemyInputController.OnAttackInputBegan += BeginAttack;
         _enemyInputController.OnAttackInputEnded += EndAttack;
+        
+        _enemyInputController.OnLookInputUpdated += LookInputUpdated;
     }
-    
+
     private void OnDisable()
     {
         _enemyInputController.Disable();
         _enemyInputController.OnAttackInputBegan -= BeginAttack;
         _enemyInputController.OnAttackInputEnded -= EndAttack;
+        
+        _enemyInputController.OnLookInputUpdated -= LookInputUpdated;
     }
-    
+
+    protected override void LookInputUpdated(Vector2 lookInput)
+    {
+        MovementController.lookDirection = lookInput;
+    }
 }
