@@ -12,8 +12,7 @@ namespace _Project.Scripts.Core.Enemy
         public LayerMask layerMask; // A LayerMask to specify which layers the detection should interact with
         
         private readonly List<Transform> _playersInRange = new List<Transform>();  // List of players currently in range
-
-      
+        
         void Update()
         {
             // Find all players in range

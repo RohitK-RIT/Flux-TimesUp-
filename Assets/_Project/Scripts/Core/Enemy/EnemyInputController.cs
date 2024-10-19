@@ -131,6 +131,15 @@ namespace _Project.Scripts.Core.Enemy
          _isAttacking = false;  // Allow a new attack after cooldown
      }
      
+     //Method to rotate the player towards the player
+    private void RotateTowardsPlayer(Transform player)
+    {
+        Vector3 directionToPlayer = player.position - transform.position;
+        directionToPlayer.y = 0; // Keep rotation on the horizontal plane
+
+        // Use the HandleLook method from CharacterMovement to rotate the enemy
+        _movementController.HandleLook(directionToPlayer);
+    }
     
     }
 }
