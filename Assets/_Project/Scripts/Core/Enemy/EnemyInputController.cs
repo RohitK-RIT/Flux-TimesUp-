@@ -36,7 +36,8 @@ namespace _Project.Scripts.Core.Enemy
 
         private void Update()
         {
-            UpdateAIInput();
+            // call method to finf closest player
+            FindPlayer();
         }
 
         public void Disable()
@@ -45,17 +46,23 @@ namespace _Project.Scripts.Core.Enemy
             _currentTarget = null;
         }
 
-        private void UpdateAIInput()
+        
+        // Method to find closest player and check if the closest player is in conical field of view
+        private void FindPlayer()
         {
+            // get the closest player
             Transform closestPlayer = _playerDetection.FindClosestPlayerInRange();
+            
+            // check if the closest player is within the conical FOV
             if (closestPlayer && _playerDetection.IsPlayerInCone(closestPlayer))
             {
                 // Rotate towards the player
                 RotateTowardsPlayer(closestPlayer);
+                
                 // Try to attack the player
                 TryAttack(closestPlayer);
             }
-            else if (_currentTarget != null)
+            else if (_currentTarget)
             {
                 // If the player is no longer in range, end the attack
                 OnAttackInputEnded?.Invoke();
@@ -63,6 +70,7 @@ namespace _Project.Scripts.Core.Enemy
             }
         }
 
+        //method to check if the player is within attack range and cool down is not active
         private void TryAttack(Transform player)
         {
             if (IsPlayerInAttackRange(player) && !_isCooldownActive)
@@ -77,6 +85,7 @@ namespace _Project.Scripts.Core.Enemy
             }
         }
 
+        // method to check if player is in attack range
         private bool IsPlayerInAttackRange(Transform player)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -96,8 +105,8 @@ namespace _Project.Scripts.Core.Enemy
         private void StopAttack()
         {
             if (!_isAttacking) return;
-
-            //_weaponController.CurrentWeapon.EndAttack();    // Stop the weapon from attacking
+            
+            // Invoke an event to notify end attack
             OnAttackInputEnded?.Invoke();
             if (_attackCoroutine != null)
             {
@@ -110,6 +119,7 @@ namespace _Project.Scripts.Core.Enemy
         // Coroutine to handle the attack and initiate cooldown after finishing
         private IEnumerator AttackCoroutine()
         {
+            // Invoke an event to notify start attack
             OnAttackInputBegan?.Invoke();
             yield return new WaitForSeconds(attackCooldown); // Wait for the attack duration or cooldown time
             StartCoroutine(StartCooldown());
@@ -124,20 +134,19 @@ namespace _Project.Scripts.Core.Enemy
             _isAttacking = false; // Allow a new attack after cooldown
         }
 
-        //Method to rotate the player towards the player
+        //Method to rotate the enemy towards the player
         private void RotateTowardsPlayer(Transform player)
         {
             if (!player)
                 return;
-
-            Debug.Log($"Player Name: {player.name}");
-            Debug.Log($"Player Pos: {player.position}\tEnemy Pos: {transform.position}");
+            
+            // Calculate the direction from the current object to the player's position.
             var directionToPlayer = (player.position - transform.position).normalized;
+            
+            // calculate the rotation needed to align the weapon's forward direction with the player's position.
             var rotation = Quaternion.FromToRotation(_weaponController.CurrentWeapon.transform.forward, directionToPlayer).eulerAngles;
-
-            Debug.Log($"Rotation: {rotation}\tDirection: {directionToPlayer}");
-
-            // Use the HandleLook method from CharacterMovement to rotate the enemy
+            
+            // Invoke an event to notify that the look direction (rotation) has been updated.
             OnLookInputUpdated?.Invoke(rotation);
         }
     }
