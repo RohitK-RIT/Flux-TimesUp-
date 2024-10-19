@@ -34,6 +34,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Magazine size of the weapon.
         /// </summary>
         public int MagazineSize => magazineSize;
+        
+        /// <summary>
+        /// Max bullet count of the weapon.
+        /// </summary>
+        public int MaxBulletCount => maxBulletCount;
 
         /// <summary>
         /// Burst amount of the weapon.
@@ -62,6 +67,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         [SerializeField] private float spread;
         [SerializeField] private float recoil;
         [SerializeField] private int magazineSize;
+        [SerializeField] private int maxBulletCount;
         [SerializeField] private int burstAmount;
         [SerializeField] private float burstDuration;
         [SerializeField] private float trailSpeed = 100f;

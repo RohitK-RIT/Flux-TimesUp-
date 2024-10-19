@@ -44,8 +44,8 @@ namespace _Project.Scripts.UI
             switch (player.WeaponController.CurrentWeapon)
             {
                 case RangedWeapon currentRangedWeapon:
-                    currAmmo.text = currentRangedWeapon.MagazineCount.ToString();
-                    maxAmmo.text = currentRangedWeapon.Stats.MagazineSize.ToString();
+                    currAmmo.text = currentRangedWeapon.CurrentAmmo.ToString();
+                    maxAmmo.text = currentRangedWeapon.MaxAmmo.ToString();
                     break;
                 default:
                     currAmmo.gameObject.SetActive(false);
