@@ -34,7 +34,7 @@ namespace _Project.Scripts.UI
         // Updates the health bar based on the player's current and max health
         private void UpdateHealthBar()
         {
-            healthBar.value = player.currentHealth;
+            healthBar.value = player.CurrentHealth;
             healthBar.maxValue = player.CharacterStats.maxHealth;
         }
 

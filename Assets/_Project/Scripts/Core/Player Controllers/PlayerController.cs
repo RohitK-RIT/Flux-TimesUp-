@@ -11,11 +11,6 @@ namespace _Project.Scripts.Core.Player_Controllers
     public abstract class PlayerController : MonoBehaviour
     {
         /// <summary>
-        /// Player's current health.
-        /// </summary>
-        [SerializeField] private float currentHealth;
-
-        /// <summary>
         /// Component that handles movement.
         /// </summary>
         protected MovementController MovementController { get; private set; }
@@ -31,9 +26,19 @@ namespace _Project.Scripts.Core.Player_Controllers
         public CharacterStats CharacterStats => characterStats;
 
         /// <summary>
+        /// Property to access the player's current health.
+        /// </summary>
+        public float CurrentHealth => currentHealth;
+
+        /// <summary>
         /// Component that handles Character Stats.
         /// </summary>
         [SerializeField] private CharacterStats characterStats;
+
+        /// <summary>
+        /// Player's current health.
+        /// </summary>
+        [SerializeField] private float currentHealth;
 
 
         protected virtual void Awake()
@@ -41,7 +46,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Get the CharacterMovement and CharacterWeaponController component attached to the player
             MovementController = GetComponent<MovementController>();
             WeaponController = GetComponent<WeaponController>();
-            
+
             currentHealth = CharacterStats.maxHealth;
         }
 
