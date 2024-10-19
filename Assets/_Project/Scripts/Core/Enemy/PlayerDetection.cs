@@ -13,6 +13,7 @@ namespace _Project.Scripts.Core.Enemy
         
         private readonly List<Transform> _playersInRange = new List<Transform>();  // List of players currently in range
         
+        [SerializeField] private Transform body;
         void Update()
         {
             // Find all players in range
@@ -101,11 +102,13 @@ namespace _Project.Scripts.Core.Enemy
 
         internal bool IsPlayerInCone(Transform player)
         {
-            Vector3 directionToPlayer = player.position - transform.position;
+            if (!player)
+                return false; 
+            Vector3 directionToPlayer = player.position - body.position;
             directionToPlayer.y = 0;  // Only rotate on the horizontal plane
 
             // Angle between enemy's forward direction and the direction to the player
-            float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer.normalized);
+            float angleToPlayer = Vector3.Angle(body.forward, directionToPlayer.normalized);
 
             // Check if the player is within the field of view angle
             return angleToPlayer <= fieldOfViewAngle;
