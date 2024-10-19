@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using _Project.Scripts.Core.Character;
 using _Project.Scripts.Core.Character.Weapon_Controller;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
 using UnityEngine;
@@ -36,7 +35,7 @@ namespace _Project.Scripts.Core.Enemy
 
         private void Update()
         {
-            // call method to finf closest player
+            // call method to find the closest player
             FindPlayer();
         }
 
@@ -47,17 +46,15 @@ namespace _Project.Scripts.Core.Enemy
         }
 
         
-        // Method to find closest player and check if the closest player is in conical field of view
+        // Method to find the closest player and check if the closest player is in conical field of view
         private void FindPlayer()
         {
             // get the closest player
             Transform closestPlayer = _playerDetection.FindClosestPlayerInRange();
             
-            Debug.Log("chk to rotate player:" + _playerDetection.IsPlayerInCone(closestPlayer));
             // check if the closest player is within the conical FOV
             if (closestPlayer && _playerDetection.IsPlayerInCone(closestPlayer))
             {
-                Debug.Log("rotate player:" + closestPlayer.gameObject.name);
                 // Rotate towards the player
                 RotateTowardsPlayer(closestPlayer);
                 
@@ -77,11 +74,13 @@ namespace _Project.Scripts.Core.Enemy
         {
             if (IsPlayerInAttackRange(player) && !_isCooldownActive)
             {
+                // start attacking when the player is in range and not in cooldown
                 StartAttack();
                 _currentTarget = player;
             }
             else if (_currentTarget == player)
             {
+                // Stopping the enemy attack if the player is not in range and cooldown is active
                 StopAttack();
                 _currentTarget = null;
             }
@@ -99,6 +98,7 @@ namespace _Project.Scripts.Core.Enemy
         private void StartAttack()
         {
             if (_isAttacking || _isCooldownActive) return; // Prevent multiple attacks or attacks during cooldown
+            
             _isAttacking = true;
             _attackCoroutine = StartCoroutine(AttackCoroutine());
         }
@@ -153,9 +153,6 @@ namespace _Project.Scripts.Core.Enemy
             
             // Calculate the final rotation needed to align the weapon's forward direction with the player's position
             Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
-            
-            // Update the enemy's body rotation (horizontal aiming)
-            //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
             
             // Rotate the weapon towards the player (vertical aiming)
             if (_weaponController && _weaponController.CurrentWeapon)

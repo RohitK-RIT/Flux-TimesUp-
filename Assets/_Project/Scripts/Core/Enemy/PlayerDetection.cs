@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using _Project.Scripts.Core.Character;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Enemy
@@ -13,13 +12,13 @@ namespace _Project.Scripts.Core.Enemy
         
         private readonly List<Transform> _playersInRange = new List<Transform>();  // List of players currently in range
         
-        [SerializeField] private Transform body;
+        [SerializeField] private Transform body; // To get the reference of the body
         void Update()
         {
             // Find all players in range
             FindPlayersInRange();
 
-            // Debugging: Print the list of players in range --> Just for testing purpose
+            // Debugging: Print the list of players in range --> for testing purpose will be removed later
             DebugPlayersInRange();
         }
        
@@ -42,7 +41,7 @@ namespace _Project.Scripts.Core.Enemy
                     if (!_playersInRange.Contains(hitCollider.transform))
                     {
                         _playersInRange.Add(hitCollider.transform);
-                        Debug.Log("Player entered range: " + hitCollider.transform.name);
+                        Debug.Log("Player entered range: " + hitCollider.transform.name); // will be removed later
                     }
                 }
             }
@@ -52,13 +51,13 @@ namespace _Project.Scripts.Core.Enemy
             {
                 if (!currentPlayers.Contains(_playersInRange[i]))
                 {
-                    Debug.Log("Player left range: " + _playersInRange[i].name);
+                    Debug.Log("Player left range: " + _playersInRange[i].name); // will be removed later
                     _playersInRange.RemoveAt(i);  // Remove the player reference
                 }
             }
         }
         
-        // Print the names of the players currently in range for debugging.
+        // Print the names of the players currently in range for debugging --> for testing will be removed later
         private void DebugPlayersInRange()
         {
             if (_playersInRange.Count == 0)
