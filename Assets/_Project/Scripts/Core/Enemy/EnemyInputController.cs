@@ -53,9 +53,11 @@ namespace _Project.Scripts.Core.Enemy
             // get the closest player
             Transform closestPlayer = _playerDetection.FindClosestPlayerInRange();
             
+            Debug.Log("chk to rotate player:" + _playerDetection.IsPlayerInCone(closestPlayer));
             // check if the closest player is within the conical FOV
             if (closestPlayer && _playerDetection.IsPlayerInCone(closestPlayer))
             {
+                Debug.Log("rotate player:" + closestPlayer.gameObject.name);
                 // Rotate towards the player
                 RotateTowardsPlayer(closestPlayer);
                 
@@ -140,14 +142,35 @@ namespace _Project.Scripts.Core.Enemy
             if (!player)
                 return;
             
-            // Calculate the direction from the current object to the player's position.
-            var directionToPlayer = (player.position - transform.position).normalized;
+            // Calculate the direction from the enemy to the player
+            Vector3 directionToPlayer = (player.position - transform.position).normalized;
             
-            // calculate the rotation needed to align the weapon's forward direction with the player's position.
-            var rotation = Quaternion.FromToRotation(_weaponController.CurrentWeapon.transform.forward, directionToPlayer).eulerAngles;
+            // Extract horizontal direction (Y-axis) from the directionToPlayer
+            Vector3 horizontalDirection = new Vector3(directionToPlayer.x, 0, directionToPlayer.z);
             
-            // Invoke an event to notify that the look direction (rotation) has been updated.
-            OnLookInputUpdated?.Invoke(rotation);
+            // Calculate the vertical angle (X-axis rotation)
+            float verticalAngle = Mathf.Atan2(directionToPlayer.y, horizontalDirection.magnitude) * Mathf.Rad2Deg;
+            
+            // Calculate the final rotation needed to align the weapon's forward direction with the player's position
+            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+            
+            // Update the enemy's body rotation (horizontal aiming)
+            //transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+            
+            // Rotate the weapon towards the player (vertical aiming)
+            if (_weaponController && _weaponController.CurrentWeapon)
+            {
+                // Get the current local rotation of the weapon and update the pitch (X-axis) based on the calculated vertical angle
+                var weaponLocalRotation = _weaponController.CurrentWeapon.transform.localRotation;
+                Quaternion weaponTargetRotation = Quaternion.Euler(-verticalAngle, weaponLocalRotation.eulerAngles.y, weaponLocalRotation.eulerAngles.z);
+                _weaponController.CurrentWeapon.transform.localRotation = Quaternion.Slerp(weaponLocalRotation, weaponTargetRotation, Time.deltaTime * 5f);
+            }
+            
+            // Invoke an event to notify that the look direction (rotation) has been updated
+            OnLookInputUpdated?.Invoke(new Vector2(targetRotation.eulerAngles.y, verticalAngle));
+            
+            
+            
         }
     }
 }
