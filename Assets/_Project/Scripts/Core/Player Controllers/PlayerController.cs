@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
 {
-    [RequireComponent(typeof(MovementController), typeof(WeaponController))]
+    [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(CharacterStats)) ]
     public abstract class PlayerController : MonoBehaviour
     {
         /// <summary>
@@ -13,9 +13,24 @@ namespace _Project.Scripts.Core.Player_Controllers
         private MovementController _movementController;
 
         /// <summary>
+        /// Property to access the weapon controller.
+        /// <summary>
+        public WeaponController WeaponController => _weaponController;
+        
+        /// <summary>
         /// Component that handles weapons.
         /// </summary>
         private WeaponController _weaponController;
+        
+        /// <summary>
+        /// Property to access the char stats.
+        /// <summary>
+        public CharacterStats CharacterStats => characterStats;
+        /// <summary>
+        /// Component that handles Character Stats.
+        /// </summary>
+        [SerializeField] private CharacterStats characterStats;
+        
 
         protected virtual void Awake()
         {
@@ -47,6 +62,11 @@ namespace _Project.Scripts.Core.Player_Controllers
         protected void EndAttack()
         {
             _weaponController.EndAttack();
+        }
+        
+        public void TakeDamage(float damage)
+        {
+            CharacterStats.TakeDamage(damage);
         }
     }
 }

@@ -1,4 +1,5 @@
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
+using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
 {
@@ -27,6 +28,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnMoveInputUpdated += UpdateMoveDirection;
             _localInputController.OnAttackInputBegan += BeginAttack;
             _localInputController.OnAttackInputEnded += EndAttack;
+            
         }
 
         private void OnDisable()
@@ -39,5 +41,14 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Disable the LocalInputController
             _localInputController.Disable();
         }
+
+#if UNITY_EDITOR
+        //to be removed
+        [ContextMenu("Take Damage")]
+        public void TakeDamage()
+        {
+            CharacterStats.TakeDamage(10);
+        }  
+#endif
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
@@ -27,7 +28,13 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Trail renderer prefab.
         /// </summary>
         [SerializeField] private TrailRenderer trailRendererPrefab;
-        [SerializeField] private Projectile projectilePrefab;
+
+        public RangedWeaponStats Stats => stats;
+
+        /// <summary>
+        /// Property to access current number of bullets in the magazine.
+        /// </summary>
+        public int MagazineCount => _magazineCount;
 
         /// <summary>
         /// Number of bullets in the magazine.
@@ -130,7 +137,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private void FireBullet()
         {
-            var spreadOffset = new Vector3(Random.Range(-stats.Spread, stats.Spread), Random.Range(-stats.Spread, stats.Spread), 0); // Add some spread to the bullet.
+            var spreadOffset = new Vector3(Random.Range(-stats.Spread, stats.Spread),
+                Random.Range(-stats.Spread, stats.Spread), 0); // Add some spread to the bullet.
             var recoilOffset = new Vector3(0, Random.Range(0, stats.Recoil), 0); // Add some recoil to the bullet.
             _recoilFactor = Mathf.Clamp01(_recoilFactor + 0.1f); // Increase the recoil factor.
 
@@ -140,9 +148,17 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
 
             // Raycast to check if the bullet hits something. If it does, play the trail to that point, else play the trail to the miss distance.
-            StartCoroutine(Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance)
-                ? PlayTrail(muzzle.position, hit.point)
-                : PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
+            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance))
+            {
+                StartCoroutine(PlayTrail(muzzle.position, hit.point));
+                var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
+                if (playerController)
+                    playerController.TakeDamage(stats.Damage);
+            }
+            else
+            {
+                StartCoroutine(PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
+            }
 
             // Decrease the magazine count and reload if it's empty.
             if (--_magazineCount != 0) return;
@@ -170,7 +186,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             var remainingDistance = distance;
             while (remainingDistance > 0)
             {
-                trail.transform.position = Vector3.Lerp(startPos, endPos, Mathf.Clamp01((distance - remainingDistance) / distance));
+                trail.transform.position = Vector3.Lerp(startPos, endPos,
+                    Mathf.Clamp01((distance - remainingDistance) / distance));
                 remainingDistance -= stats.TrailSpeed * Time.deltaTime;
 
                 yield return null;
