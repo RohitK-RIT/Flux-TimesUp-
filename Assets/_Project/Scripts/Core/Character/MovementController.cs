@@ -10,14 +10,23 @@ namespace _Project.Scripts.Core.Character
     public class MovementController : MonoBehaviour
     {
         /// <summary>
+        /// The direction the player is looking in.
+        /// </summary>
+        public Vector2 LookDirection
+        {
+            get => lookDirection;
+            set
+            {
+                // Clamp the vertical look direction to prevent the player from looking too far up or down.
+                var clampedValue = new Vector2(value.x, Mathf.Clamp(value.y, -90f, 90f));
+                lookDirection = clampedValue;
+            }
+        }
+
+        /// <summary>
         /// The direction the player is moving in.
         /// </summary>
         [HideInInspector] public Vector2 moveDirection;
-
-        /// <summary>
-        /// The direction the player is looking in.
-        /// </summary>
-        [HideInInspector] public Vector2 lookDirection;
 
         /// <summary>
         /// Body of the player.
@@ -36,6 +45,11 @@ namespace _Project.Scripts.Core.Character
 
         // this is a hack to get the weapon controller to move the current weapon to the correct position. To be removed.
         private WeaponController _weaponController;
+
+        /// <summary>
+        /// The direction the player is looking in.
+        /// </summary>
+        [SerializeField] private Vector2 lookDirection;
 
         private void Awake()
         {
@@ -74,12 +88,13 @@ namespace _Project.Scripts.Core.Character
             // Assign Horizontal component of the look direction to the y-axis rotation of the body.
             var bodyLocalRotation = body.transform.localRotation;
             var bodyTargetRotation = Quaternion.Euler(bodyLocalRotation.eulerAngles.x, lookDirection.x, bodyLocalRotation.eulerAngles.z);
-            body.transform.localRotation = Quaternion.Slerp(body.transform.localRotation, bodyTargetRotation, Time.deltaTime * 100f);
+            body.transform.localRotation = Quaternion.Slerp(body.transform.localRotation, bodyTargetRotation, Time.deltaTime * 50f);
 
             // Assign negative of the Vertical component of the look direction to the x-axis rotation of the weapon.
             var weaponLocalRotation = _weaponController.CurrentWeapon.transform.localRotation;
             var weaponTargetRotation = Quaternion.Euler(-lookDirection.y, weaponLocalRotation.eulerAngles.y, weaponLocalRotation.eulerAngles.z);
-            _weaponController.CurrentWeapon.transform.localRotation = Quaternion.Slerp(weaponLocalRotation, weaponTargetRotation, Time.deltaTime * 100f);
+            // Quaternion.clam
+            _weaponController.CurrentWeapon.transform.localRotation = Quaternion.Slerp(weaponLocalRotation, weaponTargetRotation, Time.deltaTime * 50f);
         }
     }
 }

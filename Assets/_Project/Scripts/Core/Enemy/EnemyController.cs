@@ -38,7 +38,7 @@ namespace _Project.Scripts.Core.Enemy
         protected override void LookInputUpdated(Vector2 lookInput)
         {
             // Update the look direction in the MovementController based on the new input.
-            MovementController.lookDirection = lookInput;
+            MovementController.LookDirection = lookInput;
         }
     }
 }

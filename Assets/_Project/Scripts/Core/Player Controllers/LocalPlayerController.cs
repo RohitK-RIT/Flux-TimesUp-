@@ -51,7 +51,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <param name="lookInput"></param>
         protected override void LookInputUpdated(Vector2 lookInput)
         {
-            MovementController.lookDirection += lookInput * AimSensitivity;
+            MovementController.LookDirection += lookInput * AimSensitivity;
         }
 
 #if UNITY_EDITOR
