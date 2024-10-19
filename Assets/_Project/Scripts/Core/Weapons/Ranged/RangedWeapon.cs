@@ -30,13 +30,14 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         [SerializeField] private TrailRenderer trailRendererPrefab;
 
-        public RangedWeaponStats Stats => stats;
-
         /// <summary>
         /// Property to access current number of bullets in the magazine.
         /// </summary>
         public int CurrentAmmo { get; private set; }
 
+        /// <summary>
+        /// Property to access the maximum number of bullets for the Gun.
+        /// </summary>
         public int MaxAmmo { get; private set; }
 
         /// <summary>
@@ -59,6 +60,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private Dictionary<FireModes, IFireModeStrategy> _fireModeStrategies;
 
+        /// <summary>
+        /// Object pool for trail renderers.
+        /// </summary>
         private ObjectPool<TrailRenderer> _trailRendererPool;
 
         private void Start()
@@ -126,7 +130,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         {
             // Find a fire mode strategy and wait for it to finish, else show an error.
             if (_fireModeStrategies.TryGetValue(_currentFireMode, out var strategy))
+            {
                 yield return strategy.Fire(stats, FireBullet);
+            }
             else
                 Debug.LogError($"No fire mode set for {stats.WeaponName}", stats);
         }
@@ -136,6 +142,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private void FireBullet()
         {
+            if (_reloading)
+                return;
+
             var spreadOffset = new Vector3(Random.Range(-stats.Spread, stats.Spread),
                 Random.Range(-stats.Spread, stats.Spread), 0); // Add some spread to the bullet.
             var recoilOffset = new Vector3(0, Random.Range(0, stats.Recoil), 0); // Add some recoil to the bullet.
@@ -159,11 +168,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
                 StartCoroutine(PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
             }
 
+            Debug.Log($"Current Ammo{CurrentAmmo}");
+
             // Decrease the magazine count and reload if it's empty.
             if (--CurrentAmmo != 0) return;
 
-            if (AttackCoroutine != null)
-                StopCoroutine(AttackCoroutine);
             StartCoroutine(ReloadCoroutine());
         }
 
@@ -207,10 +216,13 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private IEnumerator ReloadCoroutine()
         {
+            if (AttackCoroutine != null)
+                StopCoroutine(AttackCoroutine);
+
             // Wait for the reload time and then refill the magazine.
             _reloading = true;
             yield return new WaitForSeconds(stats.ReloadTime);
-            
+
             CurrentAmmo = MaxAmmo < stats.MagazineSize ? MaxAmmo : stats.MagazineSize;
             MaxAmmo = math.clamp(MaxAmmo - stats.MagazineSize, 0, int.MaxValue);
 
