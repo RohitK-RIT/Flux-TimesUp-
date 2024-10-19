@@ -4,24 +4,44 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
 {
-    [RequireComponent(typeof(MovementController), typeof(WeaponController))]
+    /// <summary>
+    /// Base class for player controllers.
+    /// </summary>
+    [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(CharacterStats))]
     public abstract class PlayerController : MonoBehaviour
     {
+        /// <summary>
+        /// Player's current health.
+        /// </summary>
+        public float currentHealth;
+
         /// <summary>
         /// Component that handles movement.
         /// </summary>
         private MovementController _movementController;
 
         /// <summary>
-        /// Component that handles weapons.
+        /// Property to access the weapon controller.
         /// </summary>
-        private WeaponController _weaponController;
+        public WeaponController WeaponController { get; private set; }
+
+        /// <summary>
+        /// Property to access the char stats.
+        /// </summary>
+        public CharacterStats CharacterStats => characterStats;
+
+        /// <summary>
+        /// Component that handles Character Stats.
+        /// </summary>
+        [SerializeField] private CharacterStats characterStats;
+
 
         protected virtual void Awake()
         {
             // Get the CharacterMovement and CharacterWeaponController component attached to the player
             _movementController = GetComponent<MovementController>();
-            _weaponController = GetComponent<WeaponController>();
+            WeaponController = GetComponent<WeaponController>();
+            currentHealth = CharacterStats.maxHealth;
         }
 
         /// <summary>
@@ -38,15 +58,48 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// </summary>
         protected void BeginAttack()
         {
-            _weaponController.BeginAttack();
+            WeaponController.BeginAttack();
         }
-        
+
         /// <summary>
         /// End the player's attack.
         /// </summary>
         protected void EndAttack()
         {
-            _weaponController.EndAttack();
+            WeaponController.EndAttack();
+        }
+
+        /// <summary>
+        /// Function to take damage by reducing the stat's value.
+        /// </summary>
+        /// <param name="damageAmount"></param>
+        public void TakeDamage(float damageAmount)
+        {
+            currentHealth -= damageAmount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
+        }
+
+        /// <summary>
+        /// Function to heal character's health by increasing the stat's value.
+        /// </summary>
+        /// <param name="healAmount"></param>
+        protected void Heal(int healAmount)
+        {
+            currentHealth += healAmount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
+        }
+
+        /// <summary>
+        /// Function to handle the character's death.
+        /// </summary>
+        private void Die()
+        {
+            // Handle the character's death
+            Debug.Log("Character has died");
         }
     }
 }

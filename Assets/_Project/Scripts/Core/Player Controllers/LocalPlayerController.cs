@@ -1,4 +1,5 @@
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
+using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
 {
@@ -39,5 +40,20 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Disable the LocalInputController
             _localInputController.Disable();
         }
+
+#if UNITY_EDITOR
+        //to be removed
+        [ContextMenu("Take Damage")]
+        public void TakeDamage()
+        {
+            TakeDamage(10);
+        }
+
+        [ContextMenu("Heal")]
+        public void Heal()
+        {
+            Heal(10);
+        }
+#endif
     }
 }

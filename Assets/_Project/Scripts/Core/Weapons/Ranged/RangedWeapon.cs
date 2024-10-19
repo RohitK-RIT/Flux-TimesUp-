@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Core.Player_Controllers;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
@@ -29,9 +31,14 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         [SerializeField] private TrailRenderer trailRendererPrefab;
 
         /// <summary>
-        /// Number of bullets in the magazine.
+        /// Property to access current number of bullets in the magazine.
         /// </summary>
-        private int _magazineCount;
+        public int CurrentAmmo { get; private set; }
+
+        /// <summary>
+        /// Property to access the maximum number of bullets for the Gun.
+        /// </summary>
+        public int MaxAmmo { get; private set; }
 
         /// <summary>
         /// Is the weapon currently reloading.
@@ -53,6 +60,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private Dictionary<FireModes, IFireModeStrategy> _fireModeStrategies;
 
+        /// <summary>
+        /// Object pool for trail renderers.
+        /// </summary>
         private ObjectPool<TrailRenderer> _trailRendererPool;
 
         private void Start()
@@ -64,7 +74,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
 
             // Set the default fire mode and magazine count.
             _currentFireMode = _fireModeStrategies.First().Key;
-            _magazineCount = stats.MagazineSize;
+            CurrentAmmo = stats.MagazineSize;
+            MaxAmmo = stats.MaxBulletCount;
 
             // Initialize the trail renderer pool.
             _trailRendererPool = new ObjectPool<TrailRenderer>(CreateTrail);
@@ -119,7 +130,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         {
             // Find a fire mode strategy and wait for it to finish, else show an error.
             if (_fireModeStrategies.TryGetValue(_currentFireMode, out var strategy))
+            {
                 yield return strategy.Fire(stats, FireBullet);
+            }
             else
                 Debug.LogError($"No fire mode set for {stats.WeaponName}", stats);
         }
@@ -129,7 +142,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private void FireBullet()
         {
-            var spreadOffset = new Vector3(Random.Range(-stats.Spread, stats.Spread), Random.Range(-stats.Spread, stats.Spread), 0); // Add some spread to the bullet.
+            if (_reloading)
+                return;
+
+            var spreadOffset = new Vector3(Random.Range(-stats.Spread, stats.Spread),
+                Random.Range(-stats.Spread, stats.Spread), 0); // Add some spread to the bullet.
             var recoilOffset = new Vector3(0, Random.Range(0, stats.Recoil), 0); // Add some recoil to the bullet.
             _recoilFactor = Mathf.Clamp01(_recoilFactor + 0.1f); // Increase the recoil factor.
 
@@ -139,15 +156,23 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
 
             // Raycast to check if the bullet hits something. If it does, play the trail to that point, else play the trail to the miss distance.
-            StartCoroutine(Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance)
-                ? PlayTrail(muzzle.position, hit.point)
-                : PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
+            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance))
+            {
+                StartCoroutine(PlayTrail(muzzle.position, hit.point));
+                var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
+                if (playerController)
+                    playerController.TakeDamage(stats.Damage);
+            }
+            else
+            {
+                StartCoroutine(PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
+            }
+
+            Debug.Log($"Current Ammo{CurrentAmmo}");
 
             // Decrease the magazine count and reload if it's empty.
-            if (--_magazineCount != 0) return;
+            if (--CurrentAmmo != 0) return;
 
-            if (AttackCoroutine != null)
-                StopCoroutine(AttackCoroutine);
             StartCoroutine(ReloadCoroutine());
         }
 
@@ -169,7 +194,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             var remainingDistance = distance;
             while (remainingDistance > 0)
             {
-                trail.transform.position = Vector3.Lerp(startPos, endPos, Mathf.Clamp01((distance - remainingDistance) / distance));
+                trail.transform.position = Vector3.Lerp(startPos, endPos,
+                    Mathf.Clamp01((distance - remainingDistance) / distance));
                 remainingDistance -= stats.TrailSpeed * Time.deltaTime;
 
                 yield return null;
@@ -190,10 +216,16 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private IEnumerator ReloadCoroutine()
         {
+            if (AttackCoroutine != null)
+                StopCoroutine(AttackCoroutine);
+
             // Wait for the reload time and then refill the magazine.
             _reloading = true;
             yield return new WaitForSeconds(stats.ReloadTime);
-            _magazineCount = stats.MagazineSize;
+
+            CurrentAmmo = MaxAmmo < stats.MagazineSize ? MaxAmmo : stats.MagazineSize;
+            MaxAmmo = math.clamp(MaxAmmo - stats.MagazineSize, 0, int.MaxValue);
+
             _reloading = false;
 
             if (Attacking)
