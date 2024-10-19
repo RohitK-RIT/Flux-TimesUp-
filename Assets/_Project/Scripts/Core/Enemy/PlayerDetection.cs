@@ -83,7 +83,7 @@ namespace _Project.Scripts.Core.Enemy
             
             // Initialize the closest distance as the detection range
             float closestDistance = detectionRange;
-
+            Debug.Log("chk Players in range:"+_playersInRange.Count);
             foreach (Transform player in _playersInRange)
             {
                 // Calculate the distance between the enemy and the current player
@@ -97,6 +97,7 @@ namespace _Project.Scripts.Core.Enemy
                 }
             }
             
+            Debug.Log("Chk closest Player:"+closest);
             // Return the Transform of the closest player, or null if no player was found
             return closest;
         }
