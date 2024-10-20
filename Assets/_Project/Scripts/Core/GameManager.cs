@@ -1,4 +1,6 @@
+using _Project.Scripts.Core.Backend.Scene_Control;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.Core
 {
@@ -7,6 +9,7 @@ namespace _Project.Scripts.Core
     {
         public GameObject pauseMenuUI;  // Drag your pause menu UI panel here
         private bool _isPaused;          // Variable to check if the game is paused
+        private SceneSystem _sceneSystem; // Reference to the SceneSystem
 
         // Update is called once per frame
         void Update()
@@ -35,11 +38,20 @@ namespace _Project.Scripts.Core
         // Call this function to pause the game
         public void Pause()
         {
+            Cursor.visible = true;          // Show the cursor
             pauseMenuUI.SetActive(true);   // Show pause menu
             Time.timeScale = 0f;           // Freeze the game
             _isPaused = true;               // Update pause state
         }
-        
+        // Function to restart the game and go back to the main menu
+        public void RestartToMainMenu()
+        {
+            // Unfreeze the game in case it's paused
+            Time.timeScale = 1f;
+
+            // Replace "MainMenuScene" with the name of your actual main menu scene
+            _sceneSystem.LoadScene(new SceneLoadRequest("UI", LoadSceneMode.Single));
+        }
         //Function to exit the game when the quit button is clicked
         public void QuitGame()
         {

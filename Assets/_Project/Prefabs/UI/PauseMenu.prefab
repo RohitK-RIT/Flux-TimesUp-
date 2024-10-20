@@ -1034,7 +1034,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 650, y: -652}
+  m_AnchoredPosition: {x: 650, y: -689.33344}
   m_SizeDelta: {x: 400, y: 130}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &6162164671852177556
@@ -1149,7 +1149,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1855819619380448922
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1167,7 +1167,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 650, y: -331.2}
+  m_AnchoredPosition: {x: 650, y: -538.00006}
   m_SizeDelta: {x: 400, y: 128}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &2991217735387335342
@@ -1251,7 +1251,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3737386340358061676}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: _Project.Scripts.Core.GameManager, Assembly-CSharp
+        m_MethodName: RestartToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6500431843466375787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1667,7 +1679,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 650, y: -426}
+  m_AnchoredPosition: {x: 650, y: -388.6667}
   m_SizeDelta: {x: 400, y: 128}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &5366198694545610415
