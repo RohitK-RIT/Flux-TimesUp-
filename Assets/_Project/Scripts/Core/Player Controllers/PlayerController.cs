@@ -11,14 +11,9 @@ namespace _Project.Scripts.Core.Player_Controllers
     public abstract class PlayerController : MonoBehaviour
     {
         /// <summary>
-        /// Player's current health.
-        /// </summary>
-        public float currentHealth;
-
-        /// <summary>
         /// Component that handles movement.
         /// </summary>
-        private MovementController _movementController;
+        protected MovementController MovementController { get; private set; }
 
         /// <summary>
         /// Property to access the weapon controller.
@@ -31,16 +26,27 @@ namespace _Project.Scripts.Core.Player_Controllers
         public CharacterStats CharacterStats => characterStats;
 
         /// <summary>
+        /// Property to access the player's current health.
+        /// </summary>
+        public float CurrentHealth => currentHealth;
+
+        /// <summary>
         /// Component that handles Character Stats.
         /// </summary>
         [SerializeField] private CharacterStats characterStats;
+
+        /// <summary>
+        /// Player's current health.
+        /// </summary>
+        [SerializeField] private float currentHealth;
 
 
         protected virtual void Awake()
         {
             // Get the CharacterMovement and CharacterWeaponController component attached to the player
-            _movementController = GetComponent<MovementController>();
+            MovementController = GetComponent<MovementController>();
             WeaponController = GetComponent<WeaponController>();
+
             currentHealth = CharacterStats.maxHealth;
         }
 
@@ -50,7 +56,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <param name="direction">direction in which player should move</param>
         protected void UpdateMoveDirection(Vector2 direction)
         {
-            _movementController.moveDirection = direction;
+            MovementController.moveDirection = direction;
         }
 
         /// <summary>
@@ -101,5 +107,11 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Handle the character's death
             Debug.Log("Character has died");
         }
+
+        /// <summary>
+        /// Update the player's look direction.
+        /// </summary>
+        /// <param name="lookInput">Look input</param>
+        protected abstract void LookInputUpdated(Vector2 lookInput);
     }
 }

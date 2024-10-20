@@ -168,8 +168,6 @@ namespace _Project.Scripts.Core.Weapons.Ranged
                 StartCoroutine(PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
             }
 
-            Debug.Log($"Current Ammo{CurrentAmmo}");
-
             // Decrease the magazine count and reload if it's empty.
             if (--CurrentAmmo != 0) return;
 

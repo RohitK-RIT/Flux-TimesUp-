@@ -1,3 +1,4 @@
+using _Project.Scripts.Core.Character.Weapon_Controller;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Character
@@ -9,9 +10,28 @@ namespace _Project.Scripts.Core.Character
     public class MovementController : MonoBehaviour
     {
         /// <summary>
+        /// The direction the player is looking in.
+        /// </summary>
+        public Vector2 LookDirection
+        {
+            get => lookDirection;
+            set
+            {
+                // Clamp the vertical look direction to prevent the player from looking too far up or down.
+                var clampedValue = new Vector2(value.x, Mathf.Clamp(value.y, -90f, 90f));
+                lookDirection = clampedValue;
+            }
+        }
+
+        /// <summary>
         /// The direction the player is moving in.
         /// </summary>
         [HideInInspector] public Vector2 moveDirection;
+
+        /// <summary>
+        /// Body of the player.
+        /// </summary>
+        [SerializeField] private Transform body;
 
         /// <summary>
         /// The speed at which the player moves.
@@ -23,15 +43,19 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         private CharacterController _characterController;
 
+        // this is a hack to get the weapon controller to move the current weapon to the correct position. To be removed.
+        private WeaponController _weaponController;
+
         /// <summary>
-        /// The constant rotation factor per frame.
+        /// The direction the player is looking in.
         /// </summary>
-        private const float RotationFactorPerFrame = 10.0f;
+        [SerializeField] private Vector2 lookDirection;
 
         private void Awake()
         {
             // Get and store the CharacterController component attached to the player
             _characterController = GetComponent<CharacterController>();
+            _weaponController = GetComponent<WeaponController>();
         }
 
         private void Update()
@@ -61,17 +85,16 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         private void HandleLook()
         {
-            var positionToLookAt = new Vector3(moveDirection.x, 0.0f, moveDirection.y);
-            var currentRotation = transform.rotation;
+            // Assign Horizontal component of the look direction to the y-axis rotation of the body.
+            var bodyLocalRotation = body.transform.localRotation;
+            var bodyTargetRotation = Quaternion.Euler(bodyLocalRotation.eulerAngles.x, lookDirection.x, bodyLocalRotation.eulerAngles.z);
+            body.transform.localRotation = Quaternion.Slerp(body.transform.localRotation, bodyTargetRotation, Time.deltaTime * 50f);
 
-            // If movement input is pressed, rotate the character to face the movement direction
-            if (positionToLookAt == Vector3.zero) return;
-
-            // Calculate the target rotation based on the movement direction
-            Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
-
-            // Smoothly interpolate the character's rotation towards the target rotation
-            transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, RotationFactorPerFrame * Time.deltaTime);
+            // Assign negative of the Vertical component of the look direction to the x-axis rotation of the weapon.
+            var weaponLocalRotation = _weaponController.CurrentWeapon.transform.localRotation;
+            var weaponTargetRotation = Quaternion.Euler(-lookDirection.y, weaponLocalRotation.eulerAngles.y, weaponLocalRotation.eulerAngles.z);
+            // Quaternion.clam
+            _weaponController.CurrentWeapon.transform.localRotation = Quaternion.Slerp(weaponLocalRotation, weaponTargetRotation, Time.deltaTime * 50f);
         }
     }
 }
