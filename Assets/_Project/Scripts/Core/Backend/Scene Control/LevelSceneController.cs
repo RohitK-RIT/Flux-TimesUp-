@@ -28,7 +28,13 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
         private void Update()
         {
             // Check if the player presses the pause key (Escape in this case)
-            if (Keyboard.current[Key.M].wasPressedThisFrame)
+            if (
+#if UNITY_EDITOR
+                Keyboard.current[Key.M].wasPressedThisFrame
+#else
+                Keyboard.current[Key.Escape].wasPressedThisFrame
+#endif
+                )
             {
                 if (_isPaused)
                     Resume();
