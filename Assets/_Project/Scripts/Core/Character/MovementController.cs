@@ -66,6 +66,12 @@ namespace _Project.Scripts.Core.Character
             _characterController = GetComponent<CharacterController>();
         }
 
+        private void Start()
+        {
+            // Set the look direction to the forward direction of the body.
+            LookDirection = new Vector2(body.forward.x, body.forward.z);
+        }
+
         private void Update()
         {
             // Handle movement and look.
