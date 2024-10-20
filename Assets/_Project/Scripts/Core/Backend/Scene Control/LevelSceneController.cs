@@ -37,17 +37,24 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
             }
 
             if (player.CurrentHealth <= 0) // Check if the player is dead
-            {
-                // Show the game over UI
-                loosePage.SetActive(true);
-                Time.timeScale = 0f; // Freeze the game
-            }
+                GameOver(false);
             else if (Array.TrueForAll(enemies, enemy => enemy.CurrentHealth <= 0)) // Check if all enemies are dead.
+                GameOver(true);
+        }
+        
+        private void GameOver(bool win)
+        {
+            Cursor.visible = true; // Show the cursor
+            Cursor.lockState = CursorLockMode.None; // Unlock the cursor
+            if (win)
             {
-                // Show the game over UI
                 winPage.SetActive(true);
-                Time.timeScale = 0f; // Freeze the game
             }
+            else
+            {
+                loosePage.SetActive(true);
+            }
+            Time.timeScale = 0f; // Freeze the game
         }
 
         // Call this function to resume the game
