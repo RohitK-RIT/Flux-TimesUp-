@@ -25,12 +25,12 @@ Transform:
   m_GameObject: {fileID: 1054744739635253348}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.262, z: 1.135}
+  m_LocalPosition: {x: 0, y: 0.26199996, z: 1.135}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3139061449344179694}
-  m_Father: {fileID: 6952407069893139989}
+  m_Father: {fileID: 3136263382672430508}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2443093282919742094
 GameObject:
@@ -64,6 +64,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2085943989864831246}
+  - {fileID: 3569496227156943954}
   m_Father: {fileID: 6952407069893139989}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1430144350240127690
@@ -149,7 +150,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3136263382672430508}
-  - {fileID: 3569496227156943954}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &8445589689361633642
@@ -192,6 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveDirection: {x: 0, y: 0}
   body: {fileID: 3136263382672430508}
+  weaponParent: {fileID: 3569496227156943954}
   moveSpeed: 5
   lookDirection: {x: 0, y: 0}
 --- !u!114 &3157371613708155280
