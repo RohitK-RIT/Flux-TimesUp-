@@ -14,14 +14,5 @@ namespace _Project.Scripts.Core.Character
         public float reloadSpeed;
         public float aimAccuracy;
         public int cooldown;
-        
-        private void Awake()
-        {
-            // Initialize current health to max health when the game starts
-        }
-
-        
-        
-        
     }
 }

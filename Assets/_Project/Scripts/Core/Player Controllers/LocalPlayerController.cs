@@ -13,7 +13,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Component that handles player input.
         /// </summary>
         private LocalInputController _localInputController;
-        
+
         // This will go in player info eventually.
         private const float AimSensitivity = 0.1f;
 
@@ -26,30 +26,30 @@ namespace _Project.Scripts.Core.Player_Controllers
         private void OnEnable()
         {
             // Subscribe to input events
-            _localInputController.OnMoveInputUpdated += UpdateMoveDirection;
+            _localInputController.OnMoveInputUpdated += SetMoveInput;
 
             _localInputController.OnAttackInputBegan += BeginAttack;
             _localInputController.OnAttackInputEnded += EndAttack;
 
-            _localInputController.OnLookInputUpdated += LookInputUpdated;
+            _localInputController.OnLookInputUpdated += SetLookInput;
         }
 
         private void OnDisable()
         {
             // Unsubscribe from input events
-            _localInputController.OnMoveInputUpdated -= UpdateMoveDirection;
+            _localInputController.OnMoveInputUpdated -= SetMoveInput;
 
             _localInputController.OnAttackInputBegan -= BeginAttack;
             _localInputController.OnAttackInputEnded -= EndAttack;
 
-            _localInputController.OnLookInputUpdated -= LookInputUpdated;
+            _localInputController.OnLookInputUpdated -= SetLookInput;
         }
 
         /// <summary>
         /// Update the player's look direction.
         /// </summary>
         /// <param name="lookInput"></param>
-        protected override void LookInputUpdated(Vector2 lookInput)
+        protected override void SetLookInput(Vector2 lookInput)
         {
             MovementController.LookDirection += lookInput * AimSensitivity;
         }

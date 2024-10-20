@@ -1,5 +1,7 @@
+using System;
 using _Project.Scripts.Core.Character.Weapon_Controller;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Character
 {
@@ -7,26 +9,26 @@ namespace _Project.Scripts.Core.Character
     /// This class is responsible for moving the character based on the movement input.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class MovementController : MonoBehaviour
+    public class MovementController : CharacterComponent
     {
         /// <summary>
         /// The direction the player is looking in.
         /// </summary>
         public Vector2 LookDirection
         {
-            get => lookDirection;
+            get => _lookDirection;
             set
             {
                 // Clamp the vertical look direction to prevent the player from looking too far up or down.
                 var clampedValue = new Vector2(value.x, Mathf.Clamp(value.y, -90f, 90f));
-                lookDirection = clampedValue;
+                _lookDirection = clampedValue;
             }
         }
 
         /// <summary>
         /// The direction the player is moving in.
         /// </summary>
-        [HideInInspector] public Vector2 moveDirection;
+        [NonSerialized] public Vector2 MoveInput;
 
         /// <summary>
         /// Body of the player.
@@ -48,12 +50,15 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         private CharacterController _characterController;
 
-        // this is a hack to get the weapon controller to move the current weapon to the correct position. To be removed.
+        /// <summary>
+        /// The direction the player is moving in.
+        /// </summary>
+        private Vector2 _moveDirection;
 
         /// <summary>
         /// The direction the player is looking in.
         /// </summary>
-        [SerializeField] private Vector2 lookDirection;
+        private Vector2 _lookDirection;
 
         private void Awake()
         {
@@ -74,10 +79,12 @@ namespace _Project.Scripts.Core.Character
         private void HandleMovement()
         {
             // If movement input is zero then return.
-            if (moveDirection == Vector2.zero) return;
+            if (MoveInput == Vector2.zero) return;
 
             // Assign horizontal and vertical inputs to the movement vector
-            var currentMovement = new Vector3(moveDirection.x, 0.0f, moveDirection.y);
+            var currentMovement = (body.right * MoveInput.x + body.forward * MoveInput.y) * PlayerController.CharacterStats.movementSpeed;
+            
+            // Can add jump here if needed by modifying the y component of the movement vector. 
 
             // Move the character via the character controller.
             _characterController.Move(currentMovement * (moveSpeed * Time.deltaTime));
@@ -88,21 +95,14 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         private void HandleLook()
         {
-            // float mouseX = Input.GetAxis("Mouse X");  // Horizontal look (yaw)
-            // float mouseY = Input.GetAxis("Mouse Y");  // Vertical look (pitch)
-            // if (mouseX != 0 || mouseY != 0)
-            // {
-            //     LookDirection = new Vector2(lookDirection.x + mouseX, lookDirection.y - mouseY);
-            // }
             // Assign Horizontal component of the look direction to the y-axis rotation of the body.
             var bodyLocalRotation = body.transform.localRotation;
-            var bodyTargetRotation = Quaternion.Euler(bodyLocalRotation.eulerAngles.x, lookDirection.x, bodyLocalRotation.eulerAngles.z);
+            var bodyTargetRotation = Quaternion.Euler(bodyLocalRotation.eulerAngles.x, _lookDirection.x, bodyLocalRotation.eulerAngles.z);
             body.transform.localRotation = Quaternion.Slerp(body.transform.localRotation, bodyTargetRotation, Time.deltaTime * 50f);
 
             // Assign negative of the Vertical component of the look direction to the x-axis rotation of the weapon.
             var weaponLocalRotation = weaponParent.localRotation;
-            var weaponTargetRotation = Quaternion.Euler(-lookDirection.y, weaponLocalRotation.eulerAngles.y, weaponLocalRotation.eulerAngles.z);
-            // Quaternion.clam
+            var weaponTargetRotation = Quaternion.Euler(-_lookDirection.y, weaponLocalRotation.eulerAngles.y, weaponLocalRotation.eulerAngles.z);
             weaponParent.localRotation = Quaternion.Slerp(weaponLocalRotation, weaponTargetRotation, Time.deltaTime * 50f);
         }
     }

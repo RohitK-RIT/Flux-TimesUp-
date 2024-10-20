@@ -940,6 +940,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5744057397268360987}
+  - component: {fileID: 2673218121630239007}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -969,6 +970,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -50.440186, y: -28.372803}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2673218121630239007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4119309460457582721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbc54e37a1624a043b497934dd4c13b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 9140819831849532665}
+  currAmmo: {fileID: 2398764979154721602}
+  maxAmmo: {fileID: 6631621857437910848}
+  player: {fileID: 0}
 --- !u!1 &4569622778529757031
 GameObject:
   m_ObjectHideFlags: 0
