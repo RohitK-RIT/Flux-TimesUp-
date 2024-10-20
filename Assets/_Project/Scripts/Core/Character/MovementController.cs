@@ -85,6 +85,12 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         private void HandleLook()
         {
+            float mouseX = Input.GetAxis("Mouse X");  // Horizontal look (yaw)
+            float mouseY = Input.GetAxis("Mouse Y");  // Vertical look (pitch)
+            if (mouseX != 0 || mouseY != 0)
+            {
+                LookDirection = new Vector2(lookDirection.x + mouseX, lookDirection.y - mouseY);
+            }
             // Assign Horizontal component of the look direction to the y-axis rotation of the body.
             var bodyLocalRotation = body.transform.localRotation;
             var bodyTargetRotation = Quaternion.Euler(bodyLocalRotation.eulerAngles.x, lookDirection.x, bodyLocalRotation.eulerAngles.z);

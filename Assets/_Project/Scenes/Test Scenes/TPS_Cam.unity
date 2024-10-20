@@ -642,7 +642,7 @@ Transform:
   m_GameObject: {fileID: 374337518}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 2.5619998, z: -7.865}
+  m_LocalPosition: {x: 0.4, y: 2.3, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1108,6 +1108,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 743999598}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &743999601 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 588117779325310496, guid: 17c6ba7bd432cec44ad7c1df2d0ef065,
+    type: 3}
+  m_PrefabInstance: {fileID: 743999598}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a6d5758395c849f18c1b34ac8c212bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &829471015
 GameObject:
   m_ObjectHideFlags: 3
@@ -1194,7 +1206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0.1, y: 0.5, z: 0.3}
-  ShoulderOffset: {x: 0.4, y: 1, z: -7}
+  ShoulderOffset: {x: 0.4, y: 0.5, z: -5}
   VerticalArmLength: 0.27
   CameraSide: 1
   CameraDistance: 2
@@ -1448,6 +1460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1355895791}
   - component: {fileID: 1355895790}
+  - component: {fileID: 1355895792}
   m_Layer: 0
   m_Name: ThirdPersonCam
   m_TagString: Untagged
@@ -1510,13 +1523,32 @@ Transform:
   m_GameObject: {fileID: 1355895789}
   serializedVersion: 2
   m_LocalRotation: {x: 0.21947533, y: 0.07805168, z: -0.017618053, w: 0.9723313}
-  m_LocalPosition: {x: 0.4, y: 2.5619998, z: -7.865}
+  m_LocalPosition: {x: 0.4, y: 2.3, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 829471016}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1355895792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355895789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f98fcc6d26fbb694198367e025f33e1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followTarget: {fileID: 743999600}
+  movementController: {fileID: 743999601}
+  distance: 2
+  height: 3
+  rotationSpeed: 5
+  minPitch: 40
+  maxPitch: 340
 --- !u!1 &1446898616
 GameObject:
   m_ObjectHideFlags: 3
