@@ -21,6 +21,13 @@ namespace _Project.Scripts.UI
         {
             SceneSystem.Instance.LoadScene(new SceneLoadRequest(gameSceneName, LoadSceneMode.Single));
         }
+        /// <summary>
+        /// Called when the quit button is clicked
+        /// </summary>
+        public void OnQuitButtonClicked()
+        {
+            Application.Quit();
+        }
     }
 }
     
