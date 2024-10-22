@@ -1,0 +1,72 @@
+using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
+using UnityEngine;
+
+namespace _Project.Scripts.Core.Player_Controllers
+{
+    /// <summary>
+    /// This class is responsible for handling the player's input.
+    /// </summary>
+    [RequireComponent(typeof(LocalInputController))]
+    public class LocalPlayerController : PlayerController
+    {
+        /// <summary>
+        /// Component that handles player input.
+        /// </summary>
+        private LocalInputController _localInputController;
+
+        // This will go in player info eventually.
+        private const float AimSensitivity = 0.1f;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _localInputController = GetComponent<LocalInputController>();
+        }
+
+        private void OnEnable()
+        {
+            // Subscribe to input events
+            _localInputController.OnMoveInputUpdated += SetMoveInput;
+
+            _localInputController.OnAttackInputBegan += BeginAttack;
+            _localInputController.OnAttackInputEnded += EndAttack;
+
+            _localInputController.OnLookInputUpdated += SetLookInput;
+        }
+
+        private void OnDisable()
+        {
+            // Unsubscribe from input events
+            _localInputController.OnMoveInputUpdated -= SetMoveInput;
+
+            _localInputController.OnAttackInputBegan -= BeginAttack;
+            _localInputController.OnAttackInputEnded -= EndAttack;
+
+            _localInputController.OnLookInputUpdated -= SetLookInput;
+        }
+
+        /// <summary>
+        /// Update the player's look direction.
+        /// </summary>
+        /// <param name="lookInput"></param>
+        protected override void SetLookInput(Vector2 lookInput)
+        {
+            MovementController.LookDirection += lookInput * AimSensitivity;
+        }
+
+#if UNITY_EDITOR
+        //to be removed
+        [ContextMenu("Take Damage")]
+        public void TakeDamage()
+        {
+            TakeDamage(10);
+        }
+
+        [ContextMenu("Heal")]
+        public void Heal()
+        {
+            Heal(10);
+        }
+#endif
+    }
+}

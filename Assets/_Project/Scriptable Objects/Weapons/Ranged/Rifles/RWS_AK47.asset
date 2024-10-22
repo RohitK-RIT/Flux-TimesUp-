@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RWS_AK47
   m_EditorClassIdentifier: 
   weaponID: AK47
+  weaponType: 0
   weaponName: AK 47
   damage: 30
   range: 75
@@ -22,5 +23,8 @@ MonoBehaviour:
   spread: 0.05
   recoil: 0.01
   magazineSize: 30
+  maxBulletCount: 240
   burstAmount: 3
   burstDuration: 0.01
+  trailSpeed: 100
+  missDistance: 100

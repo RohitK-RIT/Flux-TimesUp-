@@ -34,6 +34,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Magazine size of the weapon.
         /// </summary>
         public int MagazineSize => magazineSize;
+        
+        /// <summary>
+        /// Max bullet count of the weapon.
+        /// </summary>
+        public int MaxBulletCount => maxBulletCount;
 
         /// <summary>
         /// Burst amount of the weapon.
@@ -45,6 +50,16 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         public float BurstDuration => burstDuration;
 
+        /// <summary>
+        /// Trail speed of the weapon.
+        /// </summary>
+        public float TrailSpeed => trailSpeed;
+
+        /// <summary>
+        /// Miss distance of the weapon.
+        /// </summary>
+        public float MissDistance => missDistance;
+
         [Header("Ranged Weapon Stats")] [SerializeField]
         private FireModes[] fireModes = { Ranged.FireModes.Auto };
 
@@ -52,7 +67,10 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         [SerializeField] private float spread;
         [SerializeField] private float recoil;
         [SerializeField] private int magazineSize;
+        [SerializeField] private int maxBulletCount;
         [SerializeField] private int burstAmount;
         [SerializeField] private float burstDuration;
+        [SerializeField] private float trailSpeed = 100f;
+        [SerializeField] private float missDistance = 100f;
     }
 }
