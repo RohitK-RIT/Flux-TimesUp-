@@ -474,7 +474,6 @@ GameObject:
   - component: {fileID: 613014874}
   - component: {fileID: 613014873}
   - component: {fileID: 613014872}
-  - component: {fileID: 613014876}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -565,22 +564,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &613014876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 613014871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbc54e37a1624a043b497934dd4c13b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBar: {fileID: 1928084413}
-  currAmmo: {fileID: 1676385195}
-  maxAmmo: {fileID: 816492344}
-  player: {fileID: 676259525}
 --- !u!1001 &676259524
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -659,30 +642,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e559bbdc9b3e45678a387662f720f87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &816492344 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6631621857437910848, guid: 2a784e46f5e48c042bd7896f14b38ee2,
-    type: 3}
-  m_PrefabInstance: {fileID: 8161958559731965396}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1676385195 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2398764979154721602, guid: 2a784e46f5e48c042bd7896f14b38ee2,
-    type: 3}
-  m_PrefabInstance: {fileID: 8161958559731965396}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1823688464
@@ -907,18 +866,6 @@ MonoBehaviour:
       enableFptlForForwardOpaque: 0
       enableBigTilePrepass: 0
       isFptlEnabled: 0
---- !u!114 &1928084413 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9140819831849532665, guid: 2a784e46f5e48c042bd7896f14b38ee2,
-    type: 3}
-  m_PrefabInstance: {fileID: 8161958559731965396}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2013410473
 GameObject:
   m_ObjectHideFlags: 1
@@ -1081,10 +1028,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 613014875}
     m_Modifications:
+    - target: {fileID: 2673218121630239007, guid: 2a784e46f5e48c042bd7896f14b38ee2,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 676259525}
     - target: {fileID: 4119309460457582721, guid: 2a784e46f5e48c042bd7896f14b38ee2,
         type: 3}
       propertyPath: m_Name
       value: HUD
+      objectReference: {fileID: 0}
+    - target: {fileID: 5473192654503416129, guid: 2a784e46f5e48c042bd7896f14b38ee2,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5473192654503416129, guid: 2a784e46f5e48c042bd7896f14b38ee2,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5744057397268360987, guid: 2a784e46f5e48c042bd7896f14b38ee2,
         type: 3}

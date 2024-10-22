@@ -12,7 +12,7 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
         /// <summary>
         /// Name of the loading scene.
         /// </summary>
-        [SerializeField] private string loadingSceneName;
+        [SerializeField] private string loadingSceneName = "Loading Scene";
 
         /// <summary>
         /// Coroutine for loading a scene.

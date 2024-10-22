@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Character.Weapon_Controller
 {
-    public sealed class WeaponController : MonoBehaviour
+    public sealed class WeaponController : CharacterComponent
     {
         [SerializeField] private Weapon currentWeapon;
         // [SerializeField] private LoadoutConfig loadoutConfig;

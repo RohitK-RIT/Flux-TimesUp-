@@ -47,6 +47,10 @@ namespace _Project.Scripts.Core.Player_Controllers
             MovementController = GetComponent<MovementController>();
             WeaponController = GetComponent<WeaponController>();
 
+            MovementController.Initialize(this);
+            WeaponController.Initialize(this);
+
+            // Initialize the player's health
             currentHealth = CharacterStats.maxHealth;
         }
 
@@ -54,9 +58,9 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Update the player's movement direction.
         /// </summary>
         /// <param name="direction">direction in which player should move</param>
-        protected void UpdateMoveDirection(Vector2 direction)
+        protected void SetMoveInput(Vector2 direction)
         {
-            MovementController.moveDirection = direction;
+            MovementController.MoveInput = direction;
         }
 
         /// <summary>
@@ -102,7 +106,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Function to handle the character's death.
         /// </summary>
-        private void Die()
+        protected virtual void Die()
         {
             // Handle the character's death
             Debug.Log("Character has died");
@@ -112,6 +116,6 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Update the player's look direction.
         /// </summary>
         /// <param name="lookInput">Look input</param>
-        protected abstract void LookInputUpdated(Vector2 lookInput);
+        protected abstract void SetLookInput(Vector2 lookInput);
     }
 }

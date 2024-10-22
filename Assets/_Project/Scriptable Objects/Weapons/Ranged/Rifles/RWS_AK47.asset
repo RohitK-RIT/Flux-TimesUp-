@@ -23,7 +23,7 @@ MonoBehaviour:
   spread: 0.05
   recoil: 0.01
   magazineSize: 30
-  maxBulletCount: 120
+  maxBulletCount: 240
   burstAmount: 3
   burstDuration: 0.01
   trailSpeed: 100
