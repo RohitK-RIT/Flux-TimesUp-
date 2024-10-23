@@ -90,16 +90,18 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         private void HandleLook()
         {
+            // Horizontal rotation
             var horizontalTargetLocation = new Vector3(aimTransform.position.x, body.position.y, aimTransform.position.z);
             var horizontalDirection = (horizontalTargetLocation - transform.position).normalized;
-
             body.forward = Vector3.Lerp(body.forward, horizontalDirection, Time.deltaTime * 20f);
 
-            var dy = aimTransform.position.y - weaponParent.position.y;
-            var dz = aimTransform.position.z - weaponParent.position.z;
-            var verticalAngle = Mathf.Asin(dy / dz) * Mathf.Rad2Deg;
-            var weaponTargetRotation = Quaternion.Euler(-verticalAngle, weaponParent.localRotation.eulerAngles.y, weaponParent.localRotation.eulerAngles.z);
+            // Vertical rotation
+            var direction = aimTransform.position - weaponParent.position;
+            var horizontalDistance = new Vector3(direction.x, 0f, direction.z).magnitude;
+            var verticalDistance = direction.y;
+            var pitchAngle = Mathf.Atan2(verticalDistance, horizontalDistance) * Mathf.Rad2Deg;
 
+            var weaponTargetRotation = Quaternion.Euler(-pitchAngle, 0f, 0f);
             weaponParent.localRotation = Quaternion.Slerp(weaponParent.localRotation, weaponTargetRotation, Time.deltaTime * 20f);
         }
     }
