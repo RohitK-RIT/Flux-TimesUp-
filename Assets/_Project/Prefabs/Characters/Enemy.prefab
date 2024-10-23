@@ -162,6 +162,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55640ec42f1b34384b0d8b7c5ad45bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 4083512241357911797}
+  aimTransform: {fileID: 8629311464888197687}
   attackRange: 5
   attackCooldown: 5
 --- !u!114 &779967032003919024
@@ -178,3 +180,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterStats: {fileID: 11400000, guid: 72c3c8a87f21a3a4894c6a42c8bd0fbc, type: 2}
   currentHealth: 0
+--- !u!4 &8629311464888197687 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7272411107724378478, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1381956723922281305}
+  m_PrefabAsset: {fileID: 0}

@@ -6,7 +6,7 @@ namespace _Project.Scripts.Core.Player_Controllers
     /// <summary>
     /// This class is responsible for handling the player's input.
     /// </summary>
-    [RequireComponent(typeof(LocalInputController))]
+    [RequireComponent(typeof(LocalInputController), typeof(CameraController))]
     public class LocalPlayerController : PlayerController
     {
         /// <summary>
@@ -14,13 +14,20 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// </summary>
         private LocalInputController _localInputController;
 
+        private CameraController _cameraController;
+
         // This will go in player info eventually.
-        private const float AimSensitivity = 0.1f;
+        [SerializeField] private float aimSensitivity = 1f;
 
         protected override void Awake()
         {
             base.Awake();
+
             _localInputController = GetComponent<LocalInputController>();
+            _cameraController = GetComponent<CameraController>();
+
+            _localInputController.Initialize(this);
+            _cameraController.Initialize(this);
         }
 
         private void OnEnable()
@@ -49,9 +56,9 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Update the player's look direction.
         /// </summary>
         /// <param name="lookInput"></param>
-        protected override void SetLookInput(Vector2 lookInput)
+        private void SetLookInput(Vector2 lookInput)
         {
-            MovementController.LookDirection += lookInput * AimSensitivity;
+            _cameraController.LookInput = lookInput * aimSensitivity;
         }
 
 #if UNITY_EDITOR

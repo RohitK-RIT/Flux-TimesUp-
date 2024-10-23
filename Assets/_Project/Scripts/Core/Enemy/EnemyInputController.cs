@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using _Project.Scripts.Core.Character.Weapon_Controller;
+using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
 using UnityEngine;
 
@@ -10,7 +10,6 @@ namespace _Project.Scripts.Core.Enemy
     public class EnemyInputController : InputController
     {
         public override event Action<Vector2> OnMoveInputUpdated;
-        public override event Action<Vector2> OnLookInputUpdated;
         public override event Action OnAttackInputBegan;
         public override event Action OnAttackInputEnded;
 
@@ -24,13 +23,13 @@ namespace _Project.Scripts.Core.Enemy
         private bool _isCooldownActive; // Tracks if cooldown is active
         private Coroutine _attackCoroutine; // Holds the attack coroutine instance
 
-        // This is hack, remove later.
-        private WeaponController _weaponController;
-
-        private void Awake()
+        public override void Initialize(PlayerController playerController)
         {
+            base.Initialize(playerController);
+
             _playerDetection = GetComponent<PlayerDetection>();
-            _weaponController = GetComponent<WeaponController>();
+
+            _playerDetection.Initialize(playerController);
         }
 
         private void Update()
@@ -45,19 +44,19 @@ namespace _Project.Scripts.Core.Enemy
             _currentTarget = null;
         }
 
-        
+
         // Method to find the closest player and check if the closest player is in conical field of view
         private void FindPlayer()
         {
             // get the closest player
             Transform closestPlayer = _playerDetection.FindClosestPlayerInRange();
-            
+
             // check if the closest player is within the conical FOV
             if (closestPlayer && _playerDetection.IsPlayerInCone(closestPlayer))
             {
                 // Rotate towards the player
                 RotateTowardsPlayer(closestPlayer);
-                
+
                 // Try to attack the player
                 TryAttack(closestPlayer);
             }
@@ -98,7 +97,7 @@ namespace _Project.Scripts.Core.Enemy
         private void StartAttack()
         {
             if (_isAttacking || _isCooldownActive) return; // Prevent multiple attacks or attacks during cooldown
-            
+
             _isAttacking = true;
             _attackCoroutine = StartCoroutine(AttackCoroutine());
         }
@@ -107,7 +106,7 @@ namespace _Project.Scripts.Core.Enemy
         private void StopAttack()
         {
             if (!_isAttacking) return;
-            
+
             // Invoke an event to notify end attack
             OnAttackInputEnded?.Invoke();
             if (_attackCoroutine != null)
@@ -140,34 +139,9 @@ namespace _Project.Scripts.Core.Enemy
         private void RotateTowardsPlayer(Transform player)
         {
             if (!player)
-                return;
-            
-            // Calculate the direction from the enemy to the player
-            Vector3 directionToPlayer = (player.position - transform.position).normalized;
-            
-            // Extract horizontal direction (Y-axis) from the directionToPlayer
-            Vector3 horizontalDirection = new Vector3(directionToPlayer.x, 0, directionToPlayer.z);
-            
-            // Calculate the vertical angle (X-axis rotation)
-            float verticalAngle = Mathf.Atan2(directionToPlayer.y, horizontalDirection.magnitude) * Mathf.Rad2Deg;
-            
-            // Calculate the final rotation needed to align the weapon's forward direction with the player's position
-            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
-            
-            // Rotate the weapon towards the player (vertical aiming)
-            if (_weaponController && _weaponController.CurrentWeapon)
-            {
-                // Get the current local rotation of the weapon and update the pitch (X-axis) based on the calculated vertical angle
-                var weaponLocalRotation = _weaponController.CurrentWeapon.transform.localRotation;
-                Quaternion weaponTargetRotation = Quaternion.Euler(-verticalAngle, weaponLocalRotation.eulerAngles.y, weaponLocalRotation.eulerAngles.z);
-                _weaponController.CurrentWeapon.transform.localRotation = Quaternion.Slerp(weaponLocalRotation, weaponTargetRotation, Time.deltaTime * 5f);
-            }
-            
-            // Invoke an event to notify that the look direction (rotation) has been updated
-            OnLookInputUpdated?.Invoke(new Vector2(targetRotation.eulerAngles.y, verticalAngle));
-            
-            
-            
+                PlayerController.MovementController.AimTransform.position = PlayerController.MovementController.Body.forward * 1000f;
+            else
+                PlayerController.MovementController.AimTransform.position = player.position;
         }
     }
 }

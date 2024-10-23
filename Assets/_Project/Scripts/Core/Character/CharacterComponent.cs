@@ -7,7 +7,7 @@ namespace _Project.Scripts.Core.Character
     {
         public PlayerController PlayerController { get; private set; }
 
-        public void Initialize(PlayerController playerController)
+        public virtual void Initialize(PlayerController playerController)
         {
             PlayerController = playerController;
         }
