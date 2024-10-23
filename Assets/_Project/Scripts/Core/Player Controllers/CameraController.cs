@@ -1,6 +1,7 @@
 ﻿using System;
 using _Project.Scripts.Core.Character;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Player_Controllers
 {
@@ -13,15 +14,14 @@ namespace _Project.Scripts.Core.Player_Controllers
 
         [SerializeField] private Transform cinemachineCameraTarget;
 
-        [SerializeField] private Transform aimTransform;
+        [SerializeField] private Camera mainCamera;
 
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
-        private Camera _camera;
 
         private void Start()
         {
-            _camera = Camera.main;
+            mainCamera = Camera.main;
         }
 
         private void LateUpdate()
@@ -52,8 +52,12 @@ namespace _Project.Scripts.Core.Player_Controllers
             cinemachineCameraTarget.rotation = Quaternion.Euler(_cinemachineTargetPitch, _cinemachineTargetYaw, 0.0f);
 
             var screenCenter = new Vector3(0.5f, 0.5f, 0f);
-            if (_camera && Physics.Raycast(_camera.ViewportPointToRay(screenCenter), out var hit, 1000f))
-                aimTransform.position = hit.point;
+            if (mainCamera)
+            {
+                PlayerController.MovementController.AimTransform.position = Physics.Raycast(mainCamera.ViewportPointToRay(screenCenter), out var hit, 1000f)
+                    ? hit.point
+                    : mainCamera.transform.position + mainCamera.transform.forward * 50f;
+            }
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
