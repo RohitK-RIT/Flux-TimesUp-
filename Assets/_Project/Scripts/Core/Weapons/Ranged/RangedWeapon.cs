@@ -145,15 +145,15 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             if (_reloading)
                 return;
 
-            // var spreadOffset = new Vector3(Random.Range(-stats.Spread, stats.Spread),
-            //     Random.Range(-stats.Spread, stats.Spread), 0); // Add some spread to the bullet.
-            // var recoilOffset = new Vector3(0, Random.Range(0, stats.Recoil), 0); // Add some recoil to the bullet.
-            // _recoilFactor = Mathf.Clamp01(_recoilFactor + 0.1f); // Increase the recoil factor.
+            var spreadOffset = new Vector3(Random.Range(-stats.Spread, stats.Spread),
+                Random.Range(-stats.Spread, stats.Spread), 0); // Add some spread to the bullet.
+            var recoilOffset = new Vector3(0, Random.Range(0, stats.Recoil), 0); // Add some recoil to the bullet.
+            _recoilFactor = Mathf.Clamp01(_recoilFactor + 0.1f); // Increase the recoil factor.
 
             // Get the direction of the bullet.
             var fireDirection = muzzle.forward;
-            // fireDirection = (fireDirection + spreadOffset).normalized;
-            // fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
+            fireDirection = (fireDirection + spreadOffset).normalized;
+            fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
 
             // Raycast to check if the bullet hits something. If it does, play the trail to that point, else play the trail to the miss distance.
             if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance))
