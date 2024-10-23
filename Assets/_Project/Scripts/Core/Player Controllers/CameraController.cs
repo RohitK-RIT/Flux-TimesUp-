@@ -19,6 +19,8 @@ namespace _Project.Scripts.Core.Player_Controllers
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
 
+        private const float Threshold = 0.01f;
+
         private void Start()
         {
             mainCamera = Camera.main;
@@ -34,15 +36,20 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// </summary>
         private void RotateCamera()
         {
+            if (!mainCamera)
+                return;
+
             // if there is an input and camera position is not fixed
+            if (LookInput.sqrMagnitude >= Threshold)
+            {
+                //Don't multiply mouse input by Time.deltaTime;
+                // float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
+                const float deltaTimeMultiplier = 1.0f;
 
-            //Don't multiply mouse input by Time.deltaTime;
-            // float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-            const float deltaTimeMultiplier = 1.0f;
-
-            _cinemachineTargetYaw += LookInput.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += LookInput.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += LookInput.x * deltaTimeMultiplier;
+                _cinemachineTargetPitch += LookInput.y * deltaTimeMultiplier;
+            }
 
             // clamp our rotations so our values are limited 360 degrees
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
@@ -51,13 +58,9 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Cinemachine will follow this target
             cinemachineCameraTarget.rotation = Quaternion.Euler(_cinemachineTargetPitch, _cinemachineTargetYaw, 0.0f);
 
-            var screenCenter = new Vector3(0.5f, 0.5f, 0f);
-            if (mainCamera)
-            {
-                PlayerController.MovementController.AimTransform.position = Physics.Raycast(mainCamera.ViewportPointToRay(screenCenter), out var hit, 1000f)
-                    ? hit.point
-                    : mainCamera.transform.position + mainCamera.transform.forward * 50f;
-            }
+            PlayerController.MovementController.AimTransform.position = Physics.Raycast(mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f)), out var hit, 1000f)
+                ? hit.point
+                : mainCamera.transform.position + mainCamera.transform.forward * 50f;
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
