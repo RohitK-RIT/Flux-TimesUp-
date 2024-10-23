@@ -11,7 +11,10 @@ namespace _Project.Scripts.Core.Enemy
         protected override void Awake()
         {
             base.Awake();
+            
             _enemyInputController = GetComponent<EnemyInputController>();
+            
+            _enemyInputController.Initialize(this);
         }
 
         private void OnEnable()
@@ -19,9 +22,6 @@ namespace _Project.Scripts.Core.Enemy
             // Subscribe to attack input events on enable
             _enemyInputController.OnAttackInputBegan += BeginAttack;
             _enemyInputController.OnAttackInputEnded += EndAttack;
-
-            // Subscribe to look input updates on enable
-            _enemyInputController.OnLookInputUpdated += SetLookInput;
         }
 
         private void OnDisable()
@@ -30,15 +30,6 @@ namespace _Project.Scripts.Core.Enemy
             _enemyInputController.Disable();
             _enemyInputController.OnAttackInputBegan -= BeginAttack;
             _enemyInputController.OnAttackInputEnded -= EndAttack;
-
-            // Subscribe to look input updates on disable
-            _enemyInputController.OnLookInputUpdated -= SetLookInput;
-        }
-
-        protected override void SetLookInput(Vector2 lookInput)
-        {
-            // Update the look direction in the MovementController based on the new input.
-            MovementController.LookDirection = lookInput;
         }
 
         protected override void Die()
