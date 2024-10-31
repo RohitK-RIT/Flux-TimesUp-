@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3d22cffc77194ba1885f044e07aad85f, type: 3}
-  m_Name: RWS_Pistol3
+  m_Name: RWS_Laser
   m_EditorClassIdentifier: 
-  weaponID: Pistol3
-  weaponType: 1
-  weaponName: TBD
-  damage: 22
-  range: 75
-  attackSpeed: 3
+  weaponID: Laser
+  weaponType: 0
+  weaponName: XFLW-39
+  damage: 35
+  range: 200
+  attackSpeed: 5.5
   fireModes: 00000000
-  reloadTime: 2
-  spread: 0.02
-  recoil: 0.02
-  magazineSize: 8
-  maxBulletCount: 40
+  reloadTime: 3
+  spread: 0
+  recoil: 0
+  magazineSize: 40
+  maxBulletCount: 240
   burstAmount: 3
-  burstDuration: 0.1
+  burstDuration: 0.01
   trailSpeed: 100
   missDistance: 100
