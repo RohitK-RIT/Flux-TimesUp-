@@ -19,6 +19,13 @@ namespace _Project.Scripts.UI
 
         public async void OnJoinButtonClicked()
         {
+            if (string.IsNullOrEmpty(lobbyCodeInputField.text) || lobbyCodeInputField.text.Length <= 4)
+            {
+                statusText.text = "Invalid lobby code";
+                statusText.color = Color.red;
+                
+                return;
+            }
             // Start the game in client mode
             var status = await NetworkSystem.Instance.JoinSession(lobbyCodeInputField.text);
             if (status.Item1)
