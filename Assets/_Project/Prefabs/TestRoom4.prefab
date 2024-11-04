@@ -251,7 +251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6907614621501186345}
   m_Layer: 0
-  m_Name: TestRoomC
+  m_Name: TestRoom4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -465,7 +465,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5829781883090653684}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
