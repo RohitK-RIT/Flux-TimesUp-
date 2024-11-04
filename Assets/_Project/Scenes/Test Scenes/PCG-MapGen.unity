@@ -443,6 +443,7 @@ GameObject:
   - component: {fileID: 601565725}
   - component: {fileID: 601565724}
   - component: {fileID: 601565723}
+  - component: {fileID: 601565727}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -532,11 +533,34 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_LocalScale: {x: 60, y: 1, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &601565727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601565722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f81d25617d49e34484e3864fa3a3503, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomPrefabs:
+  - {fileID: 3831200746998603493, guid: a1d4089891d11424788d4940c4daa0ce, type: 3}
+  - {fileID: 3831200746998603493, guid: 0bf89b746f9e94bf7b31b43c0d8e92a3, type: 3}
+  - {fileID: 3831200746998603493, guid: 8b1c6c3a320a24837a8ba4e579c7e400, type: 3}
+  - {fileID: 3831200746998603493, guid: 0d55bfcaf852d4f7381c038dbe57f3cf, type: 3}
+  - {fileID: 3831200746998603493, guid: 0bf89b746f9e94bf7b31b43c0d8e92a3, type: 3}
+  - {fileID: 3831200746998603493, guid: 44a1e7321df3e480cbf157de6df1f5c5, type: 3}
+  - {fileID: 3831200746998603493, guid: a1d4089891d11424788d4940c4daa0ce, type: 3}
+  bossRoomPrefab: {fileID: 3831200746998603493, guid: 0ae2886a9b27543158cfa4f0b58603a4,
+    type: 3}
+  playerCount: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
