@@ -7,10 +7,21 @@ namespace _Project.Scripts.UI
         // Flag to check if the page is active
         private bool _isActive;
 
-        // Method to show the page
-        public abstract void Show();
+        /// <summary>
+        /// Method to show the page
+        /// </summary>
+        public virtual void Show()
+        {
+            gameObject.SetActive(true);
+        }
 
-        public abstract void Hide();
+        /// <summary>
+        /// Method to hide the page
+        /// </summary>
+        public virtual void Hide()
+        {
+            gameObject.SetActive(false);
+        }
 
         // Optional: Initialization logic for the page
         public virtual void Initialize()

@@ -7,15 +7,6 @@ namespace _Project.Scripts.UI
     public class MainMenu : UIPage
     {
         [SerializeField] private string gameSceneName;
-        public override void Show()
-        {
-            gameObject.SetActive(true);
-        }
-
-        public override void Hide()
-        {
-            gameObject.SetActive(false);
-        }
         
         public void OnStartButtonClicked()
         {
