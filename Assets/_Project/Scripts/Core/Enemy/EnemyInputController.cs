@@ -3,6 +3,7 @@ using System.Collections;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace _Project.Scripts.Core.Enemy
 {
@@ -22,6 +23,24 @@ namespace _Project.Scripts.Core.Enemy
         private bool _isAttacking; // Tracks if an attack is in progress
         private bool _isCooldownActive; // Tracks if cooldown is active
         private Coroutine _attackCoroutine; // Holds the attack coroutine instance
+        
+        private Transform _closestPlayer;
+        
+        [SerializeField]private Transform targetPlayerTest; // for testing purpose currently providing the transform of the player directly
+        private float _updateSpeed = 0.1f; // how frequently to calculate path based on targets transform position
+        private NavMeshAgent _enemy; // navmesh agent
+
+        private void Awake()
+        {
+            _enemy = GetComponentInParent<NavMeshAgent>(); 
+            // assigning the navmesh agent from the empty parent game object
+            // empty game object is created to align the pivot of the enemy game object and the obstacle avoidance
+        }
+
+        private void Start()
+        {
+            StartCoroutine(FollowPlayer());
+        }
 
         public override void Initialize(PlayerController playerController)
         {
@@ -49,16 +68,16 @@ namespace _Project.Scripts.Core.Enemy
         private void FindPlayer()
         {
             // get the closest player
-            Transform closestPlayer = _playerDetection.FindClosestPlayerInRange();
+            _closestPlayer = _playerDetection.FindClosestPlayerInRange();
 
             // check if the closest player is within the conical FOV
-            if (closestPlayer && _playerDetection.IsPlayerInCone(closestPlayer))
+            if (_closestPlayer && _playerDetection.IsPlayerInCone(_closestPlayer))
             {
                 // Rotate towards the player
-                RotateTowardsPlayer(closestPlayer);
+                RotateTowardsPlayer(_closestPlayer);
 
                 // Try to attack the player
-                TryAttack(closestPlayer);
+                TryAttack(_closestPlayer);
             }
             else if (_currentTarget)
             {
@@ -142,6 +161,37 @@ namespace _Project.Scripts.Core.Enemy
                 PlayerController.MovementController.AimTransform.position = PlayerController.MovementController.Body.forward * 1000f;
             else
                 PlayerController.MovementController.AimTransform.position = player.position;
+        }
+
+        // Method to move the enemy towards the player
+        // Currently it's not having the expected movement behavior that why I have commented the setDestination which is responsible for the movement of the enemy
+        private IEnumerator FollowPlayer()
+        {
+            WaitForSeconds wait = new WaitForSeconds(_updateSpeed);
+            while (enabled)
+            {
+                //_enemy.SetDestination(targetPlayerTest.position);
+                yield return wait;
+            }
+        }
+        
+        // to visualize the path towards the player
+        private void OnDrawGizmos()
+        {
+            if (_enemy == null || targetPlayerTest == null) return;
+
+            NavMeshPath path = new NavMeshPath();
+            _enemy.CalculatePath(targetPlayerTest.position, path);
+
+            // Draw the calculated path
+            if (path.corners.Length > 1)
+            {
+                for (int i = 0; i < path.corners.Length - 1; i++)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawLine(path.corners[i], path.corners[i + 1]);
+                }
+            }
         }
     }
 }
