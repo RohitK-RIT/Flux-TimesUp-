@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1054744739635253348}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.26199996, z: 1.135}
+  m_LocalPosition: {x: 0, y: 0.26199996, z: 1.5718701}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -150,6 +150,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3136263382672430508}
+  - {fileID: 7272411107724378478}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &8445589689361633642
@@ -190,11 +191,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6d5758395c849f18c1b34ac8c212bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveDirection: {x: 0, y: 0}
+  aimTransform: {fileID: 7272411107724378478}
   body: {fileID: 3136263382672430508}
   weaponParent: {fileID: 3569496227156943954}
   moveSpeed: 5
-  lookDirection: {x: 0, y: 0}
 --- !u!114 &3157371613708155280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,6 +291,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8419592419465679896
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7272411107724378478}
+  m_Layer: 0
+  m_Name: Aim Transform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7272411107724378478
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8419592419465679896}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 9.18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6952407069893139989}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1433911828329293053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -313,6 +344,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 0.86999995
+      objectReference: {fileID: 0}
+    - target: {fileID: 4068554712008636691, guid: aa63e3324934bac429ef80736eae850f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.4349999
       objectReference: {fileID: 0}
     - target: {fileID: 4068554712008636691, guid: aa63e3324934bac429ef80736eae850f,
         type: 3}

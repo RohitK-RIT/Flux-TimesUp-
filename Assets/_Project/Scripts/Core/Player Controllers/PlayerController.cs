@@ -13,7 +13,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Component that handles movement.
         /// </summary>
-        protected MovementController MovementController { get; private set; }
+        public MovementController MovementController { get; private set; }
 
         /// <summary>
         /// Property to access the weapon controller.
@@ -111,11 +111,5 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Handle the character's death
             Debug.Log("Character has died");
         }
-
-        /// <summary>
-        /// Update the player's look direction.
-        /// </summary>
-        /// <param name="lookInput">Look input</param>
-        protected abstract void SetLookInput(Vector2 lookInput);
     }
 }

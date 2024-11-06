@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using _Project.Scripts.Core.Character;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Enemy
 {
-    public class PlayerDetection : MonoBehaviour
+    public class PlayerDetection : CharacterComponent
     {
         public float detectionRange = 10f;  // The distance at which the enemy detects the player
         public float fieldOfViewAngle = 45f; // The conical angle at which the enemy detects the player
@@ -12,7 +13,6 @@ namespace _Project.Scripts.Core.Enemy
         
         private readonly List<Transform> _playersInRange = new List<Transform>();  // List of players currently in range
         
-        [SerializeField] private Transform body; // To get the reference of the body
         void Update()
         {
             // Find all players in range
@@ -103,11 +103,11 @@ namespace _Project.Scripts.Core.Enemy
         {
             if (!player)
                 return false; 
-            Vector3 directionToPlayer = player.position - body.position;
+            Vector3 directionToPlayer = player.position - PlayerController.MovementController.Body.position;
             directionToPlayer.y = 0;  // Only rotate on the horizontal plane
 
             // Angle between enemy's forward direction and the direction to the player
-            float angleToPlayer = Vector3.Angle(body.forward, directionToPlayer.normalized);
+            float angleToPlayer = Vector3.Angle(PlayerController.MovementController.Body.forward, directionToPlayer.normalized);
 
             // Check if the player is within the field of view angle
             return angleToPlayer <= fieldOfViewAngle;

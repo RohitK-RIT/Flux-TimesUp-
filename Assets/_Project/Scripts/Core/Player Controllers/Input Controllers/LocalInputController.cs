@@ -17,7 +17,7 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         /// <summary>
         /// Event that is called when the player looks around.
         /// </summary>
-        public override event Action<Vector2> OnLookInputUpdated;
+        public event Action<Vector2> OnLookInputUpdated;
 
         /// <summary>
         /// Event that is called when the player starts attacking.

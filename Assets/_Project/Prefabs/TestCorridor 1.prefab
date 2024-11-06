@@ -43,7 +43,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5792328203459121119}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -315,6 +315,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.9399998
@@ -378,6 +382,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.82
@@ -440,6 +448,10 @@ PrefabInstance:
     - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
@@ -578,6 +590,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.05
@@ -715,6 +731,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.05
@@ -777,6 +797,10 @@ PrefabInstance:
     - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1063,6 +1087,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.9300003
@@ -1125,6 +1153,10 @@ PrefabInstance:
     - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1263,6 +1295,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.05
@@ -1325,6 +1361,10 @@ PrefabInstance:
     - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1611,6 +1651,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.9399998
@@ -1822,6 +1866,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.9300003
@@ -1885,6 +1933,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.9
@@ -1947,6 +1999,10 @@ PrefabInstance:
     - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_Name
       value: SM_Bld_Castle_Wall_01 (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 147672, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 446930, guid: 77ad9661321c6e84280c8fbe32492c06, type: 3}
       propertyPath: m_LocalPosition.x

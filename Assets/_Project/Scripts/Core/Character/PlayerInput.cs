@@ -127,7 +127,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""id"": ""c642d864-52ec-41e9-ab99-023c897554b2"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""InvertVector2(invertX=false),ScaleVector2(x=0.05,y=0.05)"",
                     ""groups"": ""Keyboad"",
                     ""action"": ""Look"",
                     ""isComposite"": false,
