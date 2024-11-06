@@ -47,7 +47,13 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
             else if (Array.TrueForAll(enemies, enemy => enemy.CurrentHealth <= 0)) // Check if all enemies are dead.
                 GameOver(true);
         }
-        
+
+        private void OnDestroy()
+        {
+            // This is to prevent the game from freezing after returning from the menu scene.
+            Time.timeScale = 1f; // Unfreeze the game;
+        }
+
         private void GameOver(bool win)
         {
             Cursor.visible = true; // Show the cursor
