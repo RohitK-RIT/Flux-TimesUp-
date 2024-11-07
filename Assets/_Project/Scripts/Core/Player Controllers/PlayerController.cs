@@ -62,14 +62,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             MovementController.MoveInput = direction;
         }
-
-        /// <summary>
-        /// Function to equip the player's ability.
-        /// </summary>
-        protected void AbilityEquipped()
-        {
-            Debug.Log("Ability Equipped");
-        }
+        
         /// <summary>
         /// Begin the player's attack.
         /// </summary>

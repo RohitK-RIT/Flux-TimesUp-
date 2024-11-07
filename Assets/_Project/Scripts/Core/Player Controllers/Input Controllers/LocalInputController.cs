@@ -32,7 +32,7 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         /// <summary>
         /// Event that is called when the player equips ability.
         /// </summary>
-        public event Action OnAbilityEquipped;
+        public override event Action OnAbilityEquipped;
 
         /// <summary>
         /// Component that handles player input Unity API calls.

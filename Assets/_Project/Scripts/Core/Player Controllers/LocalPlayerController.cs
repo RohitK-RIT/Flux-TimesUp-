@@ -66,6 +66,15 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             _cameraController.LookInput = lookInput * aimSensitivity;
         }
+        
+        /// <summary>
+        /// Function to equip the player's ability.
+        /// </summary>
+        private void AbilityEquipped()
+        {
+            WeaponController.OnAbilityEquiped();
+            Debug.Log("Ability Equipped");
+        }
 
 #if UNITY_EDITOR
         //to be removed
