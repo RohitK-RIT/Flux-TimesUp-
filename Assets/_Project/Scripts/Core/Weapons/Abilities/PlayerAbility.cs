@@ -9,6 +9,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
     {
         protected override IEnumerator OnAttack()
         {
+            Debug.Log("Player is using the ability!!");
             // start attack
             yield return null;
         }
