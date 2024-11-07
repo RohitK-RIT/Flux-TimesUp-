@@ -64,6 +64,13 @@ namespace _Project.Scripts.Core.Player_Controllers
         }
 
         /// <summary>
+        /// Function to equip the player's ability.
+        /// </summary>
+        protected void AbilityEquipped()
+        {
+            Debug.Log("Ability Equipped");
+        }
+        /// <summary>
         /// Begin the player's attack.
         /// </summary>
         protected void BeginAttack()
@@ -78,7 +85,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             WeaponController.EndAttack();
         }
-
+        
         /// <summary>
         /// Function to take damage by reducing the stat's value.
         /// </summary>

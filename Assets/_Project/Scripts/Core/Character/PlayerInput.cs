@@ -53,6 +53,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EquipAbility"",
+                    ""type"": ""Button"",
+                    ""id"": ""65709bd6-921b-42fe-b98e-c6f5d1b58f7d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +141,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""06101149-2cf9-443c-bd04-e444fb0a30b3"",
+                    ""path"": ""<Keyboard>/#(E)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboad"",
+                    ""action"": ""EquipAbility"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -154,6 +174,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_PlayerControl_Move = m_PlayerControl.FindAction("Move", throwIfNotFound: true);
         m_PlayerControl_Look = m_PlayerControl.FindAction("Look", throwIfNotFound: true);
         m_PlayerControl_Attack = m_PlayerControl.FindAction("Attack", throwIfNotFound: true);
+        m_PlayerControl_EquipAbility = m_PlayerControl.FindAction("EquipAbility", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -218,6 +239,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerControl_Move;
     private readonly InputAction m_PlayerControl_Look;
     private readonly InputAction m_PlayerControl_Attack;
+    private readonly InputAction m_PlayerControl_EquipAbility;
     public struct PlayerControlActions
     {
         private @PlayerInput m_Wrapper;
@@ -225,6 +247,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_PlayerControl_Move;
         public InputAction @Look => m_Wrapper.m_PlayerControl_Look;
         public InputAction @Attack => m_Wrapper.m_PlayerControl_Attack;
+        public InputAction @EquipAbility => m_Wrapper.m_PlayerControl_EquipAbility;
         public InputActionMap Get() { return m_Wrapper.m_PlayerControl; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -243,6 +266,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
+            @EquipAbility.started += instance.OnEquipAbility;
+            @EquipAbility.performed += instance.OnEquipAbility;
+            @EquipAbility.canceled += instance.OnEquipAbility;
         }
 
         private void UnregisterCallbacks(IPlayerControlActions instance)
@@ -256,6 +282,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
+            @EquipAbility.started -= instance.OnEquipAbility;
+            @EquipAbility.performed -= instance.OnEquipAbility;
+            @EquipAbility.canceled -= instance.OnEquipAbility;
         }
 
         public void RemoveCallbacks(IPlayerControlActions instance)
@@ -296,5 +325,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnEquipAbility(InputAction.CallbackContext context);
     }
 }

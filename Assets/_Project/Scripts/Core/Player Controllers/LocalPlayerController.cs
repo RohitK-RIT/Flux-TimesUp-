@@ -39,6 +39,9 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnAttackInputEnded += EndAttack;
 
             _localInputController.OnLookInputUpdated += SetLookInput;
+            
+            // Subscribe to ability events
+            _localInputController.OnAbilityEquipped += AbilityEquipped;
         }
 
         private void OnDisable()
@@ -50,6 +53,9 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnAttackInputEnded -= EndAttack;
 
             _localInputController.OnLookInputUpdated -= SetLookInput;
+            
+            // Unsubscribe from ability events
+            _localInputController.OnAbilityEquipped -= AbilityEquipped;
         }
 
         /// <summary>
