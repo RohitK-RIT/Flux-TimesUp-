@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using _Project.Scripts.Core.Backend.Scene_Control;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
@@ -10,11 +11,16 @@ namespace _Project.Scripts.Core.Backend
 {
     public class NetworkSystem : BaseSystem<NetworkSystem>, INetworkRunnerCallbacks
     {
-        private NetworkRunner _runner;
+        protected override bool IsPersistent => true;
+        public List<SessionInfo> SessionList { get; private set; } = new();
+        public SessionInfo CurrentSessionInfo => Runner.SessionInfo;
+        public bool IsSceneAuthority => Runner.IsSceneAuthority;
+
+        internal NetworkRunner Runner { get; private set; }
 
         private NetworkRunner CreateRunner()
         {
-            var runnerGameObject = new GameObject("NetworkRunner");
+            var runnerGameObject = new GameObject("Network Runner");
             runnerGameObject.transform.SetParent(transform);
             var runner = runnerGameObject.AddComponent<NetworkRunner>();
             runner.ProvideInput = true;
@@ -22,10 +28,10 @@ namespace _Project.Scripts.Core.Backend
             return runner;
         }
 
-        public async Task<string> CreateSession()
+        public async Task<(bool, string)> CreateSession()
         {
-            _runner = CreateRunner();
-            _runner.ProvideInput = true;
+            Runner = CreateRunner();
+            Runner.ProvideInput = true;
 
             // Create the NetworkSceneInfo from the current scene
             var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
@@ -36,21 +42,28 @@ namespace _Project.Scripts.Core.Backend
             }
 
             // Start or join (depends on gamemode) a session with a specific name
-            var result = await _runner.StartGame(new StartGameArgs
+            var result = await Runner.StartGame(new StartGameArgs
             {
                 GameMode = GameMode.Host,
                 PlayerCount = 3,
                 Scene = scene,
-                SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
+                SceneManager = SceneSystem.Instance.NetworkSceneManager
             });
 
-            return result.Ok ? _runner.SessionInfo.Name : result.ShutdownReason.ToString();
+            // If the session was created successfully, return true and the session name
+            if (result.Ok)
+                return (true, Runner.SessionInfo.Name);
+
+            // If the session was not created successfully, shutdown the runner and return false with the error message
+            await Runner.Shutdown();
+            Destroy(Runner.gameObject);
+            return (false, result.ErrorMessage);
         }
 
         public async Task<(bool, string)> JoinSession(string sessionName)
         {
-            _runner = CreateRunner();
-            _runner.ProvideInput = true;
+            Runner = CreateRunner();
+            Runner.ProvideInput = true;
 
             // Create the NetworkSceneInfo from the current scene
             var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
@@ -61,7 +74,7 @@ namespace _Project.Scripts.Core.Backend
             }
 
             // Join a session with a specific name
-            var result = await _runner.StartGame(new StartGameArgs
+            var result = await Runner.StartGame(new StartGameArgs
             {
                 GameMode = GameMode.Client,
                 SessionName = sessionName,
@@ -69,7 +82,14 @@ namespace _Project.Scripts.Core.Backend
                 SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
             });
 
-            return (result.Ok, result.Ok ? _runner.SessionInfo.Name : result.ShutdownReason.ToString());
+            // If the session was joined successfully, return true and the session name
+            if (result.Ok)
+                return (true, Runner.SessionInfo.Name);
+
+            // If the session was not joined successfully, shutdown the runner and return false with the error message
+            await Runner.Shutdown();
+            Destroy(Runner.gameObject);
+            return (false, result.ErrorMessage);
         }
 
         public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player) { }
@@ -96,7 +116,11 @@ namespace _Project.Scripts.Core.Backend
 
         public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
 
-        public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
+        public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
+        {
+            if (runner == Runner)
+                SessionList = sessionList;
+        }
 
         public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
 
