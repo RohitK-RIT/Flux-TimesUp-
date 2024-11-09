@@ -168,9 +168,23 @@ namespace _Project.Scripts.Core.Enemy
         private IEnumerator FollowPlayer()
         {
             WaitForSeconds wait = new WaitForSeconds(_updateSpeed);
+            float stoppingDistance = 5f; // Adjust this value to control how close the enemy gets to the player before stopping.
+
             while (enabled)
             {
-                //_enemy.SetDestination(targetPlayerTest.position);
+                float distanceToPlayer = Vector3.Distance(_enemy.transform.position, targetPlayerTest.position);
+
+                if (distanceToPlayer > stoppingDistance)
+                {
+                    // If the enemy is farther than the stopping distance, set the destination to the player.
+                    _enemy.SetDestination(targetPlayerTest.position);
+                }
+                else
+                {
+                    // If the enemy is within the stopping distance, stop moving.
+                    _enemy.ResetPath();
+                }
+
                 yield return wait;
             }
         }
