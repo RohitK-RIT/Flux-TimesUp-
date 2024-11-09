@@ -31,6 +31,15 @@
                     "processors": "",
                     "interactions": "Press",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "EquipAbility",
+                    "type": "Button",
+                    "id": "65709bd6-921b-42fe-b98e-c6f5d1b58f7d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -108,6 +117,17 @@
                     "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.05,y=0.05)",
                     "groups": "Keyboad",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "06101149-2cf9-443c-bd04-e444fb0a30b3",
+                    "path": "<Keyboard>/#(E)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboad",
+                    "action": "EquipAbility",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

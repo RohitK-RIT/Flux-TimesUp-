@@ -62,7 +62,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             MovementController.MoveInput = direction;
         }
-
+        
         /// <summary>
         /// Begin the player's attack.
         /// </summary>
@@ -78,7 +78,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             WeaponController.EndAttack();
         }
-
+        
         /// <summary>
         /// Function to take damage by reducing the stat's value.
         /// </summary>

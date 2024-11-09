@@ -17,3 +17,4 @@ MonoBehaviour:
   reloadSpeed: 1.2
   aimAccuracy: 0.9
   cooldown: 18
+  playerAbilityType: 1

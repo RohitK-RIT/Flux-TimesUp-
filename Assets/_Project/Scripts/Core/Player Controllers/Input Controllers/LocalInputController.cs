@@ -28,6 +28,11 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         /// Event that is called when the player stops attacking.
         /// </summary>
         public override event Action OnAttackInputEnded;
+        
+        /// <summary>
+        /// Event that is called when the player equips ability.
+        /// </summary>
+        public override event Action OnAbilityEquipped;
 
         /// <summary>
         /// Component that handles player input Unity API calls.
@@ -54,7 +59,10 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
             // Look Input Events
             _playerInput.PlayerControl.Look.performed += OnLookInputReceived;
             _playerInput.PlayerControl.Look.canceled += OnLookInputReceived;
-
+            
+            // Equip Ability Input Events
+            _playerInput.PlayerControl.EquipAbility.performed += OnEquipAbilityInput;
+            
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
@@ -77,6 +85,9 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
             // Look Input Events
             _playerInput.PlayerControl.Look.performed -= OnLookInputReceived;
             _playerInput.PlayerControl.Look.canceled -= OnLookInputReceived;
+            
+            // Equip Ability Input Events
+            _playerInput.PlayerControl.EquipAbility.performed -= OnEquipAbilityInput;
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -91,6 +102,20 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         }
 
         // Input Event Handlers
+
+        #region Equip Ability Input
+        
+        /// <summary>
+        /// This method is called when the player equips an ability.
+        /// </summary>
+        /// <param name="context">struct that holds the action context</param>
+        private void OnEquipAbilityInput(InputAction.CallbackContext context)
+        {
+            // Invoke the OnEquipAbilityInput event.
+            OnAbilityEquipped?.Invoke();
+        }
+
+        #endregion
 
         #region Movement Input
 
