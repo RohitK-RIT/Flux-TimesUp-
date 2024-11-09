@@ -94,7 +94,7 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
             // Load the requested scene. If the scene is not found, log an error and return.
             sceneOp = NetworkSystem.Instance.Runner.LoadScene(request.SceneName, request.Mode);
 
-            if (sceneOp.IsValid)
+            if (!sceneOp.IsValid)
             {
                 Debug.LogError($"Failed to load scene {request.SceneName}");
                 return;
