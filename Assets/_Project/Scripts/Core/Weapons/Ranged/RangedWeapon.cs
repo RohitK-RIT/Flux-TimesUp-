@@ -164,7 +164,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
 
             // Raycast to check if the bullet hits something. If it does, play the trail to that point, else play the trail to the miss distance.
-            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance))
+            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance, CurrentPlayerController.OpponentLayer))
             {
                 StartCoroutine(PlayTrail(muzzle.position, hit.point));
                 var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
