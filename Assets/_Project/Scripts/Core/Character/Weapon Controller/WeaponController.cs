@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Abilities;
 using UnityEngine;
@@ -9,14 +11,19 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
     {
         [SerializeField] private Weapon currentWeapon;
         [SerializeField] private Weapon[] weapons;
-        // [SerializeField] private LoadoutConfig loadoutConfig;
         public Weapon CurrentWeapon => currentWeapon;
 
         private int _currentWeaponIndex = 0;
 
         private void Start()
         {
-            // LoadWeapon(loadoutConfig.PrimaryWeaponID);
+            // Find the first weapon in the weapons array that is of type PlayerAbility and cast it to PlayerAbility
+            var playerAbility = weapons.First(weapon => weapon is PlayerAbility) as PlayerAbility;
+            // If a PlayerAbility was found, set its currentPlayerController to the PlayerController casted as LocalPlayerController
+            if(playerAbility)
+            {
+                playerAbility.currentPlayerController = PlayerController as LocalPlayerController;
+            }
         }
 
         private void LoadWeapon(string weaponID)
@@ -24,7 +31,7 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
             // Load the weapon
         }
 
-        public void OnAbilityEquiped()
+        public void OnAbilityEquipped()
         {
             currentWeapon.gameObject.SetActive(false);
             var playerAbility = weapons.First(weapon => weapon is PlayerAbility);
@@ -35,6 +42,17 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
             }
             currentWeapon = playerAbility;
             currentWeapon.gameObject.SetActive(true);
+            switch (PlayerController.CharacterStats.playerAbilityType)
+            {
+                case PlayerAbilityType.Shield:
+                    (playerAbility as PlayerAbility)?.UseShield();
+                    break;
+                case PlayerAbilityType.Heal:
+                    (playerAbility as PlayerAbility)?.UseHeal();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void BeginAttack()

@@ -72,7 +72,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// </summary>
         private void AbilityEquipped()
         {
-            WeaponController.OnAbilityEquiped();
+            WeaponController.OnAbilityEquipped();
             Debug.Log("Ability Equipped");
         }
 
