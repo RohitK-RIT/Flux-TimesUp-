@@ -14,8 +14,8 @@ TagManager:
   - Wall
   - Walkable
   - Non-Walkable
-  - 
-  - 
+  - Player
+  - Enemy
   - 
   - 
   - 
