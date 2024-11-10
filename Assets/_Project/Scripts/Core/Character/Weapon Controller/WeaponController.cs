@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Abilities;
-using _Project.Scripts.Core.Weapons.Ranged;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Character.Weapon_Controller
@@ -12,19 +10,36 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
     public sealed class WeaponController : CharacterComponent
     {
         [SerializeField] private Weapon currentWeapon;
+        [SerializeField] private PlayerAbility currentAbility;
         [SerializeField] private Weapon[] weapons;
-        public Weapon CurrentWeapon => currentWeapon;
+
+        public Weapon CurrentWeapon
+        {
+            get => currentWeapon;
+            private set
+            {
+                if (!value)
+                {
+                    Debug.LogError("Weapon not found");
+                    return;
+                }
+
+                currentWeapon.gameObject.SetActive(false);
+                currentWeapon = value;
+                currentWeapon.gameObject.SetActive(true);
+            }
+        }
+
+        public PlayerAbility CurrentAbility => currentAbility;
 
         private int _currentWeaponIndex = 0;
 
         private void Start()
         {
-            // Find the first weapon in the weapons array that is of type PlayerAbility and cast it to PlayerAbility
-            var playerAbility = weapons.First(weapon => weapon is PlayerAbility) as PlayerAbility;
-            // If a PlayerAbility was found, set its currentPlayerController to the PlayerController casted as LocalPlayerController
-            if(playerAbility)
+            // Set its currentPlayerController to the PlayerController casted as LocalPlayerController
+            if (CurrentAbility)
             {
-                playerAbility.currentPlayerController = PlayerController as LocalPlayerController;
+                CurrentAbility.currentPlayerController = PlayerController as LocalPlayerController;
             }
         }
 
@@ -35,44 +50,23 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
 
         public void OnAbilityEquipped()
         {
-            currentWeapon.gameObject.SetActive(false);
-            var playerAbility = weapons.First(weapon => weapon is PlayerAbility);
-            if(!playerAbility)
+            if (!CurrentAbility)
             {
                 Debug.LogError("Ability not found");
                 return;
             }
-            currentWeapon = playerAbility;
-            currentWeapon.gameObject.SetActive(true);
-            
-            switch (PlayerController.CharacterStats.playerAbilityType)
-            {
-                case PlayerAbilityType.Shield:
-                {
-                    var shieldAbility = playerAbility as ShieldAbility;
-                    shieldAbility?.OnEquip();
-                    StartCoroutine(HandleWeaponSwitch(shieldAbility));
-                    shieldAbility?.UseShield();
-                    break;
-                }
-                case PlayerAbilityType.Heal:
-                    var healAbility = playerAbility as HealAbility;
-                    healAbility?.UseHeal();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+
+            CurrentWeapon = CurrentAbility;
+            CurrentAbility?.OnEquip();
+
+            StartCoroutine(HandleWeaponSwitch(CurrentAbility));
         }
-        
+
         private IEnumerator HandleWeaponSwitch(PlayerAbility ability)
         {
-            Debug.Log("Switched back to weapon");
             // Handle weapon switch
             yield return new WaitUntil(() => ability.Used);
-            currentWeapon.gameObject.SetActive(false);
-            currentWeapon = weapons[_currentWeaponIndex];
-            currentWeapon.gameObject.SetActive(true);
-            Debug.Log("madarchod");
+            CurrentWeapon = weapons[_currentWeaponIndex];
         }
 
         public void BeginAttack()

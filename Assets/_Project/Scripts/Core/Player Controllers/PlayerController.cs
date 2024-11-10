@@ -1,6 +1,5 @@
 ﻿using _Project.Scripts.Core.Character;
 using _Project.Scripts.Core.Character.Weapon_Controller;
-using _Project.Scripts.Core.Weapons.Abilities;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
@@ -84,9 +83,8 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Function to take damage by reducing the stat's value.
         /// </summary>
         /// <param name="damageAmount"></param>
-        public void TakeDamage(float damageAmount)
+        public virtual void TakeDamage(float damageAmount)
         {
-            if (ShieldAbility.HasShield) return;
             currentHealth -= damageAmount;
             currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
             if (currentHealth <= 0)

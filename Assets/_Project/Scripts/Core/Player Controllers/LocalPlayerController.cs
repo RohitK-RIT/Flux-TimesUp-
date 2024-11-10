@@ -1,4 +1,5 @@
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
+using _Project.Scripts.Core.Weapons.Abilities;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
@@ -14,6 +15,9 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// </summary>
         private LocalInputController _localInputController;
 
+        /// <summary>
+        /// Component that handles the player's camera.
+        /// </summary>
         private CameraController _cameraController;
 
         // This will go in player info eventually.
@@ -39,7 +43,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnAttackInputEnded += EndAttack;
 
             _localInputController.OnLookInputUpdated += SetLookInput;
-            
+
             // Subscribe to ability events
             _localInputController.OnAbilityEquipped += AbilityEquipped;
         }
@@ -53,7 +57,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnAttackInputEnded -= EndAttack;
 
             _localInputController.OnLookInputUpdated -= SetLookInput;
-            
+
             // Unsubscribe from ability events
             _localInputController.OnAbilityEquipped -= AbilityEquipped;
         }
@@ -66,7 +70,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             _cameraController.LookInput = lookInput * aimSensitivity;
         }
-        
+
         /// <summary>
         /// Function to equip the player's ability.
         /// </summary>
@@ -74,6 +78,15 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             WeaponController.OnAbilityEquipped();
             Debug.Log("Ability Equipped");
+        }
+
+        public override void TakeDamage(float damageAmount)
+        {
+            var shield = WeaponController.CurrentAbility as ShieldAbility;
+            if (shield && shield.IsActive)
+                return;
+
+            base.TakeDamage(damageAmount);
         }
 
 #if UNITY_EDITOR

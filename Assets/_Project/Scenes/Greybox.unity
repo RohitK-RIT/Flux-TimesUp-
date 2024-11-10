@@ -6836,11 +6836,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8461625080883018540, guid: 17c6ba7bd432cec44ad7c1df2d0ef065,
-        type: 3}
-      propertyPath: weapons.Array.data[1]
-      value: 
-      objectReference: {fileID: 580519835}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6862,18 +6857,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e559bbdc9b3e45678a387662f720f87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &580519835 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1526130195872154010, guid: 17c6ba7bd432cec44ad7c1df2d0ef065,
-    type: 3}
-  m_PrefabInstance: {fileID: 580519832}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a683a0b376464cb49c038c0d677c6df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &596283625
