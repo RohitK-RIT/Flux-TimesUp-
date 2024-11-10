@@ -8,6 +8,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 263803625396803918, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 967680648425271652, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1054744739635253348, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1149288553018810302, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -28,6 +43,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.006
       objectReference: {fileID: 0}
+    - target: {fileID: 2443093282919742094, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3136263382672430508, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
         type: 3}
       propertyPath: m_LocalScale.y
@@ -43,10 +63,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 3286456909812954785, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3569496227156943954, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6895713774396260466, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6952407069893139989, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
         type: 3}
@@ -98,6 +128,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8419592419465679896, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8445589689361633642, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
         type: 3}
       propertyPath: m_Height
@@ -120,12 +155,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 779967032003919024}
   m_SourcePrefab: {fileID: 100100000, guid: c45c0f2125881ab4abfe55c2eb6f5ec0, type: 3}
---- !u!4 &4083512241357911797 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3136263382672430508, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
-    type: 3}
-  m_PrefabInstance: {fileID: 1381956723922281305}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &4518910825798227448 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3286456909812954785, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
@@ -148,8 +177,7 @@ MonoBehaviour:
   fieldOfViewAngle: 45
   layerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
-  body: {fileID: 4083512241357911797}
+    m_Bits: 512
 --- !u!114 &4088876135904891852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,10 +190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55640ec42f1b34384b0d8b7c5ad45bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  body: {fileID: 4083512241357911797}
-  aimTransform: {fileID: 8629311464888197687}
   attackRange: 5
   attackCooldown: 5
+  targetPlayerTest: {fileID: 0}
 --- !u!114 &779967032003919024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -179,10 +206,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterStats: {fileID: 11400000, guid: 72c3c8a87f21a3a4894c6a42c8bd0fbc, type: 2}
+  friendlyLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  opponentLayer:
+    serializedVersion: 2
+    m_Bits: 512
   currentHealth: 0
---- !u!4 &8629311464888197687 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7272411107724378478, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
-    type: 3}
-  m_PrefabInstance: {fileID: 1381956723922281305}
-  m_PrefabAsset: {fileID: 0}
