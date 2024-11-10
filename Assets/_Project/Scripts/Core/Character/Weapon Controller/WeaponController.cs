@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Abilities;
+using _Project.Scripts.Core.Weapons.Ranged;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Character.Weapon_Controller
@@ -42,17 +44,35 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
             }
             currentWeapon = playerAbility;
             currentWeapon.gameObject.SetActive(true);
+            
             switch (PlayerController.CharacterStats.playerAbilityType)
             {
                 case PlayerAbilityType.Shield:
-                    (playerAbility as PlayerAbility)?.UseShield();
+                {
+                    var shieldAbility = playerAbility as ShieldAbility;
+                    shieldAbility?.OnEquip();
+                    StartCoroutine(HandleWeaponSwitch(shieldAbility));
+                    shieldAbility?.UseShield();
                     break;
+                }
                 case PlayerAbilityType.Heal:
-                    (playerAbility as PlayerAbility)?.UseHeal();
+                    var healAbility = playerAbility as HealAbility;
+                    healAbility?.UseHeal();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+        
+        private IEnumerator HandleWeaponSwitch(PlayerAbility ability)
+        {
+            Debug.Log("Switched back to weapon");
+            // Handle weapon switch
+            yield return new WaitUntil(() => ability.Used);
+            currentWeapon.gameObject.SetActive(false);
+            currentWeapon = weapons[_currentWeaponIndex];
+            currentWeapon.gameObject.SetActive(true);
+            Debug.Log("madarchod");
         }
 
         public void BeginAttack()

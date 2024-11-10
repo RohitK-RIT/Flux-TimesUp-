@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Core.Character;
 using _Project.Scripts.Core.Character.Weapon_Controller;
+using _Project.Scripts.Core.Weapons.Abilities;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
@@ -85,6 +86,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <param name="damageAmount"></param>
         public void TakeDamage(float damageAmount)
         {
+            if (ShieldAbility.HasShield) return;
             currentHealth -= damageAmount;
             currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
             if (currentHealth <= 0)
