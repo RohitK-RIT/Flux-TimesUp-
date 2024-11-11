@@ -15,7 +15,7 @@ namespace _Project.Scripts.UI
         [SerializeField] public Slider healthBar;
         [SerializeField] public TMP_Text currAmmo;
         [SerializeField] public TMP_Text maxAmmo;
-        [SerializeField] public PlayerController player;
+        [SerializeField] public LocalPlayerController player;
 
         private void Start()
         {
@@ -41,17 +41,10 @@ namespace _Project.Scripts.UI
         // Updates the ammo display based on the player's current and total ammo
         private void UpdateAmmoDisplay()
         {
-            switch (player.WeaponController.CurrentWeapon)
-            {
-                case RangedWeapon currentRangedWeapon:
-                    currAmmo.text = currentRangedWeapon.CurrentAmmo.ToString();
-                    maxAmmo.text = currentRangedWeapon.MaxAmmo.ToString();
-                    break;
-                default:
-                    currAmmo.gameObject.SetActive(false);
-                    maxAmmo.gameObject.SetActive(false);
-                    break;
-            }
+            var currentRangedWeapon = player.WeaponController.CurrentWeapon as RangedWeapon;
+            if (!currentRangedWeapon) return;
+            currAmmo.text = currentRangedWeapon.CurrentAmmo.ToString();
+            maxAmmo.text = currentRangedWeapon.MaxAmmo.ToString();
         }
     }
 }
