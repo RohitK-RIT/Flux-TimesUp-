@@ -2,6 +2,7 @@
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Abilities;
+using _Project.Scripts.Core.Weapons.Ranged;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Character.Weapon_Controller
@@ -96,6 +97,15 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
             CurrentWeapon = CurrentAbility;
 
             StartCoroutine(HandleWeaponSwitch(CurrentAbility));
+        }
+        
+        /// <summary>
+        /// Reloads the current weapon.
+        /// </summary>
+        public void ReloadWeapon()
+        {
+            if(currentWeapon is RangedWeapon rangedWeapon)
+                rangedWeapon.OnReload();
         }
 
         /// <summary>
