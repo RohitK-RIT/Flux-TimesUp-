@@ -189,6 +189,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         public void OnReload()
         {
+            if(CurrentAmmo == stats.MagazineSize || _reloading || MaxAmmo == 0)
+                return;
             StartCoroutine(ReloadCoroutine());
         }
 
