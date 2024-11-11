@@ -79,7 +79,10 @@ namespace _Project.Scripts.Core.Player_Controllers
             WeaponController.OnAbilityEquipped();
             Debug.Log("Ability Equipped");
         }
-
+        /// <summary>
+        /// Overrides the TakeDamage method to include shield ability check.
+        /// </summary>
+        /// <param name="damageAmount">The amount of damage to be taken.</param>
         public override void TakeDamage(float damageAmount)
         {
             var shield = WeaponController.CurrentAbility as ShieldAbility;

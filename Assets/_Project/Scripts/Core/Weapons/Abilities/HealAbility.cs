@@ -3,10 +3,18 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons.Abilities
 {
+    /// <summary>
+    /// Represents the heal ability for the player.
+    /// </summary>
     public class HealAbility : PlayerAbility
     {
+        /// <summary>
+        /// The duration for which the shield ability remains active.
+        /// </summary>
         [SerializeField] private float abilityDuration;
-
+        /// <summary>
+        /// Called when the ability is equipped.
+        /// </summary>
         public override void OnEquip()
         {
             base.OnEquip();
