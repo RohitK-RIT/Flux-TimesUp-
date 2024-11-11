@@ -1,4 +1,5 @@
 using System.Collections;
+using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons
@@ -17,6 +18,16 @@ namespace _Project.Scripts.Core.Weapons
         /// Is the weapon currently attacking.
         /// </summary>
         protected bool Attacking { get; private set; }
+
+        /// <summary>
+        /// Current player controller.
+        /// </summary>
+        protected PlayerController CurrentPlayerController { get; private set; }
+
+        public virtual void OnEquip(PlayerController currentPlayerController)
+        {
+            CurrentPlayerController = currentPlayerController;
+        }
 
         /// <summary>
         /// Start attacking.

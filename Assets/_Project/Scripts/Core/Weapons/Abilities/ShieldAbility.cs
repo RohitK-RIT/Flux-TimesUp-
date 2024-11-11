@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons.Abilities
@@ -26,9 +27,9 @@ namespace _Project.Scripts.Core.Weapons.Abilities
         /// <summary>
         /// Called when the ability is equipped.
         /// </summary>
-        public override void OnEquip()
+        public override void OnEquip(PlayerController currentPlayerController)
         {
-            base.OnEquip();
+            base.OnEquip(currentPlayerController);
             UseShield();
             Used = true;
         }
@@ -43,11 +44,12 @@ namespace _Project.Scripts.Core.Weapons.Abilities
                 Debug.Log("Ability is on cooldown or already active.");
                 return;
             }
+
             SetShieldVisual(true);
             IsActive = true;
             _isAbilityActive = true;
             abilityDuration = 7f;
-            currentPlayerController.StartCoroutine(DeactivateAbility(abilityDuration));
+            CurrentPlayerController.StartCoroutine(DeactivateAbility(abilityDuration));
         }
 
         /// <summary>
@@ -61,7 +63,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
             Debug.Log("Ability deactivated!!");
             IsActive = false;
             SetShieldVisual(false);
-            currentPlayerController.StartCoroutine(StartCooldown());
+            CurrentPlayerController.StartCoroutine(StartCooldown());
         }
 
         /// <summary>

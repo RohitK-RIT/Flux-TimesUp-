@@ -31,15 +31,34 @@ namespace _Project.Scripts.Core.Player_Controllers
         public float CurrentHealth => currentHealth;
 
         /// <summary>
+        /// Property to access the friendly layer.
+        /// </summary>
+        public LayerMask FriendlyLayer => friendlyLayer;
+
+        /// <summary>
+        /// Property to access the enemy layer.
+        /// </summary>
+        public LayerMask OpponentLayer => opponentLayer;
+
+        /// <summary>
         /// Component that handles Character Stats.
         /// </summary>
         [SerializeField] private CharacterStats characterStats;
 
         /// <summary>
+        /// Layer mask for the friendly.
+        /// </summary>
+        [SerializeField] private LayerMask friendlyLayer;
+
+        /// <summary>
+        /// Layer mask for the enemy.
+        /// </summary>
+        [SerializeField] private LayerMask opponentLayer;
+
+        /// <summary>
         /// Player's current health.
         /// </summary>
         [SerializeField] private float currentHealth;
-
 
         protected virtual void Awake()
         {
@@ -63,6 +82,11 @@ namespace _Project.Scripts.Core.Player_Controllers
             MovementController.MoveInput = direction;
         }
         
+        protected virtual void SwitchWeapon(int direction)
+        {
+            WeaponController.SwitchWeapon(direction);
+        }
+
         /// <summary>
         /// Begin the player's attack.
         /// </summary>
@@ -78,7 +102,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             WeaponController.EndAttack();
         }
-        
+
         /// <summary>
         /// Function to take damage by reducing the stat's value.
         /// </summary>

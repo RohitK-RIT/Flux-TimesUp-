@@ -32,7 +32,7 @@ namespace _Project.Scripts.Core.Weapons
         /// <summary>
         /// Range of the weapon.
         /// </summary>
-        public int Range => range;
+        public float Range => range;
 
         /// <summary>
         /// Attack speed of the weapon.
@@ -45,7 +45,7 @@ namespace _Project.Scripts.Core.Weapons
         [SerializeField] private WeaponType weaponType;
         [SerializeField] private string weaponName;
         [SerializeField] private float damage;
-        [SerializeField] private int range;
+        [SerializeField] private float range;
         [SerializeField] private float attackSpeed;
     }
 }

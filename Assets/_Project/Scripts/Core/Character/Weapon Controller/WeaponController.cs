@@ -40,9 +40,10 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
                     return;
                 }
 
-                currentWeapon.gameObject.SetActive(false);
+                currentWeapon?.gameObject.SetActive(false);
                 currentWeapon = value;
-                currentWeapon.gameObject.SetActive(true);
+                currentWeapon?.gameObject.SetActive(true);
+                currentWeapon?.OnEquip(PlayerController);
             }
         }
 
@@ -58,11 +59,7 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// </summary>
         private void Start()
         {
-            // Set its currentPlayerController to the PlayerController casted as LocalPlayerController
-            if (CurrentAbility)
-            {
-                CurrentAbility.currentPlayerController = PlayerController as LocalPlayerController;
-            }
+            CurrentWeapon = weapons[_currentWeaponIndex];
         }
 
         /// <summary>
@@ -72,6 +69,17 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         private void LoadWeapon(string weaponID)
         {
             // Load the weapon
+        }
+        
+        public void SwitchWeapon(int delta)
+        {
+            _currentWeaponIndex += delta;
+            if (_currentWeaponIndex < 0)
+                _currentWeaponIndex = weapons.Length - 1;
+            else if (_currentWeaponIndex >= weapons.Length)
+                _currentWeaponIndex = 0;
+
+            CurrentWeapon = weapons[_currentWeaponIndex];
         }
 
         /// <summary>
@@ -86,7 +94,6 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
             }
 
             CurrentWeapon = CurrentAbility;
-            CurrentAbility?.OnEquip();
 
             StartCoroutine(HandleWeaponSwitch(CurrentAbility));
         }

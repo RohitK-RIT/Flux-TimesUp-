@@ -10,6 +10,8 @@ namespace _Project.Scripts.Core.Weapons.Melee
     [CreateAssetMenu(fileName = "MWS_WeaponName", menuName = "Weapons/Weapon Stats/Melee", order = 1)]
     public class MeleeWeaponStats : WeaponStats
     {
+        public float AttackFOV => attackFOV;
         
+        [SerializeField] private float attackFOV;
     }
 }
