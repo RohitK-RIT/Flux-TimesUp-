@@ -208,6 +208,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 8230801370227858818}
+  currentAbility: {fileID: 0}
+  weapons:
+  - {fileID: 8230801370227858818}
 --- !u!1 &6895713774396260466
 GameObject:
   m_ObjectHideFlags: 0

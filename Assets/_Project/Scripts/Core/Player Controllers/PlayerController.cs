@@ -83,7 +83,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Function to take damage by reducing the stat's value.
         /// </summary>
         /// <param name="damageAmount"></param>
-        public void TakeDamage(float damageAmount)
+        public virtual void TakeDamage(float damageAmount)
         {
             currentHealth -= damageAmount;
             currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);

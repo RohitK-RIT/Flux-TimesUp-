@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8596951495638256996}
   - component: {fileID: 8777140895924973327}
   - component: {fileID: 4533463796864876761}
-  - component: {fileID: 5928952100291035165}
+  - component: {fileID: 6273341532945828471}
   m_Layer: 0
   m_Name: TestAbility
   m_TagString: Untagged
@@ -106,7 +106,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5928952100291035165
+--- !u!114 &6273341532945828471
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,6 +115,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3473613526463779720}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39ebba6701fe8d8458cbead9014ed7b0, type: 3}
+  m_Script: {fileID: 11500000, guid: a683a0b376464cb49c038c0d677c6df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentPlayerController: {fileID: 0}
+  attackCooldown: 5
+  abilityDuration: 7
