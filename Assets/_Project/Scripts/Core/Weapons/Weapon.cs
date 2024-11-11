@@ -22,7 +22,12 @@ namespace _Project.Scripts.Core.Weapons
         /// <summary>
         /// Current player controller.
         /// </summary>
-        protected PlayerController CurrentPlayerController;
+        protected PlayerController CurrentPlayerController { get; private set; }
+
+        public virtual void OnEquip(PlayerController currentPlayerController)
+        {
+            CurrentPlayerController = currentPlayerController;
+        }
 
         /// <summary>
         /// Start attacking.

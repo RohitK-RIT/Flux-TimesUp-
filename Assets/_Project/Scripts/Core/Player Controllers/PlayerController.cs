@@ -81,6 +81,11 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             MovementController.MoveInput = direction;
         }
+        
+        protected virtual void SwitchWeapon(int direction)
+        {
+            WeaponController.SwitchWeapon(direction);
+        }
 
         /// <summary>
         /// Begin the player's attack.

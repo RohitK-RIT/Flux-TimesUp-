@@ -10,11 +10,6 @@ namespace _Project.Scripts.Core.Weapons.Abilities
     public abstract class PlayerAbility : Weapon
     {
         /// <summary>
-        /// The current player controller using this ability.
-        /// </summary>
-        public LocalPlayerController currentPlayerController;
-
-        /// <summary>
         /// Cooldown time between attacks.
         /// </summary>
         [SerializeField] private float attackCooldown = 5f;
@@ -37,8 +32,9 @@ namespace _Project.Scripts.Core.Weapons.Abilities
         /// <summary>
         /// Called when the ability is equipped.
         /// </summary>
-        public virtual void OnEquip()
+        public override void OnEquip(PlayerController currentPlayerController)
         {
+            base.OnEquip(currentPlayerController);
             Used = false;
         }
 

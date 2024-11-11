@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons.Abilities
@@ -12,12 +13,13 @@ namespace _Project.Scripts.Core.Weapons.Abilities
         /// The duration for which the shield ability remains active.
         /// </summary>
         [SerializeField] private float abilityDuration;
+
         /// <summary>
         /// Called when the ability is equipped.
         /// </summary>
-        public override void OnEquip()
+        public override void OnEquip(PlayerController currentPlayerController)
         {
-            base.OnEquip();
+            base.OnEquip(currentPlayerController);
             UseHeal();
             Used = true;
         }
@@ -37,7 +39,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
             //Heal the player
             abilityDuration = 5f;
             Debug.Log("Player is using the heal ability!!");
-            StartCoroutine(DeactivateAbility(abilityDuration));
+            CurrentPlayerController.StartCoroutine(DeactivateAbility(abilityDuration));
         }
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
         {
             yield return new WaitForSeconds(time);
             Debug.Log("Ability deactivated!!");
-            StartCoroutine(StartCooldown());
+            CurrentPlayerController.StartCoroutine(StartCooldown());
         }
 
         protected override IEnumerator OnAttack()

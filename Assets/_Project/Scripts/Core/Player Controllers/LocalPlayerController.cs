@@ -44,8 +44,9 @@ namespace _Project.Scripts.Core.Player_Controllers
 
             _localInputController.OnLookInputUpdated += SetLookInput;
 
-            // Subscribe to ability events
             _localInputController.OnAbilityEquipped += AbilityEquipped;
+            
+            _localInputController.OnSwitchWeaponInput += SwitchWeapon;
         }
 
         private void OnDisable()
@@ -58,8 +59,9 @@ namespace _Project.Scripts.Core.Player_Controllers
 
             _localInputController.OnLookInputUpdated -= SetLookInput;
 
-            // Unsubscribe from ability events
             _localInputController.OnAbilityEquipped -= AbilityEquipped;
+            
+            _localInputController.OnSwitchWeaponInput -= SwitchWeapon;
         }
 
         /// <summary>
