@@ -47,6 +47,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnAbilityEquipped += AbilityEquipped;
             
             _localInputController.OnSwitchWeaponInput += SwitchWeapon;
+            _localInputController.OnReloadInput += Reload;
         }
 
         private void OnDisable()
@@ -62,6 +63,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnAbilityEquipped -= AbilityEquipped;
             
             _localInputController.OnSwitchWeaponInput -= SwitchWeapon;
+            _localInputController.OnReloadInput += Reload;
         }
 
         /// <summary>

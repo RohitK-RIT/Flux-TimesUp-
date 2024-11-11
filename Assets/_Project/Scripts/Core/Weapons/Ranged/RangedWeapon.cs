@@ -185,6 +185,14 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         }
 
         /// <summary>
+        /// Reload the weapon.
+        /// </summary>
+        public void OnReload()
+        {
+            StartCoroutine(ReloadCoroutine());
+        }
+
+        /// <summary>
         /// Coroutine for playing the trail.
         /// </summary>
         /// <param name="startPos">Start position of the trail</param>

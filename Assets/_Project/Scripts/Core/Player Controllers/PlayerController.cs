@@ -82,9 +82,18 @@ namespace _Project.Scripts.Core.Player_Controllers
             MovementController.MoveInput = direction;
         }
         
+        /// <summary>
+        /// Switch the player's weapon.
+        /// </summary>
+        /// <param name="direction">the number by which the weapon is supposed to switch</param>
         protected virtual void SwitchWeapon(int direction)
         {
             WeaponController.SwitchWeapon(direction);
+        }
+        
+        protected virtual void Reload()
+        {
+            WeaponController.ReloadWeapon();
         }
 
         /// <summary>
