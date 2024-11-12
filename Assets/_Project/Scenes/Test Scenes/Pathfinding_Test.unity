@@ -595,11 +595,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1212183920}
     m_Modifications:
-    - target: {fileID: 4088876135904891852, guid: afceba7fd2b69f8499110837ba39fb7c,
+    - target: {fileID: 2710818891382712297, guid: afceba7fd2b69f8499110837ba39fb7c,
         type: 3}
-      propertyPath: targetPlayerTest
-      value: 
-      objectReference: {fileID: 1385267204}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2710818891382712297, guid: afceba7fd2b69f8499110837ba39fb7c,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4518910825798227448, guid: afceba7fd2b69f8499110837ba39fb7c,
         type: 3}
       propertyPath: m_Name
@@ -1406,12 +1411,6 @@ Transform:
   - {fileID: 996594621}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1385267204 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4523705889241013417, guid: 17c6ba7bd432cec44ad7c1df2d0ef065,
-    type: 3}
-  m_PrefabInstance: {fileID: 550989695}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1705604032
 GameObject:
   m_ObjectHideFlags: 0
