@@ -18,7 +18,7 @@ namespace _Project.Scripts.UI
         [SerializeField] public TMP_Text maxAmmo;
         [SerializeField] public LocalPlayerController player;
         [SerializeField] public GameObject reloadingText;
-        [SerializeField] private TMP_Text objectiveText;
+        //[SerializeField] private TMP_Text objectiveText;
 
         private void Start()
         {
@@ -33,7 +33,7 @@ namespace _Project.Scripts.UI
             UpdateHealthBar();
             UpdateAmmoDisplay();
             UpdateReloadingText();
-            UpdateObjectiveText();
+            //UpdateObjectiveText();
         }
 
         // Updates the health bar based on the player's current and max health
@@ -67,9 +67,9 @@ namespace _Project.Scripts.UI
             }
         }
 
-        private void UpdateObjectiveText()
+        /*private void UpdateObjectiveText()
         {
             objectiveText.text = LevelSceneController.Instance.NumberOfEnemies.ToString();
-        }
+        }*/
     }
 }
