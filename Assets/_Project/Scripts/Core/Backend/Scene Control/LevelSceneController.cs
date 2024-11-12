@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using _Project.Scripts.Core.Enemy;
 using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
@@ -10,6 +11,9 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
     //General class to manage the game
     public class LevelSceneController : MonoBehaviour
     {
+        public static LevelSceneController Instance { get; private set; }
+        public int NumberOfEnemies => enemies.Count(controller => controller.gameObject.activeSelf);
+        
         [SerializeField] private GameObject pauseMenuPage, winPage, loosePage; // Drag your game scene UI panel here
 
         [Space(25f), Header("Players in Scene")] [SerializeField]
@@ -18,6 +22,17 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
         [SerializeField] private EnemyController[] enemies; // Array to store all enemies in the scene
 
         private bool _isPaused; // Variable to check if the game is paused
+
+        private void Awake()
+        {
+            if(Instance && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+        }
 
         private void Start()
         {
@@ -34,7 +49,7 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
 #else
                 Keyboard.current[Key.Escape].wasPressedThisFrame
 #endif
-                )
+            )
             {
                 if (_isPaused)
                     Resume();
@@ -66,6 +81,7 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
             {
                 loosePage.SetActive(true);
             }
+
             Time.timeScale = 0f; // Freeze the game
         }
 

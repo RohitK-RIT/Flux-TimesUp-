@@ -1,3 +1,4 @@
+using _Project.Scripts.Core.Backend.Scene_Control;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons.Ranged;
 using TMPro;
@@ -17,6 +18,7 @@ namespace _Project.Scripts.UI
         [SerializeField] public TMP_Text maxAmmo;
         [SerializeField] public LocalPlayerController player;
         [SerializeField] public GameObject reloadingText;
+        [SerializeField] private TMP_Text objectiveText;
 
         private void Start()
         {
@@ -31,6 +33,7 @@ namespace _Project.Scripts.UI
             UpdateHealthBar();
             UpdateAmmoDisplay();
             UpdateReloadingText();
+            UpdateObjectiveText();
         }
 
         // Updates the health bar based on the player's current and max health
@@ -62,6 +65,11 @@ namespace _Project.Scripts.UI
             {
                 reloadingText.SetActive(false);
             }
+        }
+
+        private void UpdateObjectiveText()
+        {
+            objectiveText.text = LevelSceneController.Instance.NumberOfEnemies.ToString();
         }
     }
 }
