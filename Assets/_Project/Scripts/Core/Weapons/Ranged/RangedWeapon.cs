@@ -39,6 +39,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Property to access the maximum number of bullets for the Gun.
         /// </summary>
         public int MaxAmmo { get; private set; }
+        
+        ///<summary>
+        /// Property to check if the weapon is currently reloading.
+        /// </summary>
+        public bool IsReloading => _reloading;
 
         /// <summary>
         /// Is the weapon currently reloading.
