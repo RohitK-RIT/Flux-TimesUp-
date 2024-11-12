@@ -6,7 +6,7 @@ namespace _Project.Scripts.Core.Enemy
 {
     public class PlayerDetection : CharacterComponent
     {
-        private float detectionRange = 20f;  // The distance at which the enemy detects the player
+        private readonly float _detectionRange = 20f;  // The distance at which the enemy detects the player
         public float fieldOfViewAngle = 60f; // The conical angle at which the enemy detects the player
         
         public LayerMask layerMask; // A LayerMask to specify which layers the detection should interact with
@@ -26,7 +26,7 @@ namespace _Project.Scripts.Core.Enemy
         private void FindPlayersInRange()
         {
             // Get all colliders within the detection range
-            Collider[] hitColliders = Physics.OverlapSphere(transform.position, detectionRange, layerMask);
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, _detectionRange, layerMask);
 
             // Create a temporary list to track the players in this frame
             List<Transform> currentPlayers = new List<Transform>();
@@ -81,7 +81,7 @@ namespace _Project.Scripts.Core.Enemy
             Transform closest = null;
             
             // Initialize the closest distance as the detection range
-            float closestDistance = detectionRange;
+            float closestDistance = _detectionRange;
             foreach (Transform player in _playersInRange)
             {
                 // Calculate the distance between the enemy and the current player
@@ -113,12 +113,12 @@ namespace _Project.Scripts.Core.Enemy
             return angleToPlayer <= fieldOfViewAngle;
         }
         
-        
+        // Method to visualize the detect, chase, attack and conical FOV for testing purpose
         private void OnDrawGizmos()
         {
             // Visualization of the detection range (sphere)
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(PlayerController.MovementController.Body.position, detectionRange);
+            Gizmos.DrawWireSphere(PlayerController.MovementController.Body.position, _detectionRange);
 
             // Visualization of the chase range (sphere)
             Gizmos.color = Color.blue;
@@ -126,7 +126,7 @@ namespace _Project.Scripts.Core.Enemy
 
             // Visualization of the field of view (cone)
             Gizmos.color = Color.yellow;
-            Vector3 forwardDirection = PlayerController.MovementController.Body.forward * detectionRange;
+            Vector3 forwardDirection = PlayerController.MovementController.Body.forward * _detectionRange;
             float fovHalfAngle = fieldOfViewAngle * 0.5f;
             float coneAngle = Mathf.Deg2Rad * fovHalfAngle; // Convert to radians
 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Project.Scripts.Core.Enemy.FSM;
+using _Project.Scripts.Core.Enemy.FSM.EnemyStates;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
 using UnityEngine;
@@ -16,24 +18,26 @@ namespace _Project.Scripts.Core.Enemy
         public override event Action OnAttackInputEnded;
 
         private PlayerDetection _playerDetection;
-        private Transform _currentTarget;
+        
+        private Transform _currentTarget; // current target to assign
 
-        private float attackRange = 10f; // Attack range
+        private readonly float _attackRange = 10f; // Attack range
+        
         [SerializeField] private float attackCooldown = 5f; // Cooldown time between attacks
 
         private bool _isAttacking; // Tracks if an attack is in progress
+        
         private bool _isCooldownActive; // Tracks if cooldown is active
+        
         private Coroutine _attackCoroutine; // Holds the attack coroutine instance
         
-        internal Transform _closestPlayer;
+        private Transform _closestPlayer; // closest player to the enemy which is the actual target
         
-        [SerializeField]private Transform targetPlayerTest; // for testing purpose currently providing the transform of the player directly
-        private float _updateSpeed = 0.1f; // how frequently to calculate path based on targets transform position
         private NavMeshAgent _enemy; // navmesh agent
 
-        internal StateManager stateManager;
+        internal StateManager StateManager; // refrence to state manager
 
-        private float _chaseRange = 15f;
+        private readonly float _chaseRange = 15f; // chase range
 
         private void Awake()
         {
@@ -41,8 +45,9 @@ namespace _Project.Scripts.Core.Enemy
             // assigning the navmesh agent from the empty parent game object
             // empty game object is created to align the pivot of the enemy game object and the obstacle avoidance
             
-            stateManager = gameObject.AddComponent<StateManager>();
+            StateManager = gameObject.AddComponent<StateManager>();
 
+            // Initializing the dictionary for states
             var states = new Dictionary<EnemyState, BaseState>
             {
                 { EnemyState.Detect, new DetectState(this) },
@@ -50,12 +55,7 @@ namespace _Project.Scripts.Core.Enemy
                 { EnemyState.Attack, new AttackState(this) }
             };
 
-            stateManager.InitializeStates(states, EnemyState.Detect);
-        }
-
-        private void Start()
-        {
-            //StartCoroutine(FollowPlayer());
+            StateManager.InitializeStates(states, EnemyState.Detect);
         }
 
         public override void Initialize(PlayerController playerController)
@@ -67,93 +67,58 @@ namespace _Project.Scripts.Core.Enemy
             _playerDetection.Initialize(playerController);
         }
 
-        private void Update()
-        {
-            // call method to find the closest player
-            //FindPlayer();
-        }
-
         public void Disable()
         {
             // Disable AI logic
             _currentTarget = null;
         }
 
-
-        // Method to find the closest player and check if the closest player is in conical field of view
-        // private void FindPlayer()
-        // {
-        //     // get the closest player
-        //     _closestPlayer = _playerDetection.FindClosestPlayerInRange();
-        //
-        //     // check if the closest player is within the conical FOV
-        //     if (_closestPlayer && _playerDetection.IsPlayerInCone(_closestPlayer))
-        //     {
-        //         // Rotate towards the player
-        //         RotateTowardsPlayer(_closestPlayer);
-        //
-        //         // Try to attack the player
-        //         TryAttack(_closestPlayer);
-        //     }
-        //     else if (_currentTarget)
-        //     {
-        //         // If the player is no longer in range, end the attack
-        //         OnAttackInputEnded?.Invoke();
-        //         _currentTarget = null;
-        //     }
-        // }
-
+        // Method to check if the player is in detection range and in conical field of view
         internal bool FindPlayer()
         {
             _closestPlayer = _playerDetection.FindClosestPlayerInRange();
-            if (_closestPlayer && IsPlayerInCone())
-            {
-                //RotateTowardsPlayer(_closestPlayer);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return _closestPlayer && IsPlayerInCone();
         }
 
+        // Method to check if player is in chase range and conical field of view
         internal bool CanChasePlayer()
         {
-            if (IsPlayerInCone())
-            {
-                float distance = Vector3.Distance(transform.position, _closestPlayer.position); 
-                return distance <= _chaseRange; // Return true if within chase range
-            }
-            return false;
-            
+            if (!IsPlayerInCone()) return false;
+            var distance = Vector3.Distance(transform.position, _closestPlayer.position); 
+            return distance <= _chaseRange; // Return true if within chase range
+
         }
         
-        internal bool IsPlayerInCone()
+        // Method to check if player is in conical field of view
+        private bool IsPlayerInCone()
         {
             // You need to implement this method in your PlayerDetection script to check if the player is in the cone
             return _playerDetection.IsPlayerInCone(_closestPlayer);
         }
 
+        // Method to start chasing the player if player is in conical field of view
+        // ReSharper disable Unity.PerformanceAnalysis
         internal void StartChasing()
         {
-            Debug.Log("inside StartChasing");
             if (IsPlayerInCone())
             {
                 StartCoroutine(FollowPlayer()); // Start following the player
             }
         }
         
+        // Method to stop chasing the player i.e resetting the navmesh agent path
         internal void StopChasing()
         {
             _enemy.ResetPath(); // Stop following the player
         }
 
+        // Method to check if the player is in attack range and conical field of view
         internal bool CanAttack()
         {
             if (IsPlayerInCone())
             {
-                float distanceToPlayer = Vector3.Distance(transform.position, _closestPlayer.position);
-                return distanceToPlayer <= attackRange; // Check if the player is within attack range
+                var distanceToPlayer = Vector3.Distance(transform.position, _closestPlayer.position);
+                return distanceToPlayer <= _attackRange; // Check if the player is within attack range
             }
             else
             {
@@ -163,6 +128,7 @@ namespace _Project.Scripts.Core.Enemy
         }
         
         //method to check if the player is within attack range and cool down is not active
+        // ReSharper disable Unity.PerformanceAnalysis
         internal void TryAttack()
         {
             if (IsPlayerInAttackRange(_closestPlayer) && !_isCooldownActive)
@@ -182,8 +148,8 @@ namespace _Project.Scripts.Core.Enemy
         // method to check if player is in attack range
         private bool IsPlayerInAttackRange(Transform player)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-            return distanceToPlayer <= attackRange;
+            var distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            return distanceToPlayer <= _attackRange;
         }
 
 
@@ -232,44 +198,16 @@ namespace _Project.Scripts.Core.Enemy
         //Method to rotate the enemy towards the player
         internal void RotateTowardsPlayer()
         {
-            Transform player = _closestPlayer;
+            var player = _closestPlayer;
             if (!player)
                 PlayerController.MovementController.AimTransform.position = PlayerController.MovementController.Body.forward * 1000f;
             else
                 PlayerController.MovementController.AimTransform.position = player.position;
         }
-
-        // Method to move the enemy towards the player
-        // Currently it's not having the expected movement behavior that why I have commented the setDestination which is responsible for the movement of the enemy
-        // private IEnumerator FollowPlayer()
-        // {
-        //     Debug.Log("Moveeee");
-        //     WaitForSeconds wait = new WaitForSeconds(_updateSpeed);
-        //     float stoppingDistance = 1f; // Adjust this value to control how close the enemy gets to the player before stopping.
-        //
-        //     while (enabled)
-        //     {
-        //         float distanceToPlayer = Vector3.Distance(_enemy.transform.position, targetPlayerTest.position);
-        //
-        //         if (distanceToPlayer > stoppingDistance)
-        //         {
-        //             // If the enemy is farther than the stopping distance, set the destination to the player.
-        //             _enemy.SetDestination(targetPlayerTest.position);
-        //         }
-        //         else
-        //         {
-        //             // If the enemy is within the stopping distance, stop moving.
-        //             _enemy.ResetPath();
-        //         }
-        //
-        //         yield return wait;
-        //     }
-        // }
         
+        // Coroutine to follow player
         private IEnumerator FollowPlayer()
         {
-            Debug.Log("FollowPlayer");
-            //_enemy.SetDestination(_closestPlayer.position);
             while (CanChasePlayer())
             {
                 // Move towards the player
@@ -284,28 +222,10 @@ namespace _Project.Scripts.Core.Enemy
             
                 yield return null; // Keep following every frame
             }
-            //yield return null;
         }
         
-        // to visualize the path towards the player
-        // private void OnDrawGizmos()
-        // {
-        //     if (_enemy == null || targetPlayerTest == null) return;
-        //
-        //     NavMeshPath path = new NavMeshPath();
-        //     _enemy.CalculatePath(targetPlayerTest.position, path);
-        //
-        //     // Draw the calculated path
-        //     if (path.corners.Length > 1)
-        //     {
-        //         for (int i = 0; i < path.corners.Length - 1; i++)
-        //         {
-        //             Gizmos.color = Color.red;
-        //             Gizmos.DrawLine(path.corners[i], path.corners[i + 1]);
-        //         }
-        //     }
-        // }
         
+        // Method to visualize the detect, chase, attack and conical FOV for testing purpose
         private void OnDrawGizmos()
         {
             if (_enemy == null) return;
@@ -316,7 +236,7 @@ namespace _Project.Scripts.Core.Enemy
 
             // Visualization of the attack range (sphere)
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(PlayerController.MovementController.Body.position, attackRange);
+            Gizmos.DrawWireSphere(PlayerController.MovementController.Body.position, _attackRange);
 
             // Visualization of the field of view (cone)
             Gizmos.color = Color.yellow;

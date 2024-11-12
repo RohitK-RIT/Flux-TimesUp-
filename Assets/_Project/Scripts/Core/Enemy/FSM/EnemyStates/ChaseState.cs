@@ -1,61 +1,62 @@
-using _Project.Scripts.Core.Enemy;
 using UnityEngine;
-using UnityEngine.AI;
-
-public class ChaseState : BaseState
+namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
 {
-    private EnemyInputController _enemyInputController;
-    private NavMeshAgent _navMeshAgent;
-
-    public ChaseState(EnemyInputController enemyInputController) : base(EnemyState.Chase)
+    public class ChaseState : BaseState
     {
-        _enemyInputController = enemyInputController;
-    }
+        // Reference to the enemy's input controller
+        private readonly EnemyInputController _enemyInputController;
 
-    public override void EnterState()
-    {
-        Debug.Log("Entering Chase State");
-        _navMeshAgent = _enemyInputController.GetComponentInParent<NavMeshAgent>();
-        _navMeshAgent.isStopped = false; // Ensure the agent is not stopped at the beginning
-    }
-
-    public override void ExitState()
-    {
-        Debug.Log("Exiting Chase State");
-        _enemyInputController.StopChasing(); // Stop following the player when exiting this state
-    }
-
-    public override void UpdateState()
-    {
-        //Step 1: Check if player is within chase range
-        if (!_enemyInputController.CanChasePlayer())
+        // Constructor for the ChaseState, setting the state key and storing a reference to the input controller
+        public ChaseState(EnemyInputController enemyInputController) : base(EnemyState.Chase)
         {
-            // Player is out of chase range, transition to Detect state
-            Debug.Log("Player out of chase range, transitioning to Detect state.");
-            _enemyInputController.stateManager.TransitionToState(EnemyState.Detect);
-            //return;
+            _enemyInputController = enemyInputController;
         }
-        else
-        {
-            Debug.Log("Chasing player");
-            // Step 2: Follow player
-            _enemyInputController.RotateTowardsPlayer();
-            _enemyInputController.StartChasing(); // This can use NavMeshAgent to follow player without colliding
-        }
-        
-        
-        // Step 3: Check if player is in attack range
-        if (_enemyInputController.CanAttack())
-        {
-            // Player is in attack range, transition to Attack state
-            Debug.Log("Player in attack range, transitioning to Attack state.");
-            _enemyInputController.stateManager.TransitionToState(EnemyState.Attack);
-        }
-    }
 
-    public override EnemyState GetNextState()
-    {
-        // No need for transition logic here as it is handled in UpdateState
-        return EnemyState.Chase;
+        // Called when the enemy enters the ChaseState
+        public override void EnterState()
+        {
+            Debug.Log("Entering Chase State");
+        }
+
+        // Called when the enemy exits the ChaseState
+        public override void ExitState()
+        {
+            _enemyInputController.StopChasing(); // Stop following the player when exiting this state
+        }
+
+        // Called every frame while the enemy is in the ChaseState
+        // ReSharper disable Unity.PerformanceAnalysis
+        public override void UpdateState()
+        {
+            // Step 1: Check if the player is still within chase range
+            if (!_enemyInputController.CanChasePlayer())
+            {
+                // If the player is out of chase range, transition to Detect state
+                _enemyInputController.StateManager.TransitionToState(EnemyState.Detect);
+            }
+            else
+            {
+                // Step 2: Continue chasing the player
+                // Face towards the player while chasing
+                _enemyInputController.RotateTowardsPlayer();
+                
+                // Uses NavMeshAgent to move towards the player
+                _enemyInputController.StartChasing();
+            }
+            
+            // Step 3: Check if the player is now within attack range
+            if (_enemyInputController.CanAttack())
+            {
+                // If the player is in attack range, transition to Attack state
+                _enemyInputController.StateManager.TransitionToState(EnemyState.Attack);
+            }
+        }
+
+        // Returns the current state key, indicating this is still AttackState
+        public override EnemyState GetNextState()
+        {
+            // No need for transition logic here as it is handled in UpdateState
+            return EnemyState.Chase;
+        }
     }
 }
