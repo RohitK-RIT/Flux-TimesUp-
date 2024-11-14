@@ -15,6 +15,10 @@ namespace _Project.Scripts.UI
             SceneSystem.Instance.LoadScene(new SceneLoadRequest(gameSceneName, LoadSceneMode.Single));
         }
 
+        public void OnTutorialButtonClicked()
+        {
+            SceneSystem.Instance.LoadScene(new SceneLoadRequest("Onboarding Scene", LoadSceneMode.Single));
+        }
         public void OnMultiPlayButtonClicked()
         {
             UIManager.Instance.SwitchPage(PageID.SessionsPage);
