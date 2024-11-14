@@ -1,7 +1,9 @@
 using _Project.Scripts.Core.Backend.Scene_Control;
+using _Project.Scripts.Core.Player_Controllers;
 using TMPro;
 using UnityEngine;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
+using _Project.Scripts.Core.Weapons.Ranged;
 
 namespace _Project.Scripts.UI
 {
@@ -16,7 +18,7 @@ namespace _Project.Scripts.UI
         [SerializeField] private GameObject onboardingLevelTwo;
         [SerializeField] private GameObject onboardingLevelThree;
         private LevelSceneController _levelSceneController;
-        
+        private LocalPlayerController _playerController;
         private int currentPromptIndex = 0;
         
         private LocalInputController _inputController;
@@ -26,6 +28,7 @@ namespace _Project.Scripts.UI
             // Find and assign the player controller (assuming only one player in the scene)
             _inputController = FindObjectOfType<LocalInputController>();
             _levelSceneController = FindObjectOfType<LevelSceneController>();
+            _playerController = FindObjectOfType<LocalPlayerController>();
             if (!_levelSceneController) return;
         }
         
@@ -142,8 +145,8 @@ namespace _Project.Scripts.UI
         private void OnReloadDetected()
         {
             if (currentPromptIndex != 5) return;
-            NextPrompt(); // defeat all enemies prompt
-            
+            if(_playerController.WeaponController.CurrentWeapon is RangedWeapon)
+                NextPrompt(); // defeat all enemies prompt
         }
     }
 }
