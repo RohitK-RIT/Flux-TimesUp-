@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1872143524193733017}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Exit (5)
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 212840607316628870}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Exit (2)
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -72,6 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9169344966066913423}
   - component: {fileID: 215484037114482034}
+  - component: {fileID: 2812651912949719026}
   m_Layer: 0
   m_Name: Room4
   m_TagString: Untagged
@@ -130,7 +131,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 72
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -143,6 +144,27 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 0537317934c3c4220b194f0281f35293, type: 2}
   m_BuildHeightMesh: 0
+--- !u!65 &2812651912949719026
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546850383188257028}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 30, y: 1, z: 30}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1803742139092770786
 GameObject:
   m_ObjectHideFlags: 0
@@ -152,7 +174,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1360203892750040712}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Exit
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -183,7 +205,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1491361843038527127}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Exit (4)
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -214,7 +236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6531884740182891175}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Exit (3)
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -781,7 +803,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4073478407574618202}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Exit (1)
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -812,6 +834,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1781693503893482522}
+  - component: {fileID: 5580153626594009747}
   m_Layer: 6
   m_Name: Bookshelves
   m_TagString: Untagged
@@ -846,6 +869,22 @@ Transform:
   - {fileID: 2158700573629343868}
   m_Father: {fileID: 2393666669580014150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &5580153626594009747
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3697246017970771657}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.85, y: 5, z: 1.265}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 11.15, y: 5, z: -2.04}
+  m_TimeToStationary: 0.5
 --- !u!1 &4783947546672698711
 GameObject:
   m_ObjectHideFlags: 0
@@ -855,6 +894,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7526454476240924776}
+  - component: {fileID: 4857562126670708932}
   m_Layer: 6
   m_Name: Bookshelves (4)
   m_TagString: Untagged
@@ -889,6 +929,22 @@ Transform:
   - {fileID: 2330301922037155632}
   m_Father: {fileID: 2393666669580014150}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!208 &4857562126670708932
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4783947546672698711}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.85, y: 5, z: 1.265}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 11.15, y: 5, z: -2.04}
+  m_TimeToStationary: 0.5
 --- !u!1 &5802905410602493336
 GameObject:
   m_ObjectHideFlags: 0
@@ -898,6 +954,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 568448384593893461}
+  - component: {fileID: 6165444088612728411}
   m_Layer: 6
   m_Name: Bookshelves (7)
   m_TagString: Untagged
@@ -932,6 +989,22 @@ Transform:
   - {fileID: 8880404311063758724}
   m_Father: {fileID: 2393666669580014150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &6165444088612728411
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5802905410602493336}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.85, y: 5, z: 1.265}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 11.15, y: 5, z: -2.04}
+  m_TimeToStationary: 0.5
 --- !u!1 &6874784372975792366
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,6 +1014,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 72541621618268385}
+  - component: {fileID: 1537091004078437649}
   m_Layer: 6
   m_Name: Bookshelves (3)
   m_TagString: Untagged
@@ -975,6 +1049,22 @@ Transform:
   - {fileID: 4641496499291818288}
   m_Father: {fileID: 2393666669580014150}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!208 &1537091004078437649
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6874784372975792366}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.85, y: 5, z: 1.265}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 11.15, y: 5, z: -2.04}
+  m_TimeToStationary: 0.5
 --- !u!1 &6933276351014676966
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,7 +1074,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4002850536380983332}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Exit (7)
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -1015,6 +1105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4644051463622198559}
+  - component: {fileID: 1728844306198754864}
   m_Layer: 6
   m_Name: Bookshelves (6)
   m_TagString: Untagged
@@ -1049,6 +1140,22 @@ Transform:
   - {fileID: 40849212258878810}
   m_Father: {fileID: 2393666669580014150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &1728844306198754864
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7100959700045309935}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.85, y: 5, z: 1.265}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 11.15, y: 5, z: -2.04}
+  m_TimeToStationary: 0.5
 --- !u!1 &7311175415464908620
 GameObject:
   m_ObjectHideFlags: 0
@@ -1058,7 +1165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9193240009573557132}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Exit (6)
   m_TagString: Untagged
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
@@ -1306,6 +1413,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5587177310879847996}
+  - component: {fileID: 8640016352735241890}
   m_Layer: 6
   m_Name: Bookshelves (2)
   m_TagString: Untagged
@@ -1340,6 +1448,22 @@ Transform:
   - {fileID: 5377537516897055126}
   m_Father: {fileID: 2393666669580014150}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!208 &8640016352735241890
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8095269207963744711}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.85, y: 5, z: 1.265}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 11.15, y: 5, z: -2.04}
+  m_TimeToStationary: 0.5
 --- !u!1 &8470891521460335243
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,6 +1473,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5375467476013990723}
+  - component: {fileID: 6005640375391692844}
   m_Layer: 6
   m_Name: Bookshelves (1)
   m_TagString: Untagged
@@ -1383,6 +1508,22 @@ Transform:
   - {fileID: 3824499867918881699}
   m_Father: {fileID: 2393666669580014150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &6005640375391692844
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8470891521460335243}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.85, y: 5, z: 1.265}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 11.15, y: 5, z: -2.04}
+  m_TimeToStationary: 0.5
 --- !u!1 &9166178447253197223
 GameObject:
   m_ObjectHideFlags: 0
@@ -1392,6 +1533,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5362679134115436311}
+  - component: {fileID: 4701194848857374205}
   m_Layer: 6
   m_Name: Bookshelves (5)
   m_TagString: Untagged
@@ -1426,6 +1568,22 @@ Transform:
   - {fileID: 3535286230730878167}
   m_Father: {fileID: 2393666669580014150}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!208 &4701194848857374205
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9166178447253197223}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 3.85, y: 5, z: 1.265}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 11.15, y: 5, z: -2.04}
+  m_TimeToStationary: 0.5
 --- !u!1001 &24944687163683572
 PrefabInstance:
   m_ObjectHideFlags: 0
