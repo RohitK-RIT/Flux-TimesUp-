@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Core.Character
 {
-    public class CharacterComponent : MonoBehaviour
+    public abstract class CharacterComponent : MonoBehaviour
     {
         public PlayerController PlayerController { get; private set; }
 
