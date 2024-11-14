@@ -1,5 +1,6 @@
 ﻿using _Project.Scripts.Core.Character;
 using _Project.Scripts.Core.Character.Weapon_Controller;
+using Fusion;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
@@ -8,7 +9,7 @@ namespace _Project.Scripts.Core.Player_Controllers
     /// Base class for player controllers.
     /// </summary>
     [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(CharacterStats))]
-    public abstract class PlayerController : MonoBehaviour
+    public abstract class PlayerController : NetworkBehaviour
     {
         /// <summary>
         /// Component that handles movement.
