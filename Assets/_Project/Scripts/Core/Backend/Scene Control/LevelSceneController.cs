@@ -14,11 +14,14 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
         public static LevelSceneController Instance { get; private set; }
         public int NumberOfEnemies => enemies.Count(controller => controller.gameObject.activeSelf);
         
+        public GameObject WinPage => winPage;
+        public GameObject LoosePage => loosePage;
         [SerializeField] private GameObject pauseMenuPage, winPage, loosePage; // Drag your game scene UI panel here
 
         [Space(25f), Header("Players in Scene")] [SerializeField]
         private PlayerController player; // Drag your player here
 
+        
         [SerializeField] private EnemyController[] enemies; // Array to store all enemies in the scene
 
         private bool _isPaused; // Variable to check if the game is paused

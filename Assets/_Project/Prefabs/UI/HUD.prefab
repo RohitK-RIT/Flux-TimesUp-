@@ -930,7 +930,6 @@ MonoBehaviour:
   maxAmmo: {fileID: 6631621857437910848}
   player: {fileID: 0}
   reloadingText: {fileID: 8118364791137218571}
-  objectiveText: {fileID: 0}
 --- !u!1 &7017186723268787099
 GameObject:
   m_ObjectHideFlags: 0
