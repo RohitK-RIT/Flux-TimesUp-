@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using _Project.Scripts.Core.Backend.Ability;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Abilities;
@@ -12,15 +13,12 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
     /// </summary>
     public sealed class WeaponController : CharacterComponent
     {
+        [SerializeField] private Transform weaponParent;
+
         /// <summary>
         /// The currently equipped weapon.
         /// </summary>
         [SerializeField] private Weapon currentWeapon;
-
-        /// <summary>
-        /// The currently equipped ability.
-        /// </summary>
-        [SerializeField] private PlayerAbility currentAbility;
 
         /// <summary>
         /// Array of all available weapons.
@@ -57,9 +55,12 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// <summary>
         /// Gets the current ability.
         /// </summary>
-        public PlayerAbility CurrentAbility => currentAbility;
+        public PlayerAbility CurrentAbility { get; private set; }
 
-        private int _currentWeaponIndex = 0;
+        /// <summary>
+        /// The index of the current weapon.
+        /// </summary>
+        private int _currentWeaponIndex;
 
         public override void Initialize(PlayerController playerController)
         {
@@ -68,11 +69,38 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
             // The player controller has picked up all the weapons
             foreach (var weapon in weapons)
                 weapon?.OnPickup(PlayerController);
+
             // The player controller has picked up the ability
-            CurrentAbility?.OnPickup(PlayerController);
-            
+            LoadAbility(playerController.CharacterStats.playerAbilityType);
+
             // Load the first weapon
             CurrentWeapon = weapons[_currentWeaponIndex];
+        }
+
+        /// <summary>
+        /// Loads an ability by its type.
+        /// </summary>
+        /// <param name="playerAbilityType">type of the ability</param>
+        private void LoadAbility(PlayerAbilityType playerAbilityType)
+        {
+            // Check if the player has no ability
+            if(playerAbilityType == PlayerAbilityType.None)
+                return;
+            
+            // Get the ability prefab
+            var abilityPrefab = AbilityDataSystem.Instance.GetAbilityPrefab(playerAbilityType);
+            // Check if the ability prefab is not null
+            if (abilityPrefab)
+            {
+                // Instantiate the ability prefab
+                CurrentAbility = Instantiate(abilityPrefab, weaponParent);
+                CurrentAbility.gameObject.SetActive(false);
+                CurrentAbility.OnPickup(PlayerController);
+            }
+            else
+            {
+                Debug.LogError("Ability Prefab not found");
+            }
         }
 
         /// <summary>
