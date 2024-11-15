@@ -28,11 +28,18 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         /// Event that is called when the player stops attacking.
         /// </summary>
         public override event Action OnAttackInputEnded;
-        
+
         /// <summary>
         /// Event that is called when the player equips ability.
         /// </summary>
         public override event Action OnAbilityEquipped;
+
+        /// <summary>
+        /// Event that is called when the player switches weapons.
+        /// </summary>
+        public override event Action<int> OnSwitchWeaponInput;
+
+        public override event Action OnReloadInput;
 
         /// <summary>
         /// Component that handles player input Unity API calls.
@@ -59,10 +66,14 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
             // Look Input Events
             _playerInput.PlayerControl.Look.performed += OnLookInputReceived;
             _playerInput.PlayerControl.Look.canceled += OnLookInputReceived;
-            
+
             // Equip Ability Input Events
             _playerInput.PlayerControl.EquipAbility.performed += OnEquipAbilityInput;
+
+            _playerInput.PlayerControl.SwitchWeapon.performed += OnSwitchWeaponInputReceived;
             
+            _playerInput.PlayerControl.Reload.performed += OnReloadInputReceived;
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
@@ -85,9 +96,13 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
             // Look Input Events
             _playerInput.PlayerControl.Look.performed -= OnLookInputReceived;
             _playerInput.PlayerControl.Look.canceled -= OnLookInputReceived;
-            
+
             // Equip Ability Input Events
             _playerInput.PlayerControl.EquipAbility.performed -= OnEquipAbilityInput;
+
+            _playerInput.PlayerControl.SwitchWeapon.performed -= OnSwitchWeaponInputReceived;
+            
+            _playerInput.PlayerControl.Reload.performed -= OnReloadInputReceived;
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -104,7 +119,7 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
         // Input Event Handlers
 
         #region Equip Ability Input
-        
+
         /// <summary>
         /// This method is called when the player equips an ability.
         /// </summary>
@@ -167,6 +182,34 @@ namespace _Project.Scripts.Core.Player_Controllers.Input_Controllers
             OnLookInputUpdated?.Invoke(context.ReadValue<Vector2>());
         }
 
+        #endregion
+
+        #region Switch Weapon Input
+
+        /// <summary>
+        /// This method is called when the player switches weapons.
+        /// </summary>
+        /// <param name="context">input callback context</param>
+        private void OnSwitchWeaponInputReceived(InputAction.CallbackContext context)
+        {
+            // Invoke the OnSwitchWeaponInput event.
+            OnSwitchWeaponInput?.Invoke((int)context.ReadValue<float>());
+        }
+
+        #endregion
+        
+        #region Reload Input
+        
+        /// <summary>
+        /// This method is called when the player reloads the weapon.
+        /// </summary>
+        /// <param name="context">input callback context</param>
+        private void OnReloadInputReceived(InputAction.CallbackContext context)
+        {
+            // Invoke the OnReloadInput event.
+            OnReloadInput?.Invoke();
+        }
+        
         #endregion
     }
 }

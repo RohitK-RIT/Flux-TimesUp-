@@ -39,6 +39,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Property to access the maximum number of bullets for the Gun.
         /// </summary>
         public int MaxAmmo { get; private set; }
+        
+        ///<summary>
+        /// Property to check if the weapon is currently reloading.
+        /// </summary>
+        public bool IsReloading => _reloading;
 
         /// <summary>
         /// Is the weapon currently reloading.
@@ -164,7 +169,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
 
             // Raycast to check if the bullet hits something. If it does, play the trail to that point, else play the trail to the miss distance.
-            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance))
+            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance, CurrentPlayerController.OpponentLayer))
             {
                 StartCoroutine(PlayTrail(muzzle.position, hit.point));
                 var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
@@ -181,6 +186,16 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             // Decrease the magazine count and reload if it's empty.
             if (--CurrentAmmo != 0) return;
 
+            StartCoroutine(ReloadCoroutine());
+        }
+
+        /// <summary>
+        /// Reload the weapon.
+        /// </summary>
+        public void OnReload()
+        {
+            if(CurrentAmmo == stats.MagazineSize || _reloading || MaxAmmo == 0)
+                return;
             StartCoroutine(ReloadCoroutine());
         }
 

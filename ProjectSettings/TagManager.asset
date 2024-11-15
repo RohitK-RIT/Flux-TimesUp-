@@ -15,7 +15,8 @@ TagManager:
   - Walkable
   - Non-Walkable
   - Exit
-  - 
+  - Player
+  - Enemy
   - 
   - 
   - 

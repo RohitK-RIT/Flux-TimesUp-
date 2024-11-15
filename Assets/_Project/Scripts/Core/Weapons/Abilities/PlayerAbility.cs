@@ -1,23 +1,54 @@
 using System.Collections;
-using System.Collections.Generic;
-using _Project.Scripts.Core.Weapons;
+using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons.Abilities
 {
-    public sealed class PlayerAbility : Weapon
+    /// <summary>
+    /// Abstract base class for player abilities, inheriting from Weapon.
+    /// </summary>
+    public abstract class PlayerAbility : Weapon
     {
-        protected override IEnumerator OnAttack()
+        /// <summary>
+        /// Cooldown time between attacks.
+        /// </summary>
+        [SerializeField] private float attackCooldown = 5f;
+
+        /// <summary>
+        /// Indicates if the cooldown is active.
+        /// </summary>
+        protected bool _isCooldownActive = false;
+
+        /// <summary>
+        /// Indicates if the ability is active.
+        /// </summary>
+        protected bool _isAbilityActive = false;
+
+        /// <summary>
+        /// Indicates if the ability has been used.
+        /// </summary>
+        public bool Used { get; protected set; }
+
+        /// <summary>
+        /// Called when the ability is equipped.
+        /// </summary>
+        public override void OnEquip(PlayerController currentPlayerController)
         {
-            Debug.Log("Player is using the ability!!");
-            // start attack
-            yield return null;
+            base.OnEquip(currentPlayerController);
+            Used = false;
         }
 
-        public override void EndAttack()
+        /// <summary>
+        /// Starts the cooldown period for the ability.
+        /// </summary>
+        /// <returns>An IEnumerator for the coroutine.</returns>
+        protected IEnumerator StartCooldown()
         {
-            base.EndAttack();
-            // start cooldown
+            _isCooldownActive = true;
+            yield return new WaitForSeconds(attackCooldown); // Wait for the cooldown period
+            _isCooldownActive = false;
+            _isAbilityActive = false; // Allow a new attack after cooldown
+            Debug.Log("Ability is on cooldown!!");
         }
     }
 }
