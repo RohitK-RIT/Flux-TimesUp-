@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using _Project.Scripts.Core.Backend.Ability;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Abilities;
@@ -12,15 +13,12 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
     /// </summary>
     public sealed class WeaponController : CharacterComponent
     {
+        [SerializeField] private Transform weaponParent;
+
         /// <summary>
         /// The currently equipped weapon.
         /// </summary>
         [SerializeField] private Weapon currentWeapon;
-
-        /// <summary>
-        /// The currently equipped ability.
-        /// </summary>
-        [SerializeField] private PlayerAbility currentAbility;
 
         /// <summary>
         /// Array of all available weapons.
@@ -41,26 +39,68 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
                     return;
                 }
 
-                currentWeapon?.gameObject.SetActive(false);
+                if (currentWeapon)
+                {
+                    currentWeapon.OnUnequip();
+                    currentWeapon.gameObject.SetActive(false);
+                }
+
                 currentWeapon = value;
-                currentWeapon?.gameObject.SetActive(true);
-                currentWeapon?.OnEquip(PlayerController);
+
+                currentWeapon.gameObject.SetActive(true);
+                currentWeapon.OnEquip();
             }
         }
 
         /// <summary>
         /// Gets the current ability.
         /// </summary>
-        public PlayerAbility CurrentAbility => currentAbility;
-
-        private int _currentWeaponIndex = 0;
+        public PlayerAbility CurrentAbility { get; private set; }
 
         /// <summary>
-        /// Initializes the weapon controller, setting the player controller for the current ability.
+        /// The index of the current weapon.
         /// </summary>
-        private void Start()
+        private int _currentWeaponIndex;
+
+        public override void Initialize(PlayerController playerController)
         {
+            base.Initialize(playerController);
+
+            // The player controller has picked up all the weapons
+            foreach (var weapon in weapons)
+                weapon?.OnPickup(PlayerController);
+
+            // The player controller has picked up the ability
+            LoadAbility(playerController.CharacterStats.playerAbilityType);
+
+            // Load the first weapon
             CurrentWeapon = weapons[_currentWeaponIndex];
+        }
+
+        /// <summary>
+        /// Loads an ability by its type.
+        /// </summary>
+        /// <param name="playerAbilityType">type of the ability</param>
+        private void LoadAbility(PlayerAbilityType playerAbilityType)
+        {
+            // Check if the player has no ability
+            if(playerAbilityType == PlayerAbilityType.None)
+                return;
+            
+            // Get the ability prefab
+            var abilityPrefab = AbilityDataSystem.Instance.GetAbilityPrefab(playerAbilityType);
+            // Check if the ability prefab is not null
+            if (abilityPrefab)
+            {
+                // Instantiate the ability prefab
+                CurrentAbility = Instantiate(abilityPrefab, weaponParent);
+                CurrentAbility.gameObject.SetActive(false);
+                CurrentAbility.OnPickup(PlayerController);
+            }
+            else
+            {
+                Debug.LogError("Ability Prefab not found");
+            }
         }
 
         /// <summary>
@@ -71,7 +111,11 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         {
             // Load the weapon
         }
-        
+
+        /// <summary>
+        /// Switches the weapon by a delta value.
+        /// </summary>
+        /// <param name="delta">The value with which the weapon switches</param>
         public void SwitchWeapon(int delta)
         {
             _currentWeaponIndex += delta;
@@ -98,13 +142,13 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
 
             StartCoroutine(HandleWeaponSwitch(CurrentAbility));
         }
-        
+
         /// <summary>
         /// Reloads the current weapon.
         /// </summary>
         public void ReloadWeapon()
         {
-            if(currentWeapon is RangedWeapon rangedWeapon)
+            if (currentWeapon is RangedWeapon rangedWeapon)
                 rangedWeapon.OnReload();
         }
 

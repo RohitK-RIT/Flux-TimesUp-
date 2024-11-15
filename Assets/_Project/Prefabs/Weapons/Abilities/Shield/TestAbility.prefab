@@ -118,6 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a683a0b376464cb49c038c0d677c6df6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentPlayerController: {fileID: 0}
-  attackCooldown: 5
-  abilityDuration: 7
+  stats: {fileID: 11400000, guid: 743fac22fab6eb143974320ed5ba8896, type: 2}
+  shieldVisualPrefab: {fileID: 5064709389821516563, guid: 5cd332f9d9bc65a4f84d2dd1025b2ad9,
+    type: 3}

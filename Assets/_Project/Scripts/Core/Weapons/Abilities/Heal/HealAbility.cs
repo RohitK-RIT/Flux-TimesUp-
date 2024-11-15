@@ -1,25 +1,21 @@
 ﻿using System.Collections;
-using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
 
-namespace _Project.Scripts.Core.Weapons.Abilities
+namespace _Project.Scripts.Core.Weapons.Abilities.Heal
 {
     /// <summary>
     /// Represents the heal ability for the player.
     /// </summary>
     public class HealAbility : PlayerAbility
     {
-        /// <summary>
-        /// The duration for which the shield ability remains active.
-        /// </summary>
-        [SerializeField] private float abilityDuration;
+        [SerializeField] private HealAbilityStats stats;
 
         /// <summary>
         /// Called when the ability is equipped.
         /// </summary>
-        public override void OnEquip(PlayerController currentPlayerController)
+        public override void OnEquip()
         {
-            base.OnEquip(currentPlayerController);
+            base.OnEquip();
             UseHeal();
             Used = true;
         }
@@ -37,9 +33,8 @@ namespace _Project.Scripts.Core.Weapons.Abilities
 
             _isAbilityActive = true;
             //Heal the player
-            abilityDuration = 5f;
             Debug.Log("Player is using the heal ability!!");
-            CurrentPlayerController.StartCoroutine(DeactivateAbility(abilityDuration));
+            CurrentPlayerController.StartCoroutine(DeactivateAbility(stats.AbilityDuration));
         }
 
         /// <summary>
@@ -51,7 +46,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
         {
             yield return new WaitForSeconds(time);
             Debug.Log("Ability deactivated!!");
-            CurrentPlayerController.StartCoroutine(StartCooldown());
+            CurrentPlayerController.StartCoroutine(StartCooldown(stats.Cooldown));
         }
 
         protected override IEnumerator OnAttack()
