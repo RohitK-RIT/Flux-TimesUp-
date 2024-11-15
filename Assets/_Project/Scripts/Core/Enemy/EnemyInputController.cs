@@ -41,7 +41,7 @@ namespace _Project.Scripts.Core.Enemy
 
         private void Awake()
         {
-            _enemy = GetComponentInParent<NavMeshAgent>(); 
+            _enemy = GetComponent<NavMeshAgent>(); 
             // assigning the navmesh agent from the empty parent game object
             // empty game object is created to align the pivot of the enemy game object and the obstacle avoidance
             
