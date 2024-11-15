@@ -208,8 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5cea77b5ed4e3895ca6ef53545191e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponParent: {fileID: 3569496227156943954}
   currentWeapon: {fileID: 8230801370227858818}
-  currentAbility: {fileID: 0}
   weapons:
   - {fileID: 8230801370227858818}
   - {fileID: 7247089169194843119}

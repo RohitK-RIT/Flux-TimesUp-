@@ -7,7 +7,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// Ranged weapon stats.
     /// </summary>
     [Serializable]
-    [CreateAssetMenu(fileName = "RWS_WeaponName", menuName = "Weapons/Weapon Stats/Ranged", order = 0)]
+    [CreateAssetMenu(fileName = "RWS_WeaponName", menuName = "Weapons/Stats/Ranged", order = 0)]
     public class RangedWeaponStats : WeaponStats
     {
         /// <summary>

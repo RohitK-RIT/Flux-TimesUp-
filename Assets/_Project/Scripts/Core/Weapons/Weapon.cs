@@ -24,10 +24,19 @@ namespace _Project.Scripts.Core.Weapons
         /// </summary>
         protected PlayerController CurrentPlayerController { get; private set; }
 
-        public virtual void OnEquip(PlayerController currentPlayerController)
+        public virtual void OnPickup(PlayerController currentPlayerController)
         {
             CurrentPlayerController = currentPlayerController;
         }
+
+        public virtual void OnDrop()
+        {
+            CurrentPlayerController = null;
+        }
+
+        public virtual void OnEquip() { }
+        
+        public virtual void OnUnequip() { }
 
         /// <summary>
         /// Start attacking.
