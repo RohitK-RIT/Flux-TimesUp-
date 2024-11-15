@@ -1,5 +1,5 @@
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
-using _Project.Scripts.Core.Weapons.Abilities;
+using _Project.Scripts.Core.Weapons.Abilities.Shield;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
@@ -45,7 +45,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnLookInputUpdated += SetLookInput;
 
             _localInputController.OnAbilityEquipped += AbilityEquipped;
-            
+
             _localInputController.OnSwitchWeaponInput += SwitchWeapon;
             _localInputController.OnReloadInput += Reload;
         }
@@ -61,7 +61,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             _localInputController.OnLookInputUpdated -= SetLookInput;
 
             _localInputController.OnAbilityEquipped -= AbilityEquipped;
-            
+
             _localInputController.OnSwitchWeaponInput -= SwitchWeapon;
             _localInputController.OnReloadInput += Reload;
         }
@@ -83,6 +83,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             WeaponController.OnAbilityEquipped();
             Debug.Log("Ability Equipped");
         }
+
         /// <summary>
         /// Overrides the TakeDamage method to include shield ability check.
         /// </summary>

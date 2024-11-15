@@ -1,8 +1,8 @@
 ﻿using System.Collections;
-using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
+using _Project.Scripts.Core.Player_Controllers;
 
-namespace _Project.Scripts.Core.Weapons.Abilities
+namespace _Project.Scripts.Core.Weapons.Abilities.Shield
 {
     /// <summary>
     /// Represents the shield ability for the player.
@@ -15,21 +15,43 @@ namespace _Project.Scripts.Core.Weapons.Abilities
         public bool IsActive { get; private set; }
 
         /// <summary>
-        /// The duration for which the shield ability remains active.
+        /// The stats for the shield ability.
         /// </summary>
-        [SerializeField] private float abilityDuration;
+        [SerializeField] private ShieldAbilityStats stats;
 
         /// <summary>
         /// The visual representation of the shield.
         /// </summary>
-        [SerializeField] private GameObject shieldVisual;
+        [SerializeField] private GameObject shieldVisualPrefab;
+
+        /// <summary>
+        /// GameObject to represent the shield.
+        /// </summary>
+        private GameObject _shieldVisual;
+
+        public override void OnPickup(PlayerController currentPlayerController)
+        {
+            base.OnPickup(currentPlayerController);
+
+            // Instantiate the shield visual and set the shield visual as a child of the player.
+            _shieldVisual = Instantiate(shieldVisualPrefab, currentPlayerController.transform);
+            SetShieldVisual(false);
+        }
+
+        public override void OnDrop()
+        {
+            base.OnDrop();
+
+            // Destroy the shield visual.
+            Destroy(_shieldVisual);
+        }
 
         /// <summary>
         /// Called when the ability is equipped.
         /// </summary>
-        public override void OnEquip(PlayerController currentPlayerController)
+        public override void OnEquip()
         {
-            base.OnEquip(currentPlayerController);
+            base.OnEquip();
             UseShield();
             Used = true;
         }
@@ -48,8 +70,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
             SetShieldVisual(true);
             IsActive = true;
             _isAbilityActive = true;
-            abilityDuration = 7f;
-            CurrentPlayerController.StartCoroutine(DeactivateAbility(abilityDuration));
+            CurrentPlayerController.StartCoroutine(DeactivateAbility(stats.Duration));
         }
 
         /// <summary>
@@ -63,7 +84,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
             Debug.Log("Ability deactivated!!");
             IsActive = false;
             SetShieldVisual(false);
-            CurrentPlayerController.StartCoroutine(StartCooldown());
+            CurrentPlayerController.StartCoroutine(StartCooldown(stats.Cooldown));
         }
 
         /// <summary>
@@ -81,7 +102,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
         /// <param name="value">A boolean value indicating whether to activate or deactivate the shield visual.</param>
         private void SetShieldVisual(bool value)
         {
-            shieldVisual.SetActive(value);
+            _shieldVisual.SetActive(value);
         }
     }
 }

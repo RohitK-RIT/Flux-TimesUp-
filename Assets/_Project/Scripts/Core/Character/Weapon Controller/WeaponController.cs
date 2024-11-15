@@ -41,10 +41,16 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
                     return;
                 }
 
-                currentWeapon?.gameObject.SetActive(false);
+                if (currentWeapon)
+                {
+                    currentWeapon.OnUnequip();
+                    currentWeapon.gameObject.SetActive(false);
+                }
+
                 currentWeapon = value;
-                currentWeapon?.gameObject.SetActive(true);
-                currentWeapon?.OnEquip(PlayerController);
+
+                currentWeapon.gameObject.SetActive(true);
+                currentWeapon.OnEquip();
             }
         }
 
@@ -55,11 +61,17 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
 
         private int _currentWeaponIndex = 0;
 
-        /// <summary>
-        /// Initializes the weapon controller, setting the player controller for the current ability.
-        /// </summary>
-        private void Start()
+        public override void Initialize(PlayerController playerController)
         {
+            base.Initialize(playerController);
+
+            // The player controller has picked up all the weapons
+            foreach (var weapon in weapons)
+                weapon?.OnPickup(PlayerController);
+            // The player controller has picked up the ability
+            CurrentAbility?.OnPickup(PlayerController);
+            
+            // Load the first weapon
             CurrentWeapon = weapons[_currentWeaponIndex];
         }
 
@@ -71,7 +83,11 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         {
             // Load the weapon
         }
-        
+
+        /// <summary>
+        /// Switches the weapon by a delta value.
+        /// </summary>
+        /// <param name="delta">The value with which the weapon switches</param>
         public void SwitchWeapon(int delta)
         {
             _currentWeaponIndex += delta;
@@ -98,13 +114,13 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
 
             StartCoroutine(HandleWeaponSwitch(CurrentAbility));
         }
-        
+
         /// <summary>
         /// Reloads the current weapon.
         /// </summary>
         public void ReloadWeapon()
         {
-            if(currentWeapon is RangedWeapon rangedWeapon)
+            if (currentWeapon is RangedWeapon rangedWeapon)
                 rangedWeapon.OnReload();
         }
 
