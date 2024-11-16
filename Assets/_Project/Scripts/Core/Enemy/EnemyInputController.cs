@@ -37,7 +37,7 @@ namespace _Project.Scripts.Core.Enemy
 
         internal StateManager StateManager; // refrence to state manager
 
-        private readonly float _chaseRange = 15f; // chase range
+        private readonly float _chaseRange = 10f; // chase range
 
         private void Awake()
         {
