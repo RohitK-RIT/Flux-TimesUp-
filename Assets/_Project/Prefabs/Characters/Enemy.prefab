@@ -579,7 +579,7 @@ MonoBehaviour:
   fieldOfViewAngle: 45
   layerMask:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1024
 --- !u!114 &4088876135904891852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -608,10 +608,10 @@ MonoBehaviour:
   characterStats: {fileID: 11400000, guid: 72c3c8a87f21a3a4894c6a42c8bd0fbc, type: 2}
   friendlyLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 2048
   opponentLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 1024
   currentHealth: 0
 --- !u!114 &4127578449217557017
 MonoBehaviour:
