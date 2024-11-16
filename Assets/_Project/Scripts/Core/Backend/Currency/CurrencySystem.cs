@@ -71,6 +71,17 @@ namespace _Project.Scripts.Core.Backend.Currency
             return wallet != null && wallet.RemoveCoins(amount);
         }
 
+        /// <summary>
+        /// Get the amount of coins in a wallet.
+        /// </summary>
+        /// <param name="walletID">wallet ID to return the coins in it</param>
+        /// <returns>amount of coins in a wallet of specified ID</returns>
+        public int GetCoins(string walletID)
+        {
+            // Get the wallet and return the coins value
+            var wallet = GetWallet(walletID);
+            return wallet?.Coins ?? 0;
+        }
 
         /// <summary>
         /// Get a wallet by its ID.
@@ -85,18 +96,6 @@ namespace _Project.Scripts.Core.Backend.Currency
 
             Debug.LogError("Wallet not found!");
             return null;
-        }
-
-        /// <summary>
-        /// Get the amount of coins in a wallet.
-        /// </summary>
-        /// <param name="walletID">wallet ID to return the coins in it</param>
-        /// <returns>amount of coins in a wallet of specified ID</returns>
-        public int GetCoins(string walletID)
-        {
-            // Get the wallet and return the coins value
-            var wallet = GetWallet(walletID);
-            return wallet?.Coins ?? 0;
         }
     }
 }
