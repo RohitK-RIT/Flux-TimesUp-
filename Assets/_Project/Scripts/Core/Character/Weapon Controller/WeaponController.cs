@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using _Project.Scripts.Core.Backend.Ability;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
@@ -12,17 +11,8 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
     /// <summary>
     /// Manages the player's weapons and abilities, allowing for weapon switching and ability usage.
     /// </summary>
-    public sealed class WeaponController : CharacterComponent
+    public class WeaponController : CharacterComponent
     {
-        /// <summary>
-        /// Event for when an enemy is killed.
-        /// </summary>
-        public event Action OnKillEnemy;
-
-        /// <summary>
-        /// Event for when an enemy is hit.
-        /// </summary>
-        public event Action OnHitEnemy;
 
         /// <summary>
         /// The parent transform for the weapons.
@@ -56,16 +46,12 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
                 if (currentWeapon)
                 {
                     currentWeapon.OnUnequip();
-                    currentWeapon.OnKillEnemy -= OnKillEnemy;
-                    currentWeapon.OnHitEnemy -= OnHitEnemy;
                     currentWeapon.gameObject.SetActive(false);
                 }
 
                 currentWeapon = value;
 
                 currentWeapon.gameObject.SetActive(true);
-                currentWeapon.OnKillEnemy += OnKillEnemy;
-                currentWeapon.OnHitEnemy += OnHitEnemy;
                 currentWeapon.OnEquip();
             }
         }

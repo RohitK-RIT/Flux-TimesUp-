@@ -150,6 +150,12 @@ namespace _Project.Scripts.Core.Weapons.Ranged
                 Debug.LogError($"No fire mode set for {stats.WeaponName}", stats);
         }
 
+        protected override float GetDamage()
+        {
+            // TODO: Implement era specific damage calculation
+            return stats.Damage;
+        }
+
         /// <summary>
         /// Fire the bullet.
         /// </summary>
@@ -173,13 +179,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             {
                 StartCoroutine(PlayTrail(muzzle.position, hit.point));
                 var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
-                if (playerController)
-                {
-                    if (playerController.TakeDamage(stats.Damage))
-                        OnEnemyKilled();
-                    else
-                        OnEnemyHit();
-                }
+                playerController?.TakeDamage(this, GetDamage());
             }
             else
             {

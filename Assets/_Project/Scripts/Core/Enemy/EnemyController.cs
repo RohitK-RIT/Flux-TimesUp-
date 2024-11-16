@@ -11,9 +11,14 @@ namespace _Project.Scripts.Core.Enemy
         protected override void Awake()
         {
             base.Awake();
-            
+
             _enemyInputController = GetComponent<EnemyInputController>();
-            
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+
             _enemyInputController.Initialize(this);
         }
 
@@ -32,8 +37,9 @@ namespace _Project.Scripts.Core.Enemy
             _enemyInputController.OnAttackInputEnded -= EndAttack;
         }
 
-        protected override void Die()
+        protected override void Die(PlayerController enemyPlayer)
         {
+            base.Die(enemyPlayer);
             gameObject.SetActive(false);
         }
     }

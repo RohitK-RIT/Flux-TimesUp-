@@ -52,14 +52,14 @@ namespace _Project.Scripts.Core.Weapons.Melee
 
                 // Check if the enemy is a player and deal damage
                 var playerController = enemiesColliders[i].gameObject.GetComponent<PlayerController>();
-                if (!playerController)
-                    continue;
-                
-                if (playerController.TakeDamage(stats.Damage))
-                    OnEnemyKilled();
-                else
-                    OnEnemyHit();
+                playerController?.TakeDamage(this, GetDamage());
             }
+        }
+
+        protected override float GetDamage()
+        {
+            // TODO: Implement era specific damage calculation
+            return stats.Damage;
         }
     }
 }

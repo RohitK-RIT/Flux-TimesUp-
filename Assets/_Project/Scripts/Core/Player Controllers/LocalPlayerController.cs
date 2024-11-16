@@ -1,5 +1,7 @@
 using _Project.Scripts.Core.Backend.Currency;
+using _Project.Scripts.Core.Enemy;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
+using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Abilities.Shield;
 using UnityEngine;
 
@@ -24,18 +26,29 @@ namespace _Project.Scripts.Core.Player_Controllers
         // This will go in player info eventually.
         [SerializeField] private float aimSensitivity = 1f;
 
+        /// <summary>
+        /// The wallet ID for the player.
+        /// </summary>
         private string _walletID;
 
         protected override void Awake()
         {
             base.Awake();
 
+            // Get the required components
             _localInputController = GetComponent<LocalInputController>();
             _cameraController = GetComponent<CameraController>();
+        }
 
+        protected override void Start()
+        {
+            base.Start();
+
+            // Initialize the input controller and camera controller
             _localInputController.Initialize(this);
             _cameraController.Initialize(this);
 
+            // Create a wallet for the player
             _walletID = CurrencySystem.Instance.CreateWallet();
         }
 
@@ -53,9 +66,6 @@ namespace _Project.Scripts.Core.Player_Controllers
 
             _localInputController.OnSwitchWeaponInput += SwitchWeapon;
             _localInputController.OnReloadInput += Reload;
-            
-            WeaponController.OnKillEnemy += OnEnemyKilled;
-            WeaponController.OnHitEnemy += OnEnemyHit;
         }
 
         private void OnDisable()
@@ -72,9 +82,6 @@ namespace _Project.Scripts.Core.Player_Controllers
 
             _localInputController.OnSwitchWeaponInput -= SwitchWeapon;
             _localInputController.OnReloadInput -= Reload;
-            
-            WeaponController.OnKillEnemy -= OnEnemyKilled;
-            WeaponController.OnHitEnemy -= OnEnemyHit;
         }
 
         /// <summary>
@@ -97,53 +104,49 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Overrides the TakeDamage method to include shield ability check.
         /// </summary>
-        /// <param name="damageAmount">The amount of damage to be taken.</param>
+        /// <param name="weapon"></param>
+        /// <param name="damageDealt"></param>
         /// <returns>if the player is dead</returns>
-        public override bool TakeDamage(float damageAmount)
+        public override void TakeDamage(Weapon weapon, float damageDealt)
         {
             // Check if the shield ability is active, if so, return false
             var shield = WeaponController.CurrentAbility as ShieldAbility;
             if (shield && shield.IsActive)
-                return false;
+                return;
 
             // If the shield ability is not active, take damage
-            return base.TakeDamage(damageAmount);
+            base.TakeDamage(weapon, damageDealt);
         }
-        
+
         /// <summary>
         /// Called when an enemy is killed.
         /// </summary>
-        private void OnEnemyKilled()
+        /// <param name="enemyPlayer"></param>
+        protected override void OnKillConfirmed(PlayerController enemyPlayer)
         {
-            CurrencySystem.Instance.AddCoins(_walletID, 10);
+            // Cast the enemyPlayer to an enemy controller
+            if (enemyPlayer is EnemyController enemyController)
+            {
+                // Add coins to the player's wallet
+                CurrencySystem.Instance.AddCoins(_walletID, 10); // 10 coins for now, eventually this will be based on enemy type
+            }
         }
 
         /// <summary>
         /// Called when an enemy is hit.
         /// </summary>
-        private void OnEnemyHit()
+        protected override void OnHitConfirmed(PlayerController enemyPlayer)
         {
             // Empty for now
         }
-        
+
+        /// <summary>
+        /// Get the player's coins.
+        /// </summary>
+        /// <returns></returns>
         public int GetCoins()
         {
             return CurrencySystem.Instance.GetCoins(_walletID);
         }
-
-#if UNITY_EDITOR
-        //to be removed
-        [ContextMenu("Take Damage")]
-        public void TakeDamage()
-        {
-            TakeDamage(10);
-        }
-
-        [ContextMenu("Heal")]
-        public void Heal()
-        {
-            Heal(10);
-        }
-#endif
     }
 }

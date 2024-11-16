@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
@@ -10,16 +9,6 @@ namespace _Project.Scripts.Core.Weapons
     /// </summary>
     public abstract class Weapon : MonoBehaviour
     {
-        /// <summary>
-        /// Event for when an enemy is killed.
-        /// </summary>
-        public event Action OnKillEnemy;
-
-        /// <summary>
-        /// Event for when an enemy is hit.
-        /// </summary>
-        public event Action OnHitEnemy;
-
         /// <summary>
         /// Coroutine for attacking.
         /// </summary>
@@ -33,7 +22,7 @@ namespace _Project.Scripts.Core.Weapons
         /// <summary>
         /// Current player controller.
         /// </summary>
-        protected PlayerController CurrentPlayerController { get; private set; }
+        public PlayerController CurrentPlayerController { get; private set; }
 
         public virtual void OnPickup(PlayerController currentPlayerController)
         {
@@ -82,14 +71,14 @@ namespace _Project.Scripts.Core.Weapons
         /// </summary>
         protected abstract IEnumerator OnAttack();
 
-        protected void OnEnemyKilled()
+        /// <summary>
+        /// Get the damage of the weapon.
+        /// </summary>
+        /// <returns>damage dealt by the weapon</returns>
+        protected virtual float GetDamage()
         {
-            OnKillEnemy?.Invoke();
-        }
-
-        protected void OnEnemyHit()
-        {
-            OnHitEnemy?.Invoke();
+            // TODO: Implement damage calculation in base classes
+            return 0f;
         }
     }
 }
