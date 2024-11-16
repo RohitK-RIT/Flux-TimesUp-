@@ -21,7 +21,7 @@ namespace _Project.Scripts.Core.Enemy
         
         private Transform _currentTarget; // current target to assign
 
-        private readonly float _attackRange = 5f; // Attack range
+        private readonly float _attackRange = 10f; // Attack range
         
         [SerializeField] private float attackCooldown = 5f; // Cooldown time between attacks
 
@@ -37,7 +37,7 @@ namespace _Project.Scripts.Core.Enemy
 
         internal StateManager StateManager; // refrence to state manager
 
-        private readonly float _chaseRange = 10f; // chase range
+        private readonly float _chaseRange = 15f; // chase range
 
         private void Awake()
         {
