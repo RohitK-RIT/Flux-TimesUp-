@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using _Project.Scripts.Core.Backend.Ability;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
@@ -13,6 +14,19 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
     /// </summary>
     public sealed class WeaponController : CharacterComponent
     {
+        /// <summary>
+        /// Event for when an enemy is killed.
+        /// </summary>
+        public event Action OnKillEnemy;
+
+        /// <summary>
+        /// Event for when an enemy is hit.
+        /// </summary>
+        public event Action OnHitEnemy;
+
+        /// <summary>
+        /// The parent transform for the weapons.
+        /// </summary>
         [SerializeField] private Transform weaponParent;
 
         /// <summary>
@@ -42,12 +56,16 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
                 if (currentWeapon)
                 {
                     currentWeapon.OnUnequip();
+                    currentWeapon.OnKillEnemy -= OnKillEnemy;
+                    currentWeapon.OnHitEnemy -= OnHitEnemy;
                     currentWeapon.gameObject.SetActive(false);
                 }
 
                 currentWeapon = value;
 
                 currentWeapon.gameObject.SetActive(true);
+                currentWeapon.OnKillEnemy += OnKillEnemy;
+                currentWeapon.OnHitEnemy += OnHitEnemy;
                 currentWeapon.OnEquip();
             }
         }
@@ -84,9 +102,9 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         private void LoadAbility(PlayerAbilityType playerAbilityType)
         {
             // Check if the player has no ability
-            if(playerAbilityType == PlayerAbilityType.None)
+            if (playerAbilityType == PlayerAbilityType.None)
                 return;
-            
+
             // Get the ability prefab
             var abilityPrefab = AbilityDataSystem.Instance.GetAbilityPrefab(playerAbilityType);
             // Check if the ability prefab is not null

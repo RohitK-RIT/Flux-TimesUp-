@@ -81,7 +81,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             MovementController.MoveInput = direction;
         }
-        
+
         /// <summary>
         /// Switch the player's weapon.
         /// </summary>
@@ -90,7 +90,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             WeaponController.SwitchWeapon(direction);
         }
-        
+
         protected virtual void Reload()
         {
             WeaponController.ReloadWeapon();
@@ -116,14 +116,17 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Function to take damage by reducing the stat's value.
         /// </summary>
         /// <param name="damageAmount"></param>
-        public virtual void TakeDamage(float damageAmount)
+        /// <returns>if the character is dead</returns>
+        public virtual bool TakeDamage(float damageAmount)
         {
             currentHealth -= damageAmount;
             currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
-            if (currentHealth <= 0)
-            {
-                Die();
-            }
+            if (currentHealth > 0)
+                return false;
+            
+            Die();
+            return true;
+
         }
 
         /// <summary>

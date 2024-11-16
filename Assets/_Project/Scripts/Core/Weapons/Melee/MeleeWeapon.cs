@@ -50,8 +50,15 @@ namespace _Project.Scripts.Core.Weapons.Melee
                 if (angle > stats.AttackFOV)
                     continue;
 
+                // Check if the enemy is a player and deal damage
                 var playerController = enemiesColliders[i].gameObject.GetComponent<PlayerController>();
-                playerController?.TakeDamage(stats.Damage);
+                if (!playerController)
+                    continue;
+                
+                if (playerController.TakeDamage(stats.Damage))
+                    OnEnemyKilled();
+                else
+                    OnEnemyHit();
             }
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
@@ -9,6 +10,16 @@ namespace _Project.Scripts.Core.Weapons
     /// </summary>
     public abstract class Weapon : MonoBehaviour
     {
+        /// <summary>
+        /// Event for when an enemy is killed.
+        /// </summary>
+        public event Action OnKillEnemy;
+
+        /// <summary>
+        /// Event for when an enemy is hit.
+        /// </summary>
+        public event Action OnHitEnemy;
+
         /// <summary>
         /// Coroutine for attacking.
         /// </summary>
@@ -35,7 +46,7 @@ namespace _Project.Scripts.Core.Weapons
         }
 
         public virtual void OnEquip() { }
-        
+
         public virtual void OnUnequip() { }
 
         /// <summary>
@@ -70,5 +81,15 @@ namespace _Project.Scripts.Core.Weapons
         /// Coroutine for attacking.
         /// </summary>
         protected abstract IEnumerator OnAttack();
+
+        protected void OnEnemyKilled()
+        {
+            OnKillEnemy?.Invoke();
+        }
+
+        protected void OnEnemyHit()
+        {
+            OnHitEnemy?.Invoke();
+        }
     }
 }
