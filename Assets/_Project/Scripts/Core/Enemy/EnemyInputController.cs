@@ -21,7 +21,7 @@ namespace _Project.Scripts.Core.Enemy
         
         private Transform _currentTarget; // current target to assign
 
-        private readonly float _attackRange = 10f; // Attack range
+        private readonly float _attackRange = 5f; // Attack range
         
         [SerializeField] private float attackCooldown = 5f; // Cooldown time between attacks
 
