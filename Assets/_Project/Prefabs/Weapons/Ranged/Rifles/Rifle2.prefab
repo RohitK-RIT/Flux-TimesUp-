@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 4400650788546934984}
   - component: {fileID: 7052611767422597503}
   m_Layer: 0
-  m_Name: AK47
+  m_Name: Rifle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4fc3311e76f4111a7ecdc958de43ff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 11400000, guid: 22bbb6c749db0db488c411f36c9e466c, type: 2}
+  stats: {fileID: 11400000, guid: b47e1c628636e4dcf9497816a23a3b62, type: 2}
   muzzle: {fileID: 1619547666470843636}
   trailRendererPrefab: {fileID: 3577689957102526741, guid: 86b5e158990bad84f84846c77f2c6e70,
     type: 3}
