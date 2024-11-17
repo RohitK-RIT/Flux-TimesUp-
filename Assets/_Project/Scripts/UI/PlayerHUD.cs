@@ -17,8 +17,11 @@ namespace _Project.Scripts.UI
         [SerializeField] public TMP_Text currAmmo;
         [SerializeField] public TMP_Text maxAmmo;
         [SerializeField] public LocalPlayerController player;
+
         [SerializeField] public GameObject reloadingText;
+
         //[SerializeField] private TMP_Text objectiveText;
+        [SerializeField] private TMP_Text coinsText;
 
         private void Start()
         {
@@ -34,6 +37,7 @@ namespace _Project.Scripts.UI
             UpdateAmmoDisplay();
             UpdateReloadingText();
             //UpdateObjectiveText();
+            UpdateCoinsText();
         }
 
         // Updates the health bar based on the player's current and max health
@@ -51,25 +55,25 @@ namespace _Project.Scripts.UI
             currAmmo.text = currentRangedWeapon.CurrentAmmo.ToString();
             maxAmmo.text = currentRangedWeapon.MaxAmmo.ToString();
         }
+
         // Updates the reloading text based on the player's current weapon state
         private void UpdateReloadingText()
         {
             var currentRangedWeapon = player.WeaponController.CurrentWeapon as RangedWeapon;
-            if (!currentRangedWeapon) return;
-            if (currentRangedWeapon.IsReloading)
-            {
-                reloadingText.SetActive(true);
-            }
+            if (!currentRangedWeapon)
+                return;
 
-            if (!currentRangedWeapon.IsReloading)
-            {
-                reloadingText.SetActive(false);
-            }
+            reloadingText.SetActive(currentRangedWeapon.IsReloading);
         }
 
         /*private void UpdateObjectiveText()
         {
             objectiveText.text = LevelSceneController.Instance.NumberOfEnemies.ToString();
         }*/
+
+        private void UpdateCoinsText()
+        {
+            coinsText.text = player?.GetCoins().ToString();
+        }
     }
 }

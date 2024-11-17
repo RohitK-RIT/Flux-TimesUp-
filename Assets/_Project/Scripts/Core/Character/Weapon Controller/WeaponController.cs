@@ -11,8 +11,12 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
     /// <summary>
     /// Manages the player's weapons and abilities, allowing for weapon switching and ability usage.
     /// </summary>
-    public sealed class WeaponController : CharacterComponent
+    public class WeaponController : CharacterComponent
     {
+
+        /// <summary>
+        /// The parent transform for the weapons.
+        /// </summary>
         [SerializeField] private Transform weaponParent;
 
         /// <summary>
@@ -84,9 +88,9 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         private void LoadAbility(PlayerAbilityType playerAbilityType)
         {
             // Check if the player has no ability
-            if(playerAbilityType == PlayerAbilityType.None)
+            if (playerAbilityType == PlayerAbilityType.None)
                 return;
-            
+
             // Get the ability prefab
             var abilityPrefab = AbilityDataSystem.Instance.GetAbilityPrefab(playerAbilityType);
             // Check if the ability prefab is not null

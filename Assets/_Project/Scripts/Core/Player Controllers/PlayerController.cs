@@ -1,5 +1,7 @@
-﻿using _Project.Scripts.Core.Character;
+﻿using System;
+using _Project.Scripts.Core.Character;
 using _Project.Scripts.Core.Character.Weapon_Controller;
+using _Project.Scripts.Core.Weapons;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Player_Controllers
@@ -65,7 +67,11 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Get the CharacterMovement and CharacterWeaponController component attached to the player
             MovementController = GetComponent<MovementController>();
             WeaponController = GetComponent<WeaponController>();
+        }
 
+        protected virtual void Start()
+        {
+            // Initialize the player's movement and weapon controller
             MovementController.Initialize(this);
             WeaponController.Initialize(this);
 
@@ -81,7 +87,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             MovementController.MoveInput = direction;
         }
-        
+
         /// <summary>
         /// Switch the player's weapon.
         /// </summary>
@@ -90,7 +96,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             WeaponController.SwitchWeapon(direction);
         }
-        
+
         protected virtual void Reload()
         {
             WeaponController.ReloadWeapon();
@@ -115,15 +121,16 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Function to take damage by reducing the stat's value.
         /// </summary>
-        /// <param name="damageAmount"></param>
-        public virtual void TakeDamage(float damageAmount)
+        /// <param name="weapon">weapon that is dealing the damage.</param>
+        /// <param name="damageDealt">damage dealt by the weapon</param>
+        public virtual void TakeDamage(Weapon weapon, float damageDealt)
         {
-            currentHealth -= damageAmount;
-            currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
+            currentHealth -= damageDealt;
+            currentHealth = Mathf.Clamp(currentHealth, 0f, CharacterStats.maxHealth);
+            OnHitConfirmed(weapon.CurrentPlayerController);
+
             if (currentHealth <= 0)
-            {
-                Die();
-            }
+                Die(weapon.CurrentPlayerController);
         }
 
         /// <summary>
@@ -139,10 +146,21 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Function to handle the character's death.
         /// </summary>
-        protected virtual void Die()
+        /// <param name="enemyPlayer"></param>
+        protected virtual void Die(PlayerController enemyPlayer)
         {
             // Handle the character's death
-            Debug.Log("Character has died");
+            enemyPlayer.OnKillConfirmed(this);
+        }
+
+        protected virtual void OnKillConfirmed(PlayerController enemyPlayer)
+        {
+            // Handle the kill confirmation
+        }
+
+        protected virtual void OnHitConfirmed(PlayerController enemyPlayer)
+        {
+            // Handle the hit confirmation
         }
     }
 }

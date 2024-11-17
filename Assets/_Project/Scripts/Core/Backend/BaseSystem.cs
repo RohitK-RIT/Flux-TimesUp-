@@ -8,6 +8,9 @@ namespace _Project.Scripts.Core.Backend
     /// </summary>
     public abstract class BaseSystem<T> : MonoBehaviour where T : BaseSystem<T>
     {
+        /// <summary>
+        /// Determines if the system should be persistent between scenes.
+        /// </summary>
         protected abstract bool IsPersistent { get; }
 
         /// <summary>

@@ -61,7 +61,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities.Shield
         /// </summary>
         private void UseShield()
         {
-            if (_isAbilityActive || _isCooldownActive)
+            if (IsAbilityActive || IsCooldownActive)
             {
                 Debug.Log("Ability is on cooldown or already active.");
                 return;
@@ -69,7 +69,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities.Shield
 
             SetShieldVisual(true);
             IsActive = true;
-            _isAbilityActive = true;
+            IsAbilityActive = true;
             CurrentPlayerController.StartCoroutine(DeactivateAbility(stats.Duration));
         }
 

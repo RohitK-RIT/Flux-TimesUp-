@@ -39,7 +39,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Property to access the maximum number of bullets for the Gun.
         /// </summary>
         public int MaxAmmo { get; private set; }
-        
+
         ///<summary>
         /// Property to check if the weapon is currently reloading.
         /// </summary>
@@ -150,6 +150,12 @@ namespace _Project.Scripts.Core.Weapons.Ranged
                 Debug.LogError($"No fire mode set for {stats.WeaponName}", stats);
         }
 
+        protected override float GetDamage()
+        {
+            // TODO: Implement era specific damage calculation
+            return stats.Damage;
+        }
+
         /// <summary>
         /// Fire the bullet.
         /// </summary>
@@ -173,8 +179,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             {
                 StartCoroutine(PlayTrail(muzzle.position, hit.point));
                 var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
-                if (playerController)
-                    playerController.TakeDamage(stats.Damage);
+                playerController?.TakeDamage(this, GetDamage());
             }
             else
             {
@@ -194,7 +199,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         public void OnReload()
         {
-            if(CurrentAmmo == stats.MagazineSize || _reloading || MaxAmmo == 0)
+            if (CurrentAmmo == stats.MagazineSize || _reloading || MaxAmmo == 0)
                 return;
             StartCoroutine(ReloadCoroutine());
         }

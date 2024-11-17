@@ -22,7 +22,7 @@ namespace _Project.Scripts.Core.Weapons
         /// <summary>
         /// Current player controller.
         /// </summary>
-        protected PlayerController CurrentPlayerController { get; private set; }
+        public PlayerController CurrentPlayerController { get; private set; }
 
         public virtual void OnPickup(PlayerController currentPlayerController)
         {
@@ -35,7 +35,7 @@ namespace _Project.Scripts.Core.Weapons
         }
 
         public virtual void OnEquip() { }
-        
+
         public virtual void OnUnequip() { }
 
         /// <summary>
@@ -70,5 +70,15 @@ namespace _Project.Scripts.Core.Weapons
         /// Coroutine for attacking.
         /// </summary>
         protected abstract IEnumerator OnAttack();
+
+        /// <summary>
+        /// Get the damage of the weapon.
+        /// </summary>
+        /// <returns>damage dealt by the weapon</returns>
+        protected virtual float GetDamage()
+        {
+            // TODO: Implement damage calculation in base classes
+            return 0f;
+        }
     }
 }
