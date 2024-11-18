@@ -8,6 +8,7 @@ namespace _Project.Scripts.Core.Loadout
     public class WeaponDataSystem : BaseSystem<WeaponDataSystem>
     {
         [SerializeField] private WeaponData[] weaponDatabase;
+        private List<string> _selectedWeapons;
 
         /// <summary>
         /// Fetches the weapon prefab based on the provided WeaponID.
@@ -32,5 +33,15 @@ namespace _Project.Scripts.Core.Loadout
         }
 
         protected override bool IsPersistent => true;
+        
+        public void SetSelectedWeapons(List<string> selectedWeapons)
+        {
+            _selectedWeapons = new List<string>(selectedWeapons);
+        }
+
+        public List<string> GetSelectedWeapons()
+        {
+            return _selectedWeapons;
+        }
     }
 }

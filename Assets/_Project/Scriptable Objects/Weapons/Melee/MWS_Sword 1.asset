@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6132a83c799842a2adb74574aca1345a, type: 3}
   m_Name: MWS_Sword 1
   m_EditorClassIdentifier: 
-  weaponID: Sword1
+  weaponID: Sword2
   weaponType: 2
   weaponName: TBD
   damage: 20
