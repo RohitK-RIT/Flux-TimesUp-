@@ -2,6 +2,7 @@ namespace _Project.Scripts.Core.Enemy.FSM
 {
     public enum EnemyState 
     {
+        Patrol,
         // Represents the state where the enemy searches for the player within detection range
         Detect,
         

@@ -50,12 +50,13 @@ namespace _Project.Scripts.Core.Enemy
             // Initializing the dictionary for states
             var states = new Dictionary<EnemyState, BaseState>
             {
+                { EnemyState.Patrol, new PatrolState(this) },
                 { EnemyState.Detect, new DetectState(this) },
                 { EnemyState.Chase, new ChaseState(this) },
                 { EnemyState.Attack, new AttackState(this) }
             };
 
-            StateManager.InitializeStates(states, EnemyState.Detect);
+            StateManager.InitializeStates(states, EnemyState.Patrol);
         }
 
         public override void Initialize(PlayerController playerController)
