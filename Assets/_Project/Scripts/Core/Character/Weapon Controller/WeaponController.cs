@@ -72,9 +72,7 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         {
             base.Initialize(playerController);
 
-            // The player controller has picked up all the weapons
-            foreach (var weapon in weapons)
-                weapon?.OnPickup(PlayerController);
+            
 
             // The player controller has picked up the ability
             LoadAbility(playerController.CharacterStats.playerAbilityType);
@@ -89,6 +87,10 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
             {
                 Debug.LogError("No selected weapons found in WeaponDataSystem");
             }
+            
+            // The player controller has picked up all the weapons
+            foreach (var weapon in weapons)
+                weapon?.OnPickup(PlayerController);
         }
 
         /// <summary>
