@@ -72,8 +72,6 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         {
             base.Initialize(playerController);
 
-            
-
             // The player controller has picked up the ability
             LoadAbility(playerController.CharacterStats.playerAbilityType);
             
@@ -125,8 +123,6 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// <param name="weaponID">The ID of the weapon to load.</param>
         internal void LoadWeapon(List<string> weaponIDs)
         {
-            Debug.Log("Loading weapons...");
-
             // Validate input
             if (weaponIDs == null || weaponIDs.Count == 0)
             {
@@ -144,7 +140,6 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
 
                 if (i == 0 & currentWeapon== null)
                 {
-                    Debug.Log("activate only once");
                     // Equip and activate the first weapon
                     currentWeapon = weapon;
                     currentWeapon.gameObject.SetActive(true);

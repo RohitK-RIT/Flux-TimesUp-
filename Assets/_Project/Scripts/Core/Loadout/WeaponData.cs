@@ -7,7 +7,9 @@ using UnityEngine;
 [Serializable]
 public class WeaponData
 {
+    // The weapon prefab that will be instantiated in the game
     public Weapon weaponPrefab;
     
+    // An array of weapon stats 
     public WeaponStats[] weaponStats;
 }
