@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
 {
     public class AttackState : BaseState
@@ -45,6 +47,7 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
             // If the player is neither in attack range nor chase range, switch to DetectState
             else
             {
+                Debug.Log("Attack to patrol");
                 _enemyInputController.StateManager.TransitionToState(EnemyState.Detect);
             }
         }

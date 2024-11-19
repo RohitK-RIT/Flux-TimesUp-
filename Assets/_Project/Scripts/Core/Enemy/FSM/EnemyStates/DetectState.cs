@@ -42,10 +42,14 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
                 _enemyInputController.RotateTowardsPlayer();
                 _enemyInputController.StateManager.TransitionToState(EnemyState.Chase);
             }
+            else if (_enemyInputController.isPlayerinDetectionRange())
+            {
+                _enemyInputController.StateManager.TransitionToState(EnemyState.Detect);
+            }
             else
             {
                 // If the player is not detected, remain in Detect state
-                _enemyInputController.StateManager.TransitionToState(EnemyState.Detect);
+                _enemyInputController.StateManager.TransitionToState(EnemyState.Patrol);
             }
         }
 

@@ -7,6 +7,7 @@ using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = Unity.Mathematics.Random;
 
 namespace _Project.Scripts.Core.Enemy
 {
@@ -32,13 +33,36 @@ namespace _Project.Scripts.Core.Enemy
         private Coroutine _attackCoroutine; // Holds the attack coroutine instance
         
         private Transform _closestPlayer; // closest player to the enemy which is the actual target
-        
-        private NavMeshAgent _enemy; // navmesh agent
+
+        internal NavMeshAgent _enemy; // navmesh agent
 
         internal StateManager StateManager; // refrence to state manager
 
         private readonly float _chaseRange = 15f; // chase range
 
+
+        internal Vector3 _roamingPosition;
+        
+        
+        private bool isRoaming = false; 
+
+        private void Start()
+        {
+            //_startingPosition = transform.position;
+            //Debug.Log("start pos"+_startingPosition);
+            
+            
+
+        }
+
+        private void Update()
+        {
+            //Debug.Log("roam pos"+_roamingPosition);
+            // Only start the coroutine if it's not already running
+            
+            //Debug.Log("distance ="+Vector3.Distance(_enemy.transform.position, _roamingPosition));
+            
+        }
         private void Awake()
         {
             _enemy = GetComponent<NavMeshAgent>(); 
@@ -79,6 +103,11 @@ namespace _Project.Scripts.Core.Enemy
         {
             _closestPlayer = _playerDetection.FindClosestPlayerInRange();
             return _closestPlayer && IsPlayerInCone();
+        }
+
+        internal bool isPlayerinDetectionRange()
+        {
+            return _playerDetection._playersInRange.Count>0;
         }
 
         // Method to check if player is in chase range and conical field of view
@@ -224,7 +253,39 @@ namespace _Project.Scripts.Core.Enemy
                 yield return null; // Keep following every frame
             }
         }
-        
+
+        private IEnumerator MoveToRoamPoition()
+        {
+            isRoaming = true; // Set flag to prevent multiple coroutines
+            _enemy.SetDestination(_roamingPosition);
+            while (_enemy.remainingDistance > 0.5f)
+            {
+                yield return null; // Wait for the next frame
+            }
+
+            // Once close enough, set roaming position to a new location
+            _roamingPosition = GetRoamingPosition(_enemy.transform.position);
+            isRoaming = false;
+
+        }
+
+        internal Vector3 GetRoamingPosition(Vector3 startPosition)
+        {
+            return startPosition + GetRandomDirection() * UnityEngine.Random.Range(5, 15);
+        }
+
+        private static Vector3 GetRandomDirection()
+        {
+            return new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f)).normalized;
+        }
+
+        internal void StartRoaming()
+        {
+            if (!isRoaming)
+            {
+                StartCoroutine(MoveToRoamPoition());
+            }
+        }
         
         // Method to visualize the detect, chase, attack and conical FOV for testing purpose
         private void OnDrawGizmos()
