@@ -39,6 +39,10 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
                 // Player is in attack range, so keep attacking
                 _enemyInputController.TryAttack();
             }
+            else if (true)
+            {
+                _enemyInputController.StateManager.TransitionToState(EnemyState.Flee);
+            }
             // If the player is out of attack range but within chase range, switch to ChaseState
             else if (_enemyInputController.CanChasePlayer())
             {

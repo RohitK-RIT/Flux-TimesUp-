@@ -10,6 +10,7 @@ namespace _Project.Scripts.Core.Enemy.FSM
         Chase,
         
         // Represents the state where the enemy attacks the player once in close range
-        Attack
+        Attack,
+        Flee
     }
 }

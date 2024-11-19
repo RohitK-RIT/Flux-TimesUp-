@@ -77,7 +77,8 @@ namespace _Project.Scripts.Core.Enemy
                 { EnemyState.Patrol, new PatrolState(this) },
                 { EnemyState.Detect, new DetectState(this) },
                 { EnemyState.Chase, new ChaseState(this) },
-                { EnemyState.Attack, new AttackState(this) }
+                { EnemyState.Attack, new AttackState(this) },
+                { EnemyState.Flee, new FleeState(this) }
             };
 
             StateManager.InitializeStates(states, EnemyState.Patrol);
