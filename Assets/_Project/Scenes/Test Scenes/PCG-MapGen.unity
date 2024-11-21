@@ -443,6 +443,8 @@ GameObject:
   - component: {fileID: 601565725}
   - component: {fileID: 601565724}
   - component: {fileID: 601565723}
+  - component: {fileID: 601565729}
+  - component: {fileID: 601565728}
   - component: {fileID: 601565727}
   m_Layer: 0
   m_Name: Dungeon
@@ -533,7 +535,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 60, y: 1, z: 60}
+  m_LocalScale: {x: 50, y: 1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -550,17 +552,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f81d25617d49e34484e3864fa3a3503, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomPrefabs:
-  - {fileID: 3831200746998603493, guid: a1d4089891d11424788d4940c4daa0ce, type: 3}
-  - {fileID: 3831200746998603493, guid: 0bf89b746f9e94bf7b31b43c0d8e92a3, type: 3}
-  - {fileID: 3831200746998603493, guid: 8b1c6c3a320a24837a8ba4e579c7e400, type: 3}
-  - {fileID: 3831200746998603493, guid: 0d55bfcaf852d4f7381c038dbe57f3cf, type: 3}
-  - {fileID: 3831200746998603493, guid: 0bf89b746f9e94bf7b31b43c0d8e92a3, type: 3}
-  - {fileID: 3831200746998603493, guid: 44a1e7321df3e480cbf157de6df1f5c5, type: 3}
-  - {fileID: 3831200746998603493, guid: a1d4089891d11424788d4940c4daa0ce, type: 3}
-  bossRoomPrefab: {fileID: 3831200746998603493, guid: 0ae2886a9b27543158cfa4f0b58603a4,
+  roomManager: {fileID: 601565729}
+  corridorManager: {fileID: 601565728}
+  startRoomPrefab: {fileID: 1546850383188257028, guid: fa2d0ea1a7d63a4429ad577f03bc7d2d,
     type: 3}
-  playerCount: 2
+  explorationRooms:
+  - {fileID: 4471309150207834022, guid: e549a70656eaf4db0ae3af36f16c9e4f, type: 3}
+  - {fileID: 4020236554113313343, guid: 2dbd017273a0545f691424404a04e1af, type: 3}
+  - {fileID: 1940145743977726602, guid: 5abf4af088e204d94b42254db78a2e37, type: 3}
+  - {fileID: 8157591511556919253, guid: 63d431526ad924d70a7d5b124e737063, type: 3}
+  bossRoomPrefab: {fileID: 1546850383188257028, guid: adf05c05dce05496a9ab004dfb628c66,
+    type: 3}
+  explorationRoomCount: 6
+  doorPrefab: {fileID: 126278, guid: 5409c9ff5a9c7b045a9809d71ccdcab8, type: 3}
+--- !u!114 &601565728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601565722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c16fa7d599804d949ab3d70f88cf08ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  corridorPrefab: {fileID: 126278, guid: 5409c9ff5a9c7b045a9809d71ccdcab8, type: 3}
+--- !u!114 &601565729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601565722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4db50f699ab43b5b671fce2fcf2dbb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rooms: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

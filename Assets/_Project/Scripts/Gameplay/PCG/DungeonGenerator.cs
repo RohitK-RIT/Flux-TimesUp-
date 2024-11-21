@@ -1,178 +1,145 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Gameplay.PCG
 {
     /// <summary>
-    /// Generates a dungeon layout by placing rooms and a boss room on a plane.
+    /// Generates the dungeon layout, including rooms and corridors.
     /// </summary>
     public class DungeonGenerator : MonoBehaviour
     {
         /// <summary>
-        /// Array of room prefabs to be used in the dungeon.
+        /// Reference to the RoomManager component.
         /// </summary>
-        [SerializeField] private GameObject[] roomPrefabs;
+        [SerializeField] private RoomManager roomManager;
+        /// <summary>
+        /// Reference to the CorridorManager component.
+        /// </summary> 
+        [SerializeField] private CorridorManager corridorManager;
+        /// <summary>
+        /// Prefab for the starting room.
+        /// </summary>
+        public GameObject startRoomPrefab;
+        /// <summary>
+        /// Array of exploration room prefabs.
+        /// </summary>
+        public Room[] explorationRooms;
         /// <summary>
         /// Prefab for the boss room.
         /// </summary>
-        [SerializeField] private GameObject bossRoomPrefab;
+        public GameObject bossRoomPrefab;
         /// <summary>
-        /// Number of players, which influences the number of rooms generated.
+        /// Number of exploration rooms to generate.
         /// </summary>
-        [SerializeField] private int playerCount;
+        public int explorationRoomCount;
         /// <summary>
-        /// List of positions that are already occupied by rooms.
+        /// Gets the grid system used for cell-based placement.
         /// </summary>
-        private List<Vector3> _occupiedPositions = new List<Vector3>();
+        public GridSystem GridSystem { get; private set; }
         /// <summary>
-        /// Dimensions of the plane on which the dungeon is generated.
+        /// Gets the origin point of the grid in the world.
         /// </summary>
-        private Vector2 _planeDimensions; 
-        
+        public Vector3 GridOrigin { get; private set; }
+
+        /// <summary>
+        /// Initializes the grid system based on the plane's size.
+        /// </summary>
+        private void Awake()
+        {
+            // Assuming the plane is scaled in X and Z axes
+            var planeSizeX = transform.localScale.x * 10; 
+            var planeSizeZ = transform.localScale.z * 10;
+
+            // Initialize the GridSystem
+            GridSystem = new GridSystem(
+                Mathf.FloorToInt(planeSizeX / 20), // Divide plane width by cell size
+                Mathf.FloorToInt(planeSizeZ / 20), // Divide plane height by cell size
+                20
+            );
+            GridOrigin = transform.position - new Vector3(planeSizeX / 2, 0, planeSizeZ / 2); // Bottom-left corner
+        }
+        /// <summary>
+        /// Starts the dungeon generation process.
+        /// </summary>
         private void Start()
         {
-            SetDungeonDimensions();
             GenerateDungeon();
         }
-        
         /// <summary>
-        /// Sets the dimensions of the dungeon based on its scale.
-        /// This is will modified in the future dynamically based on the number of players connected in the game.
+        /// Generates the dungeon layout, including placing rooms and connecting them with corridors.
         /// </summary>
-        private void SetDungeonDimensions()
-        {
-            var planeObject = GameObject.Find("Dungeon");
-            if (planeObject != null)
-            {
-                var scale = planeObject.transform.localScale;
-                _planeDimensions = new Vector2(10 * scale.x, 10 * scale.z);
-            }
-            else
-            {
-                Debug.LogWarning("Plane object not found. Using default dimensions.");
-                _planeDimensions = new Vector2(100, 100); // Default size if "Plane" is missing
-            }
-        }
-        /// <summary>
-        /// Generates the dungeon by placing rooms and the boss room.
-        /// </summary>
-        private void GenerateDungeon()
-        {
-            PlaceBossRoom();
-            var roomCount = GetRoomCount();
-        
-            // Create a list of possible grid positions based on the calculated dungeon dimensions
-            var availablePositions = GenerateGridPositions();
+        private void GenerateDungeon() {
+            Debug.Log("Starting dungeon generation...");
 
-            // Randomly place composite rooms without overlap
-            for (var i = 0; i < roomCount; i++)
-            {
-                if (availablePositions.Count == 0)
-                {
-                    Debug.LogWarning("No more available positions for rooms.");
-                    break;
-                }
+            // Start room (bottom-left of the grid)
+            var startRoom = startRoomPrefab.GetComponent<Room>();
+            var startPosition = GridOrigin; // Bottom-left corner
+            roomManager.PlaceRoom(startRoom, startPosition);
+            Debug.Log($"Placed Start Room at {startPosition}");
 
-                // Choose a random position from the available grid positions
-                var randomIndex = Random.Range(0, availablePositions.Count);
-                var position = availablePositions[randomIndex];
-                availablePositions.RemoveAt(randomIndex); // Remove position to avoid reuse
+            // Boss room (top-right of the grid)
+            var bossRoom = bossRoomPrefab.GetComponent<Room>();
+            var bossPosition = GridOrigin + new Vector3(
+                (GridSystem.GridWidth - Mathf.Ceil(startRoom.size.x / GridSystem.CellSize)) * GridSystem.CellSize,
+                0,
+                (GridSystem.GridHeight - Mathf.Ceil(startRoom.size.z / GridSystem.CellSize)) * GridSystem.CellSize
+            );
+            roomManager.PlaceRoom(bossRoom, bossPosition);
+            Debug.Log($"Placed Boss Room at {bossPosition}");
 
-                // Randomly select a room prefab from the array
-                var roomPrefab = roomPrefabs[Random.Range(0, roomPrefabs.Length)];
-            
-                // Calculate the room size based on the number of tiles under the "Ground" parent
-                var roomSize = CalculateRoomSize(roomPrefab);
-            
-                // Check for overlap and instantiate if there's no overlap
-                if (IsOverlapping(position, roomSize)) continue;
-                _occupiedPositions.Add(position);
-                // Set parent as dungeon
-                var instantiatedRoom = Instantiate(roomPrefab, position, Quaternion.identity);
-                instantiatedRoom.transform.parent = GameObject.Find("Dungeon").transform;
-            }
-        }
-        /// <summary>
-        /// Places the boss room at a specific position.
-        /// </summary>
-        private void PlaceBossRoom()
-        {
-            var bossRoomPosition = Vector3.zero; // Place at the center or a specific offset
-            var bossRoomSize = CalculateRoomSize(bossRoomPrefab);
+            // Exploration rooms
+            for (var i = 0; i < explorationRoomCount; i++) {
+                var explorationRoomPrefab = explorationRooms[Random.Range(0, explorationRooms.Length)];
+                var explorationRoom = explorationRoomPrefab.GetComponent<Room>();
 
-            if (!IsOverlapping(bossRoomPosition, bossRoomSize))
-            {
-                _occupiedPositions.Add(bossRoomPosition);
-                var instantiatedBossRoom = Instantiate(bossRoomPrefab, bossRoomPosition, Quaternion.identity);
-                instantiatedBossRoom.transform.parent = GameObject.Find("Dungeon").transform;
-            }
-            else
-            {
-                Debug.LogWarning("Could not place boss room at the desired position due to overlap.");
-            }
-        }
-        /// <summary>
-        /// Determines the number of rooms to generate based on the player count.
-        /// </summary>
-        /// <returns>The number of rooms to generate.</returns>
-        private int GetRoomCount()
-        {
-            return playerCount switch
-            {
-                1 => 7,
-                2 => 13,
-                3 => 15,
-                _ => 7
-            };
-        }
-        /// <summary>
-        /// Generates a list of possible grid positions for room placement.
-        /// </summary>
-        /// <returns>A list of possible grid positions.</returns>
-        private List<Vector3> GenerateGridPositions()
-        {
-            var positions = new List<Vector3>();
-        
-            var xCount = Mathf.FloorToInt(_planeDimensions.x / 20); // Approximate grid spacing
-            var zCount = Mathf.FloorToInt(_planeDimensions.y / 20); // to be adjusted based on level designs.
-
-            for (var x = 0; x < xCount; x++)
-            {
-                for (var z = 0; z < zCount; z++)
-                {
-                    var posX = x * 20 - _planeDimensions.x / 2 + 10; // to be adjusted based on level designs.
-                    var posZ = z * 20 - _planeDimensions.y / 2 + 10;
-                    positions.Add(new Vector3(posX, 0, posZ));
+                var position = roomManager.FindValidPosition(explorationRoom);
+                if (position != Vector3.zero) {
+                    roomManager.PlaceRoom(explorationRoom, position);
+                } else {
+                    Debug.LogError($"Failed to place Exploration Room {i} - no valid position found!");
                 }
             }
 
-            return positions;
+            // Connect rooms
+            ConnectAllRooms();
         }
         /// <summary>
-        /// Calculates the size of a room based on its prefab.
+        /// Connects all rooms in the dungeon with corridors.
         /// </summary>
-        /// <param name="roomPrefab">The room prefab.</param>
-        /// <returns>The size of the room.</returns>
-        private static Vector3 CalculateRoomSize(GameObject roomPrefab)
-        {
-            var ground = roomPrefab.transform.Find("Ground");
-            if (ground == null) return new Vector3(5f, 1, 4f); // Default size if "Ground" is missing
-            var tileCount = ground.childCount;
-            var tilesPerRow = Mathf.CeilToInt(Mathf.Sqrt(tileCount));
-            var roomWidth = tilesPerRow * 5f;
-            var roomDepth = Mathf.Ceil(tileCount / (float)tilesPerRow) * 4f;
-            return new Vector3(roomWidth, 1, roomDepth);
+        private void ConnectAllRooms() {
+            foreach (var room in roomManager.rooms) {
+                var hasConnectedExit = false;
+
+                foreach (var exit in room.Exits)
+                {
+                    if (!exit.isConnected) continue;
+                    hasConnectedExit = true;
+                    break; // At least one connection exists
+                }
+
+                // Ensure at least one exit is connected
+                if (hasConnectedExit) continue;
+                {
+                    foreach (var exit in room.Exits) {
+                        var closestExit = roomManager.FindClosestUnconnectedExit(exit);
+                        if (closestExit == null) continue;
+                        Debug.Log($"Connecting exit at {exit.worldPosition} to closest exit at {closestExit.worldPosition}");
+                        corridorManager.ConnectExits(exit, closestExit);
+                        break;
+                    }
+                }
+            }
         }
-        /// <summary>
-        /// Checks if a room overlaps with any existing rooms.
-        /// </summary>
-        /// <param name="position">The position to check.</param>
-        /// <param name="roomSize">The size of the room.</param>
-        /// <returns>True if there is an overlap, false otherwise.</returns>
-        private bool IsOverlapping(Vector3 position, Vector3 roomSize)
-        {
-            return _occupiedPositions.Any(occupiedPosition => Vector3.Distance(occupiedPosition, position) < Mathf.Max(roomSize.x, roomSize.z));
+        
+        private void OnDrawGizmos() {
+            if (GridSystem == null) return;
+            for (var x = 0; x <= GridSystem.GridWidth; x++) {
+                for (var y = 0; y <= GridSystem.GridHeight; y++) {
+                    var cellPos = GridSystem.GetCellWorldPosition(x, y, GridOrigin);
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawWireCube(cellPos, new Vector3(GridSystem.CellSize, 0.1f, GridSystem.CellSize));
+                }
+            }
         }
     }
 }
