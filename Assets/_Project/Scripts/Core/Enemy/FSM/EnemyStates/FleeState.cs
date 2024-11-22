@@ -60,19 +60,17 @@ public class FleeState : BaseState
             _enemyInputController._enemy.SetDestination(hit.position);
         }
         
-        // Check if the enemy is now at a safe distance
-        if (_enemyInputController._closestPlayer == null || Vector3.Distance(_enemyInputController._enemy.transform.position, _enemyInputController._closestPlayer.position) > _enemyInputController.SafeDistance)
-        {
-            Debug.Log("Enemy has reached a safe distance. Transitioning to Patrol.");
-            _enemyInputController.StateManager.TransitionToState(EnemyState.Patrol);
-        }
+        
     }
 
     // Returns the current state key, indicating this is still AttackState
     public override EnemyState GetNextState()
     {
-        
-
-        return EnemyState.Flee;
+        // Check if the enemy is now at a safe distance
+        return _enemyInputController._closestPlayer == null ||
+               Vector3.Distance(_enemyInputController._enemy.transform.position,
+                   _enemyInputController._closestPlayer.position) > _enemyInputController.SafeDistance
+            ? EnemyState.Patrol
+            : EnemyState.Flee;
     }
 }
