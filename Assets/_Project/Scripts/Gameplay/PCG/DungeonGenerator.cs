@@ -52,9 +52,9 @@ namespace _Project.Scripts.Gameplay.PCG
 
             // Initialize the GridSystem
             GridSystem = new GridSystem(
-                Mathf.FloorToInt(planeSizeX / 20), // Divide plane width by cell size
-                Mathf.FloorToInt(planeSizeZ / 20), // Divide plane height by cell size
-                20
+                Mathf.FloorToInt(planeSizeX / 5), // Divide plane width by cell size
+                Mathf.FloorToInt(planeSizeZ / 5), // Divide plane height by cell size
+                5
             );
             GridOrigin = transform.position - new Vector3(planeSizeX / 2, 0, planeSizeZ / 2); // Bottom-left corner
         }
@@ -73,17 +73,18 @@ namespace _Project.Scripts.Gameplay.PCG
 
             // Start room (bottom-left of the grid)
             var startRoom = startRoomPrefab.GetComponent<Room>();
-            var startPosition = GridOrigin; // Bottom-left corner
+            var startPosition = GridOrigin + new Vector3(startRoom.size.x / 2, 0, startRoom.size.z / 2); // Bottom-left corner
             roomManager.PlaceRoom(startRoom, startPosition);
             Debug.Log($"Placed Start Room at {startPosition}");
 
             // Boss room (top-right of the grid)
             var bossRoom = bossRoomPrefab.GetComponent<Room>();
             var bossPosition = GridOrigin + new Vector3(
-                (GridSystem.GridWidth - Mathf.Ceil(startRoom.size.x / GridSystem.CellSize)) * GridSystem.CellSize,
+                (GridSystem.GridWidth - Mathf.Ceil(bossRoom.size.x / GridSystem.CellSize)) * GridSystem.CellSize,
                 0,
-                (GridSystem.GridHeight - Mathf.Ceil(startRoom.size.z / GridSystem.CellSize)) * GridSystem.CellSize
+                (GridSystem.GridHeight - Mathf.Ceil(bossRoom.size.z / GridSystem.CellSize)) * GridSystem.CellSize
             );
+            bossPosition += new Vector3(bossRoom.size.x / 2, 0, bossRoom.size.z / 2);
             roomManager.PlaceRoom(bossRoom, bossPosition);
             Debug.Log($"Placed Boss Room at {bossPosition}");
 
@@ -99,38 +100,7 @@ namespace _Project.Scripts.Gameplay.PCG
                     Debug.LogError($"Failed to place Exploration Room {i} - no valid position found!");
                 }
             }
-
-            // Connect rooms
-            ConnectAllRooms();
         }
-        /// <summary>
-        /// Connects all rooms in the dungeon with corridors.
-        /// </summary>
-        private void ConnectAllRooms() {
-            foreach (var room in roomManager.rooms) {
-                var hasConnectedExit = false;
-
-                foreach (var exit in room.Exits)
-                {
-                    if (!exit.isConnected) continue;
-                    hasConnectedExit = true;
-                    break; // At least one connection exists
-                }
-
-                // Ensure at least one exit is connected
-                if (hasConnectedExit) continue;
-                {
-                    foreach (var exit in room.Exits) {
-                        var closestExit = roomManager.FindClosestUnconnectedExit(exit);
-                        if (closestExit == null) continue;
-                        Debug.Log($"Connecting exit at {exit.worldPosition} to closest exit at {closestExit.worldPosition}");
-                        corridorManager.ConnectExits(exit, closestExit);
-                        break;
-                    }
-                }
-            }
-        }
-        
         private void OnDrawGizmos() {
             if (GridSystem == null) return;
             for (var x = 0; x <= GridSystem.GridWidth; x++) {
@@ -140,6 +110,17 @@ namespace _Project.Scripts.Gameplay.PCG
                     Gizmos.DrawWireCube(cellPos, new Vector3(GridSystem.CellSize, 0.1f, GridSystem.CellSize));
                 }
             }
+            GridSystem.DrawOccupiedCellsGizmos(GridOrigin);
         }
+        /*private void OnDrawGizmos() {
+            if (GridSystem == null) return;
+            for (var x = 0; x <= GridSystem.GridWidth; x++) {
+                for (var y = 0; y <= GridSystem.GridHeight; y++) {
+                    var cellPos = GridSystem.GetCellWorldPosition(x, y, GridOrigin);
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawWireCube(cellPos, new Vector3(GridSystem.CellSize, 0.1f, GridSystem.CellSize));
+                }
+            }
+        }*/
     }
 }

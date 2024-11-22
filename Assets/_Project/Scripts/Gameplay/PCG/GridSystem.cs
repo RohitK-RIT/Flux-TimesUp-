@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.PCG {
     /// <summary>
@@ -38,11 +39,29 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// </summary>
         /// <param name="x">The x-coordinate of the cell.</param>
         /// <param name="y">The y-coordinate of the cell.</param>
-        public void MarkCellOccupied(int x, int y) {
+        public void MarkCellOccupied(int x, int y, Vector3 gridOrigin) {
+            var startX = gridOrigin.x;
+            var endX = gridOrigin.x + (GridWidth*CellSize);
+            var startY = gridOrigin.z;
+            var endY = gridOrigin.z + (GridHeight*CellSize);
+            if (x < startX || x > endX || y < startY || y > endY) {
+                Debug.LogWarning($"Cannot mark cell outside of grid bounds: {x}, {y}");
+                return;
+            }
+            // Calculate the cell indices
+            x = Mathf.FloorToInt((x - gridOrigin.x) / CellSize);
+            y = Mathf.FloorToInt((y - gridOrigin.z) / CellSize);
             // Clamp the indices to ensure they are within bounds
-            x = Mathf.Clamp(x, 0, GridWidth - 1);
-            y = Mathf.Clamp(y, 0, GridHeight - 1);
+            /*x = Mathf.Clamp(x, 0, GridWidth - 1);
+            y = Mathf.Clamp(y, 0, GridHeight - 1);*/
+            //Clamp with the list size
+            x = Mathf.Clamp(x, 0, _occupiedCells.GetLength(0) - 1);
+            y = Mathf.Clamp(y, 0, _occupiedCells.GetLength(1) - 1);
+            
             _occupiedCells[x, y] = true;
+            
+            
+
         }
         /// <summary>
         /// Checks if the specified cell is occupied.
@@ -65,6 +84,17 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <returns>The world position of the cell.</returns>
         public Vector3 GetCellWorldPosition(int x, int y, Vector3 gridOrigin) {
             return gridOrigin + new Vector3(x * CellSize, 0, y * CellSize);
+        }
+        public void DrawOccupiedCellsGizmos(Vector3 gridOrigin) {
+            Gizmos.color = Color.red;
+            for (int x = 0; x < GridWidth; x++) {
+                for (int y = 0; y < GridHeight; y++) {
+                    if (IsCellOccupied(x, y)) {
+                        var cellPos = GetCellWorldPosition(x, y, gridOrigin);
+                        Gizmos.DrawCube(cellPos, new Vector3(CellSize, 0.1f, CellSize));
+                    }
+                }
+            }
         }
     }
 }

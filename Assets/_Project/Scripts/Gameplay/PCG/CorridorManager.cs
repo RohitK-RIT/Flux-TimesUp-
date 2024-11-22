@@ -32,7 +32,8 @@ namespace _Project.Scripts.Gameplay.PCG {
             }
 
             // Create L-shaped connection
-            var midpoint = new Vector3(startPos.x, startPos.y, endPos.z);
+            var midpoint = startPos + endPos / 2;
+            //var midpoint = new Vector3(startPos.x, startPos.y, endPos.z);
             CreateCorridor(startPos, midpoint);
             CreateCorridor(midpoint, endPos);
 
@@ -60,7 +61,7 @@ namespace _Project.Scripts.Gameplay.PCG {
                 var rotation = Quaternion.LookRotation(direction);
                 Instantiate(corridorPrefab, position, rotation);
             }
-        }
+        } 
         /// <summary>
         /// Checks if a path between two points overlaps with any existing rooms.
         /// </summary>
@@ -88,10 +89,5 @@ namespace _Project.Scripts.Gameplay.PCG {
         private void PlaceDoor(Exit exit) {
             Instantiate(corridorPrefab, exit.worldPosition, Quaternion.LookRotation(exit.direction));
         }
-        // private void CreateCorridorSegment(Vector3 start, Vector3 end) {
-        //     var corridor = Instantiate(corridorPrefab);
-        //     corridor.transform.position = (start + end) / 2;
-        //     corridor.transform.localScale = new Vector3(1, 1, Vector3.Distance(start, end));
-        // }
     }
 }
