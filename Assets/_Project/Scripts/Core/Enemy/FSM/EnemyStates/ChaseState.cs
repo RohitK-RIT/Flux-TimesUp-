@@ -29,12 +29,6 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         public override void UpdateState()
         {
             // Step 1: Check if the player is still within chase range
-            if (!_enemyInputController.CanChasePlayer())
-            {
-                // If the player is out of chase range, transition to Detect state
-                _enemyInputController.StateManager.TransitionToState(EnemyState.Detect);
-            }
-            else
             {
                 // Step 2: Continue chasing the player
                 // Face towards the player while chasing
@@ -44,19 +38,24 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
                 _enemyInputController.StartChasing();
             }
             
-            // Step 3: Check if the player is now within attack range
-            if (_enemyInputController.CanAttack())
-            {
-                // If the player is in attack range, transition to Attack state
-                _enemyInputController.StateManager.TransitionToState(EnemyState.Attack);
-            }
+            
         }
 
         // Returns the current state key, indicating this is still AttackState
         public override EnemyState GetNextState()
         {
-            // No need for transition logic here as it is handled in UpdateState
-            return EnemyState.Chase;
+            if (!_enemyInputController.CanChasePlayer())
+            {
+                // If the player is out of chase range, transition to Detect state
+                return EnemyState.Detect;
+            }
+
+            // Step 3: Check if the player is now within attack range
+            return _enemyInputController.CanAttack() ?
+                // If the player is in attack range, transition to Attack state
+                EnemyState.Attack :
+                // No need for transition logic here as it is handled in UpdateState
+                EnemyState.Chase;
         }
     }
 }
