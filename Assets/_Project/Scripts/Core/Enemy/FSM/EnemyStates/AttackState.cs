@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
 {
     public class AttackState : BaseState
@@ -30,64 +28,49 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         // Called every frame while the enemy is in the AttackState
         public override void UpdateState()
         {
-            Debug.Log("Attack state update");
-            Debug.Log("current health = " + _enemyInputController._enemyHUD.enemy.CurrentHealth);
-
-            // Check if the player is still within attack range
-            if (_enemyInputController._enemyHUD.enemy.CurrentHealth < 50)
+            // Check if the player health is low
+            if (_enemyInputController.EnemyHUD.enemy.CurrentHealth < 50)
             {
                 // Check if the enemy has been in FleeState recently and exceeded timeout
                 if (_enemyInputController.LastFleeDuration >= _enemyInputController.FleeTimeout)
                 {
-                    Debug.Log("Flee timeout reached. Ignoring low health and continuing to attack.");
                     // Continue attacking as timeout condition overrides health
-                    _enemyInputController.RotateTowardsPlayer();
-                    _enemyInputController.TryAttack();
+                    AttackPlayer();
                 }
                 else
                 {
-                    Debug.Log("Health low. Transitioning to Flee state.");
+                    //Health is low. Transitioning to Flee state.
                     _enemyInputController.StateManager.TransitionToState(EnemyState.Flee);
                 }
             }
+            // If health is not low check if enemy can attack
             else if (_enemyInputController.CanAttack())
             {
-                // Face towards the player
-                _enemyInputController.RotateTowardsPlayer();
-
-                // Player is in attack range, so keep attacking
-                _enemyInputController.TryAttack();
+                AttackPlayer();
             }
-            // // If the player is out of attack range but within chase range, switch to ChaseState
-            // if (_enemyInputController.CanChasePlayer())
-            // {
-            //     _enemyInputController.StateManager.TransitionToState(EnemyState.Chase);
-            // }
-            // // If the player is neither in attack range nor chase range, switch to DetectState
-            // else
-            // {
-            //     Debug.Log("Attack to detect");
-            //     _enemyInputController.StateManager.TransitionToState(EnemyState.Detect);
-            // }
         }
 
+        private void AttackPlayer()
+        {
+            // Face towards the player
+            _enemyInputController.RotateTowardsPlayer();
 
-        // Returns the current state key, indicating this is still AttackState
+            // Player is in attack range, so keep attacking
+            _enemyInputController.TryAttack();
+        }
+        
         public override EnemyState GetNextState()
         {
-            // If the player is neither in attack range nor chase range, switch to DetectState
+            // If a player is still in attack range, stay in attack state
             if (_enemyInputController.CanAttack())
             {
-                Debug.Log("Attack to detect");
                 return EnemyState.Attack;
-                
             }
-            if (_enemyInputController.CanChasePlayer())
-            {
-                return EnemyState.Chase;
-            }
-            // No need for transition logic here as it is handled in UpdateState
-            return EnemyState.Detect;
+            //Check if the player is now within chase range
+            return _enemyInputController.CanChasePlayer() ? 
+                // If the player is in chase range, transition to Chase state
+                EnemyState.Chase : 
+                EnemyState.Detect;
         }
     }
 }

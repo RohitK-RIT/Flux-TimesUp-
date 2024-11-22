@@ -7,25 +7,24 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         // Reference to the enemy's input controller
         private readonly EnemyInputController _enemyInputController;
     
-        // Constructor for the DetectState, setting the state key and storing a reference to the input controller
+        // Constructor for the FleeState, setting the state key and storing a reference to the input controller
         public PatrolState(EnemyInputController enemyInputController) : base(EnemyState.Patrol) 
         {
             _enemyInputController = enemyInputController;
         }
         private Vector3 _startingPosition;
         
-        //internal Vector3 _roamingPositiontest;
-
-        // Called when the enemy enters the DetectState
+        // Called when the enemy enters the FleeState
         public override void EnterState()
         {
-            // Resets player detection status when entering the state
-            Debug.Log("Patrol State Enter");
-            _startingPosition = _enemyInputController._enemy.transform.position;
-            _enemyInputController._roamingPosition = _enemyInputController.GetRoamingPosition(_startingPosition);
+            // Set the starting position everytime on entering the PatrolState
+            _startingPosition = _enemyInputController.Enemy.transform.position;
+            
+            // Set the roaming position
+            _enemyInputController.RoamingPosition = _enemyInputController.GetRoamingPosition(_startingPosition);
         }
 
-        // Called when the enemy exits the DetectState
+        // Called when the enemy exits the FleeState
         public override void ExitState()
         {
             Debug.Log("Exiting Patrol State");
@@ -35,24 +34,20 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         // ReSharper disable Unity.PerformanceAnalysis
         public override void UpdateState()
         {
-            Debug.Log("Patrol State Update");
             _enemyInputController.StartRoaming();
             
-            if (Vector3.Distance(_enemyInputController._enemy.transform.position, _enemyInputController._roamingPosition) <= 1f)
+            // Get a new roaming position if the enemy reaches the previous roaming position
+            if (Vector3.Distance(_enemyInputController.Enemy.transform.position, _enemyInputController.RoamingPosition) <= 1f)
             {
-                _enemyInputController._roamingPosition = _enemyInputController.GetRoamingPosition(_startingPosition);
+                _enemyInputController.RoamingPosition = _enemyInputController.GetRoamingPosition(_startingPosition);
             }
         }
 
-        // Returns the current state key, indicating this is still AttackState
         public override EnemyState GetNextState()
         {
-            if (_enemyInputController.FindPlayer())
-            {
-                return EnemyState.Detect;
-            }
-            // No need for transition logic here as it is handled in UpdateState
-            return EnemyState.Patrol;
+            // Check if players are in the detection range
+            return _enemyInputController.IsPlayerInDetectionRange() ? EnemyState.Detect :
+                EnemyState.Patrol;
         }
     }
 }
