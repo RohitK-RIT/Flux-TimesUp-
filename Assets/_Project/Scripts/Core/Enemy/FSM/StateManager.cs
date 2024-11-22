@@ -32,6 +32,7 @@ namespace _Project.Scripts.Core.Enemy.FSM
             // Check if we're not transitioning and the state should remain the same
             if (!_isTransitioningState && nextStateKey == _currentState.StateKey)
             {
+                //Debug.Log("calling update :"+ nextStateKey);
                 // Continue executing the current state's update logic
                 _currentState.UpdateState();
             }

@@ -5,6 +5,7 @@ using _Project.Scripts.Core.Enemy.FSM;
 using _Project.Scripts.Core.Enemy.FSM.EnemyStates;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
+using _Project.Scripts.UI;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = Unity.Mathematics.Random;
@@ -31,8 +32,8 @@ namespace _Project.Scripts.Core.Enemy
         private bool _isCooldownActive; // Tracks if cooldown is active
         
         private Coroutine _attackCoroutine; // Holds the attack coroutine instance
-        
-        private Transform _closestPlayer; // closest player to the enemy which is the actual target
+
+        internal Transform _closestPlayer; // closest player to the enemy which is the actual target
 
         internal NavMeshAgent _enemy; // navmesh agent
 
@@ -44,7 +45,15 @@ namespace _Project.Scripts.Core.Enemy
         internal Vector3 _roamingPosition;
         
         
-        private bool isRoaming = false; 
+        private bool isRoaming = false;
+
+        internal EnemyHUD _enemyHUD;
+        
+        internal float SafeDistance = 15f; // Distance the enemy should maintain from the player
+
+        internal float FleeTimer { get; set; } // Tracks time spent in FleeState
+        internal float LastFleeDuration { get; set; } // Stores the duration of the last FleeState
+        internal float FleeTimeout { get; private set; } = 5f; // Timeout threshold for FleeState
 
         private void Start()
         {
@@ -70,6 +79,7 @@ namespace _Project.Scripts.Core.Enemy
             // empty game object is created to align the pivot of the enemy game object and the obstacle avoidance
             
             StateManager = gameObject.AddComponent<StateManager>();
+            _enemyHUD = GetComponentInChildren<EnemyHUD>();
 
             // Initializing the dictionary for states
             var states = new Dictionary<EnemyState, BaseState>
