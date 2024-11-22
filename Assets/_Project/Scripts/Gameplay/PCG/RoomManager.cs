@@ -40,16 +40,19 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <param name="position">The position of the room.</param>
         private void MarkRoomCellsOccupied(Room room, Vector3 position) {
             // Adjust the starting indices based on the grid origin
-            var startX = Mathf.FloorToInt((position.x - _dungeonGenerator.GridOrigin.x) / _dungeonGenerator.GridSystem.CellSize);
-            var startY = Mathf.FloorToInt((position.z - _dungeonGenerator.GridOrigin.z) / _dungeonGenerator.GridSystem.CellSize);
+            var startX = Mathf.FloorToInt((position.x - room.size.x / 2));
+            var startY = Mathf.FloorToInt((position.z - room.size.z / 2));
+            /*var startX = Mathf.FloorToInt((position.x - room.size.x / 2) / _dungeonGenerator.GridSystem.CellSize);
+            var startY = Mathf.FloorToInt((position.z - room.size.z / 2) / _dungeonGenerator.GridSystem.CellSize);
+            */
 
             var roomWidthInCells = Mathf.CeilToInt(room.size.x / _dungeonGenerator.GridSystem.CellSize);
             var roomHeightInCells = Mathf.CeilToInt(room.size.z / _dungeonGenerator.GridSystem.CellSize);
 
             // Ensure indices are within bounds
-            for (var x = Mathf.Max(0, startX); x < Mathf.Min(_dungeonGenerator.GridSystem.GridWidth, startX + roomWidthInCells); x++) {
-                for (var y = Mathf.Max(0, startY); y < Mathf.Min(_dungeonGenerator.GridSystem.GridHeight, startY + roomHeightInCells); y++) {
-                    _dungeonGenerator.GridSystem.MarkCellOccupied(x, y);
+            for (var x = startX; x < startX + room.size.x+_dungeonGenerator.GridSystem.CellSize; x+=5) {
+                for (var y = startY; y <  startY + room.size.z+_dungeonGenerator.GridSystem.CellSize; y+=5) {
+                    _dungeonGenerator.GridSystem.MarkCellOccupied(x, y,_dungeonGenerator.GridOrigin);
                 }
             }
         }
