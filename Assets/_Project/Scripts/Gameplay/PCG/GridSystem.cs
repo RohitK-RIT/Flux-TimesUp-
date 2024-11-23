@@ -46,7 +46,8 @@ namespace _Project.Scripts.Gameplay.PCG {
             VisitedCells = new bool[GridWidth, GridHeight];
         }
 
-        public Vector2 GetGridCellPositionFromWorldPosition(int x, int y, Vector3 gridOrigin)
+        public Vector2 
+            GetGridCellPositionFromWorldPosition(int x, int y, Vector3 gridOrigin)
         {
             var startX = gridOrigin.x;
             var endX = gridOrigin.x + (GridWidth*CellSize);
@@ -104,7 +105,7 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <param name="y">The y-coordinate of the cell.</param>
         /// <param name="gridOrigin">The origin point of the grid in the world.</param>
         /// <returns>The world position of the cell.</returns>
-        public Vector3 GetCellWorldPosition(int x, int y, Vector3 gridOrigin) {
+        public Vector3 GetCellWorldPosition(float x, float y, Vector3 gridOrigin) {
             return gridOrigin + new Vector3(x * CellSize, 0, y * CellSize);
         }
         public void DrawOccupiedCellsGizmos(Vector3 gridOrigin) {

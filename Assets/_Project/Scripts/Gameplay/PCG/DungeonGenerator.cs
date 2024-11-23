@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -104,6 +105,138 @@ namespace _Project.Scripts.Gameplay.PCG
             ConnectAllRooms();
         }
 
+
+
+        private List<Vector2> AStarSearch(Vector2 startpos,Vector2 goalpos)
+        {
+            //Create a list to store the open cells
+            var open = new List<Vector2>();
+
+            //Create a list to store the closed cells
+            var closed = new List<Vector2>();
+            
+            //Add the start position to the open list
+            open.Add(startpos);
+            
+            //Dictionary to store the parent of each cell
+            var parent = new Dictionary<Vector2,Vector2>();
+            
+            //Dictionary to store the cost of each cell
+            var cost = new Dictionary<Vector2,int>();
+            
+            //Dictionary to store the g value of each cell
+            var g = new Dictionary<Vector2,int>();
+            
+            g[startpos] = 0;
+            // f(x) = g(x) + h(x)
+            
+            cost[startpos]  = g[startpos]+ManhattanDistance((int)startpos.x,(int)startpos.y,(int)goalpos.x,(int)goalpos.y);
+            
+            
+            
+            //While the open list is not empty
+            while (open.Count != 0)
+            {
+                
+                //Get the cell with the lowest cost
+                var current = open[0];
+                foreach (var cell in open)
+                {
+                    if (cost[cell] < cost[current])
+                    {
+                        current = cell;
+                    }
+                }
+                
+                //Remove the current cell from the open list
+                open.Remove(current);
+                
+                //Add the current cell to the closed list
+                closed.Add(current);
+                
+                //If the current cell is the goal cell
+                if (current == goalpos)
+                {
+                    //Return the path
+                    var path = new List<Vector2>();
+                    while (current != startpos)
+                    {
+                        path.Add(current);
+                        current = parent[current];
+                    }
+                    path.Add(startpos);
+                    path.Reverse();
+                    return path;
+                }
+                // Get the neighbours of the current cell
+                var neighbours = new List<Vector2>();
+                neighbours.Add(new Vector2(current.x+1,current.y));
+                neighbours.Add(new Vector2(current.x-1,current.y));
+                neighbours.Add(new Vector2(current.x,current.y+1));
+                neighbours.Add(new Vector2(current.x,current.y-1));
+                
+                foreach (var neighbour in neighbours)
+                {
+                    if (neighbour == goalpos)
+                    {
+                        var path = new List<Vector2>();
+                        path.Add(goalpos);
+                        var cur = current;
+                        while (cur != startpos)
+                        {
+                            path.Add(cur);
+                            cur = parent[cur];
+                        }
+                        path.Add(startpos);
+                        path.Reverse();
+                        return path;
+                        
+                    }
+                    //If the neighbour is not walkable or is in the closed list, skip it
+                    if (neighbour.x < 0 || neighbour.x >= GridSystem.VisitedCells.GetLength(0) || neighbour.y < 0 || neighbour.y >= GridSystem.VisitedCells.GetLength(1))
+                    {
+                        continue;
+                    }
+                    if (GridSystem.IsCellOccupied((int)neighbour.x,(int)neighbour.y) || closed.Contains(neighbour))
+                    {
+                        continue;
+                    }
+                    
+                    //Calculate the cost of the neighbour
+                    var newCost = g[current] + 1;
+                    
+                    //If the neighbour is not in the open list, add it
+                    if (!open.Contains(neighbour))
+                    {
+                        open.Add(neighbour);
+                    }
+                    //If the new cost is greater than the cost of the neighbour, skip it
+                    if (g.ContainsKey(neighbour) && newCost >= g[neighbour])
+                    {
+                        continue;
+                    }
+                    
+                    //Set the parent of the neighbour to the current cell
+                    parent[neighbour] = current;
+                    
+                    //Set the cost of the neighbour to the new cost
+                    g[neighbour] = newCost;
+                    
+                    //Set the cost of the neighbour to the new cost + the heuristic
+                    cost[neighbour] = g[neighbour] + ManhattanDistance((int)neighbour.x,(int)neighbour.y,(int)goalpos.x,(int)goalpos.y);
+                }
+                
+                
+            }
+            Debug.Log("No path found "+startpos+" to "+goalpos+"!"+closed.Count);
+            return null;
+        }
+
+        private int ManhattanDistance(int x1,int y1,int x2,int y2)
+        {
+            return Math.Abs(x1-x2) + Math.Abs(y1-y2);
+        }
+
         private void ConnectAllRooms()
         {
             foreach (var room in roomManager.rooms)
@@ -119,16 +252,19 @@ namespace _Project.Scripts.Gameplay.PCG
                     {
                         continue;
                     }
-                    var path = GetPath(new Vector2(exit.worldPosition.x, exit.worldPosition.z), new Vector2(closestExit.worldPosition.x, closestExit.worldPosition.z));
+                    List<Vector2> path = GetPath(new Vector2(exit.worldPosition.x, exit.worldPosition.z), new Vector2(closestExit.worldPosition.x, closestExit.worldPosition.z));
                     if (path == null || path.Count == 0)
                     {
                         Debug.Log("Unable to find path between exits" + exit.worldPosition + " and " + closestExit.worldPosition);
                         continue;
                     }
+
+                    corridorManager.CreatePath(path, GridOrigin);
                     Debug.Log($"Path from {exit.worldPosition} to {closestExit.worldPosition}: {string.Join(" -> ", path)}");
                     GridSystem.ResetVisitedCells();
                     exit.isConnected = true;
                     closestExit.isConnected = true;
+                    
                 }
             }
         }
@@ -143,50 +279,12 @@ namespace _Project.Scripts.Gameplay.PCG
             Vector2 startIndexes = GridSystem.GetGridCellPositionFromWorldPosition(startX, startY, GridOrigin);
             Vector2 endIndexes = GridSystem.GetGridCellPositionFromWorldPosition(endX, endY, GridOrigin);
             
-            List<Vector2> result = GeneratePathIterative((int) startIndexes.x, (int) startIndexes.y, (int) endIndexes.x, (int) endIndexes.y);
+            List<Vector2> result = AStarSearch(startIndexes, endIndexes);
             
             return result;
         }
         
-        /*private List<Vector2> GeneratePathRecursive(int startX, int startY, int endX, int endY)
-        {
-            GridSystem.VisitedCells[startX, startY] = true;
-
-            if (startX == endX && startY == endY)
-            {
-                return new List<Vector2> {new Vector2(startX, startY)};
-            }
-            GridSystem.VisitedCells[startX, startY] = true;
-                var directions = new List<Vector2>
-            {
-                new Vector2(0, 1),
-                new Vector2(1, 0),
-                new Vector2(0, -1),
-                new Vector2(-1, 0)
-            };
-            foreach (var direction in directions)
-            {
-                var newX = startX + (int)direction.x;
-                var newY = startY + (int)direction.y;
-                if (newX < 0 || newX >= GridSystem.VisitedCells.GetLength(0) || newY < 0 ||  newY >= GridSystem.VisitedCells.GetLength(1))
-                {
-                    continue;
-                }
-                if (GridSystem.VisitedCells[newX, newY])
-                {
-                    continue;
-                }
-                var path = GeneratePathRecursive(newX, newY, endX, endY);
-                if (path != null)
-                {
-                    path.Insert(0, new Vector2(startX, startY));
-                    return path;
-                }
-            }
-            return null;
-        }*/
-        
-        private List<Vector2> GeneratePathIterative(int startX, int startY, int endX, int endY)
+        /*private List<Vector2> GeneratePathIterative(int startX, int startY, int endX, int endY)
         {
             int rows = GridSystem.VisitedCells.GetLength(0);
             int cols = GridSystem.VisitedCells.GetLength(1);
@@ -244,6 +342,7 @@ namespace _Project.Scripts.Gameplay.PCG
             // If no path is found
             return null;
         }
+        */
 
         private void OnDrawGizmos() {
             if (GridSystem == null) return;

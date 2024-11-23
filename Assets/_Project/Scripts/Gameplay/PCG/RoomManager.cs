@@ -62,26 +62,29 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <param name="room">The room to place.</param>
         /// <returns>A valid position for the room, or Vector3.zero if no valid position is found.</returns>
         public Vector3 FindValidPosition(Room room) {
-            var gridWidth = _dungeonGenerator.GridSystem.GridWidth;
-            var gridHeight = _dungeonGenerator.GridSystem.GridHeight;
+            var grid = _dungeonGenerator.GridSystem;
+            
+            var maxX = _dungeonGenerator.GridSystem.VisitedCells.GetLength(0);
+            var maxY = _dungeonGenerator.GridSystem.VisitedCells.GetLength(1);
+            
             var roomWidthInCells = Mathf.CeilToInt(room.size.x / _dungeonGenerator.GridSystem.CellSize);
             var roomHeightInCells = Mathf.CeilToInt(room.size.z / _dungeonGenerator.GridSystem.CellSize);
-            var validPositions = new List<Vector3>();
-
-            // Find all valid positions within the grid
-            for (var x = 0; x <= gridWidth - roomWidthInCells; x++) {
-                for (var y = 0; y <= gridHeight - roomHeightInCells; y++) {
-                    if (IsAreaFree(x, y, roomWidthInCells, roomHeightInCells)) {
-                        validPositions.Add(_dungeonGenerator.GridSystem.GetCellWorldPosition(x, y, _dungeonGenerator.GridOrigin));
-                    }
+            
+            maxX -= roomWidthInCells;
+            maxY -= roomHeightInCells;
+            
+            const int attempts = 100;
+            for(var i = 0; i < attempts; i++) {
+                var x = Random.Range(0, maxX);
+                var y = Random.Range(0, maxY);
+                if (IsAreaFree(x, y, roomWidthInCells, roomHeightInCells)) {
+                    var position = grid.GetCellWorldPosition(x, y,_dungeonGenerator.GridOrigin);
+                    var roomPosition = new Vector3(position.x + room.size.x / 2, position.y, position.z + room.size.z / 2);
+                    return roomPosition;
                 }
             }
-            // Choose a random valid position
-            if (validPositions.Count > 0) {
-                return validPositions[Random.Range(0, validPositions.Count)];
-            }
-            Debug.LogWarning("No valid positions found!");
-            return Vector3.zero; // Default fallback
+            Debug.LogWarning("Failed to find a valid position for the room.");
+            return Vector3.zero;
         }
         /// <summary>
         /// Checks if the specified area within the grid is free of occupied cells.
@@ -92,8 +95,8 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <param name="height">The height of the area in cells.</param>
         /// <returns>True if the area is free, false otherwise.</returns>
         private bool IsAreaFree(int startX, int startY, int width, int height) {
-            for (var x = startX; x < startX + width; x++) {
-                for (var y = startY; y < startY + height; y++) {
+            for (var x = startX; x < startX + width + 5; x++) {
+                for (var y = startY; y < startY + height + 5; y++) {
                     if (_dungeonGenerator.GridSystem.IsCellOccupied(x, y)) {
                         return false; // Found an occupied cell
                     }
@@ -109,7 +112,7 @@ namespace _Project.Scripts.Gameplay.PCG {
         public Exit FindClosestUnconnectedExit(Exit currentExit) {
             Exit closestExit = null;
             var closestDistance = float.MaxValue;
-
+            
             foreach (var room in rooms) {
                 if (room.Exits.Contains(currentExit)) continue; // Skip exits in the same room
 
