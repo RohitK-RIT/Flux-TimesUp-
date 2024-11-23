@@ -535,7 +535,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 50, y: 1, z: 50}
+  m_LocalScale: {x: 25, y: 1, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -564,7 +564,6 @@ MonoBehaviour:
   bossRoomPrefab: {fileID: 1546850383188257028, guid: adf05c05dce05496a9ab004dfb628c66,
     type: 3}
   explorationRoomCount: 6
-  doorPrefab: {fileID: 126278, guid: 5409c9ff5a9c7b045a9809d71ccdcab8, type: 3}
 --- !u!114 &601565728
 MonoBehaviour:
   m_ObjectHideFlags: 0

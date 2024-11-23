@@ -1,5 +1,4 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.PCG {
     /// <summary>
@@ -22,6 +21,12 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// Array to track occupied cells within the grid.
         /// </summary>
         private readonly bool[,] _occupiedCells;
+
+        /// <summary>
+        /// Visited Array to track visited cells within the grid.
+        /// </summary>
+        public bool[,] VisitedCells { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GridSystem"/> class with the specified dimensions and cell size.
         /// </summary>
@@ -33,12 +38,38 @@ namespace _Project.Scripts.Gameplay.PCG {
             GridHeight = height;
             this.CellSize = cellSize;
             _occupiedCells = new bool[width, height];
+            VisitedCells = new bool[width, height];
         }
+
+        public void ResetVisitedCells()
+        {
+            VisitedCells = new bool[GridWidth, GridHeight];
+        }
+
+        public Vector2 GetGridCellPositionFromWorldPosition(int x, int y, Vector3 gridOrigin)
+        {
+            var startX = gridOrigin.x;
+            var endX = gridOrigin.x + (GridWidth*CellSize);
+            var startY = gridOrigin.z;
+            var endY = gridOrigin.z + (GridHeight*CellSize);
+            if (x < startX || x > endX || y < startY || y > endY) {
+                Debug.LogWarning($"Cannot mark cell outside of grid bounds: {x}, {y}");
+                return Vector2.zero;
+            }
+            x = Mathf.FloorToInt((x - gridOrigin.x) / CellSize);
+            y = Mathf.FloorToInt((y - gridOrigin.z) / CellSize);
+            
+            x = Mathf.Clamp(x, 0, _occupiedCells.GetLength(0) - 1);
+            y = Mathf.Clamp(y, 0, _occupiedCells.GetLength(1) - 1);
+            return new Vector2(x, y);
+        }
+
         /// <summary>
         /// Marks the specified cell as occupied.
         /// </summary>
         /// <param name="x">The x-coordinate of the cell.</param>
         /// <param name="y">The y-coordinate of the cell.</param>
+        /// <param name="gridOrigin"></param>
         public void MarkCellOccupied(int x, int y, Vector3 gridOrigin) {
             var startX = gridOrigin.x;
             var endX = gridOrigin.x + (GridWidth*CellSize);
@@ -48,20 +79,11 @@ namespace _Project.Scripts.Gameplay.PCG {
                 Debug.LogWarning($"Cannot mark cell outside of grid bounds: {x}, {y}");
                 return;
             }
-            // Calculate the cell indices
             x = Mathf.FloorToInt((x - gridOrigin.x) / CellSize);
             y = Mathf.FloorToInt((y - gridOrigin.z) / CellSize);
-            // Clamp the indices to ensure they are within bounds
-            /*x = Mathf.Clamp(x, 0, GridWidth - 1);
-            y = Mathf.Clamp(y, 0, GridHeight - 1);*/
-            //Clamp with the list size
             x = Mathf.Clamp(x, 0, _occupiedCells.GetLength(0) - 1);
             y = Mathf.Clamp(y, 0, _occupiedCells.GetLength(1) - 1);
-            
             _occupiedCells[x, y] = true;
-            
-            
-
         }
         /// <summary>
         /// Checks if the specified cell is occupied.

@@ -117,16 +117,17 @@ namespace _Project.Scripts.Gameplay.PCG {
                     if (exit.isConnected) continue;
 
                     var distance = Vector3.Distance(currentExit.worldPosition, exit.worldPosition);
-                    if (!(distance < closestDistance) ||
-                        _corridorManager.IsPathOverlappingRooms(currentExit.worldPosition, exit.worldPosition))
+                    if (!(distance < closestDistance))
                         continue;
                     closestDistance = distance;
                     closestExit = exit;
                 }
             }
-
             return closestExit;
         }
+        
+        
+        
 
 
 
