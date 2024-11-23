@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.PCG {
     /// <summary>
@@ -9,6 +10,11 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// Prefab used for creating corridor segments.
         /// </summary>
         public GameObject corridorPrefab;
+        private DungeonGenerator _dungeonGenerator; // Reference to the dungeon generator
+        
+        private void Awake() {
+            _dungeonGenerator = GetComponent<DungeonGenerator>();
+        }
         /// <summary>
         /// Connects two exits with a corridor, ensuring no overlap with existing rooms.
         /// </summary>
@@ -42,6 +48,18 @@ namespace _Project.Scripts.Gameplay.PCG {
             endExit.isConnected = true;
 
             Debug.Log($"Connected exits: {startPos} -> {endPos}");
+        }
+
+        /// <summary>
+        /// Instantiates corridor on the path between two points.
+        /// </summary>
+        public void CreatePath(List<Vector2> path, Vector3 gridOrigin)
+        {
+            for (var i = 0; i < path.Count; i++)
+            {
+                var position = _dungeonGenerator.GridSystem.GetCellWorldPosition(path[i].x, path[i].y, gridOrigin);
+                Instantiate(corridorPrefab, position, Quaternion.identity);
+            }
         }
         /// <summary>
         /// Creates a corridor segment between two points.
