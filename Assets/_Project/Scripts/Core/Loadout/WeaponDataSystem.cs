@@ -9,7 +9,7 @@ namespace _Project.Scripts.Core.Loadout
     public class WeaponDataSystem : BaseSystem<WeaponDataSystem>
     {
         // Array that holds the weapon database, which contains all available weapon data.
-        [SerializeField] private WeaponData[] weaponDatabase;
+        [SerializeField] internal WeaponData[] weaponDatabase;
         
         // List to store the IDs of the selected weapons for the player.
         private List<string> _selectedWeapons;

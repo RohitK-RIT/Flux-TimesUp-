@@ -10,7 +10,7 @@ public class WeaponData
     // The weapon prefab that will be instantiated in the game
     [SerializeField] internal Weapon weaponPrefab;
     
-    [SerializeField] private Sprite icon;
+    [SerializeField] internal Sprite icon;
     
     // An array of weapon stats 
     [SerializeField] internal WeaponStats[] weaponStats;

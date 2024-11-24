@@ -10,13 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6132a83c799842a2adb74574aca1345a, type: 3}
-  m_Name: MWS_Sword 1
+  m_Name: MWS_Sword5
   m_EditorClassIdentifier: 
-  weaponID: Sword2
+  weaponID: Sword5
   weaponType: 2
   weaponName: TBD
-  damage: 20
-  range: 5
+  damage: 30
+  range: 6
   attackSpeed: 3.030303
-  itemIcon: {fileID: 21300000, guid: 1334a11d4674b41858e1e4520b67c8d5, type: 3}
   attackFOV: 45

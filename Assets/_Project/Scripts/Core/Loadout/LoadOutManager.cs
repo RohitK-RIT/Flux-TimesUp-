@@ -13,9 +13,9 @@ namespace _Project.Scripts.Core.Loadout
     public class LoadOutManager : MonoBehaviour
     {
         // Lists to store available weapon options for each category
-        public List<RangedWeaponStats> primaryRangedWeapons = new List<RangedWeaponStats>();
-        public List<RangedWeaponStats> secondaryRangedWeapons = new List<RangedWeaponStats>();
-        public List<MeleeWeaponStats> meleeWeapons = new List<MeleeWeaponStats>();
+        private List<WeaponData> _primaryRangedWeapons = new List<WeaponData>();
+        private List<WeaponData> _secondaryRangedWeapons = new List<WeaponData>();
+        private List<WeaponData> _meleeWeapons = new List<WeaponData>();
 
         // UI elements for the weapon slot holders
         [SerializeField] private GameObject primaryWeaponSlotHolder;
@@ -65,9 +65,13 @@ namespace _Project.Scripts.Core.Loadout
         
         private void Start()
         {
-            PopulateWeaponSlots(primaryWeaponSlotHolder, primaryRangedWeapons);
-            PopulateWeaponSlots(secondaryWeaponSlotHolder, secondaryRangedWeapons);
-            PopulateWeaponSlots(meleeWeaponSlotHolder, meleeWeapons);
+            CreatePrimaryWeaponList();
+            CreateSecondaryWeaponList();
+            CreateMeeleWeaponList();
+            PopulateWeaponSlots(primaryWeaponSlotHolder, _primaryRangedWeapons);
+            PopulateWeaponSlots(secondaryWeaponSlotHolder, _secondaryRangedWeapons);
+            PopulateWeaponSlots(meleeWeaponSlotHolder, _meleeWeapons);
+            
         }
         
         /// <summary>
@@ -75,7 +79,7 @@ namespace _Project.Scripts.Core.Loadout
         /// </summary>
         /// <param name="slotHolder">Parent object to hold the slots.</param>
         /// <param name="weapons">List of weapons to populate slots for.</param>
-        private void PopulateWeaponSlots<T>(GameObject slotHolder, List<T> weapons) where T : WeaponStats
+        private void PopulateWeaponSlots<T>(GameObject slotHolder, List<T> weapons) where T : WeaponData
         {
             foreach (var weapon in weapons)
             {
@@ -86,7 +90,7 @@ namespace _Project.Scripts.Core.Loadout
                 var slotImage = slot.transform.GetChild(0).GetComponent<Image>();
                 if (slotImage != null)
                 {
-                    slotImage.sprite = weapon.itemIcon;
+                    slotImage.sprite = weapon.icon;
                     slotImage.enabled = true;
                 }
 
@@ -104,10 +108,52 @@ namespace _Project.Scripts.Core.Loadout
             // Detect a left mouse button click
             if (Input.GetMouseButtonDown(0))
             {
-                getSelectedLoadout(); // Update the selected loadout
+                //getSelectedLoadout(); // Update the selected loadout
                 PrintLoadout();
             }
         }
+        
+        private void CreatePrimaryWeaponList()
+        {
+            foreach (var weaponData in WeaponDataSystem.Instance.weaponDatabase) // Iterate through weapon database
+            {
+                foreach (var weaponStat in weaponData.weaponStats) // Iterate through stats within each weapon
+                {
+                    if (weaponStat.WeaponType == WeaponType.Primary) // Check the WeaponID property
+                    {
+                        _primaryRangedWeapons.Add(weaponData);
+                    }
+                }
+            }
+        }
+        
+        private void CreateSecondaryWeaponList()
+        {
+            foreach (var weaponData in WeaponDataSystem.Instance.weaponDatabase) // Iterate through weapon database
+            {
+                foreach (var weaponStat in weaponData.weaponStats) // Iterate through stats within each weapon
+                {
+                    if (weaponStat.WeaponType == WeaponType.Secondary) // Check the WeaponID property
+                    {
+                        _secondaryRangedWeapons.Add(weaponData);
+                    }
+                }
+            }
+        }
+        private void CreateMeeleWeaponList()
+        {
+            foreach (var weaponData in WeaponDataSystem.Instance.weaponDatabase) // Iterate through weapon database
+            {
+                foreach (var weaponStat in weaponData.weaponStats) // Iterate through stats within each weapon
+                {
+                    if (weaponStat.WeaponType == WeaponType.Melee) // Check the WeaponID property
+                    {
+                        _meleeWeapons.Add(weaponData);
+                    }
+                }
+            }
+        }
+
 
         // // Gets the closest primary weapon slot to the mouse position
         // private RangedWeaponStats getClosestPrimaryWeapons()
@@ -152,22 +198,22 @@ namespace _Project.Scripts.Core.Loadout
         //     return null;
         // }
 
-        private RangedWeaponStats getClosestPrimaryWeapons()
+        private WeaponData getClosestPrimaryWeapons()
         {
-            return GetClosestWeapon(primaryRangedWeapons, primaryWeaponSlotHolder);
+            return GetClosestWeapon(_primaryRangedWeapons, primaryWeaponSlotHolder);
         }
 
-        private RangedWeaponStats getClosestSecondaryWeapons()
+        private WeaponData getClosestSecondaryWeapons()
         {
-            return GetClosestWeapon(secondaryRangedWeapons, secondaryWeaponSlotHolder);
+            return GetClosestWeapon(_secondaryRangedWeapons, secondaryWeaponSlotHolder);
         }
 
-        private MeleeWeaponStats getClosestMeeleWeapons()
+        private WeaponData getClosestMeeleWeapons()
         {
-            return GetClosestWeapon(meleeWeapons, meleeWeaponSlotHolder);
+            return GetClosestWeapon(_meleeWeapons, meleeWeaponSlotHolder);
         }
 
-        private T GetClosestWeapon<T>(List<T> weaponList, GameObject slotHolder) where T : WeaponStats
+        private T GetClosestWeapon<T>(List<T> weaponList, GameObject slotHolder) where T : WeaponData
         {
             for (int i = 0; i < weaponList.Count; i++)
             {
@@ -232,31 +278,31 @@ namespace _Project.Scripts.Core.Loadout
         // }
 
         // Gets the selected loadout based on mouse proximity
-        internal List<string> getSelectedLoadout()
-        {
-            var primaryWeapon = getClosestPrimaryWeapons();
-            if (primaryWeapon)
-            {
-                _loadout[0] = primaryWeapon.WeaponID;
-                Debug.Log($"Primary Weapon Selected: {primaryWeapon.WeaponID}");
-            }
-
-            var secondaryWeapon = getClosestSecondaryWeapons();
-            if (secondaryWeapon)
-            {
-                _loadout[1] = secondaryWeapon.WeaponID;
-                Debug.Log($"Secondary Weapon Selected: {secondaryWeapon.WeaponID}");
-            }
-
-            var meleeWeapon = getClosestMeeleWeapons();
-            if (meleeWeapon)
-            {
-                _loadout[2] = meleeWeapon.WeaponID;
-                Debug.Log($"Melee Weapon Selected: {meleeWeapon.WeaponID}");
-            }
-
-            return _loadout;
-        }
+        // internal List<string> getSelectedLoadout()
+        // {
+        //     var primaryWeapon = getClosestPrimaryWeapons();
+        //     if (primaryWeapon != null)
+        //     {
+        //         _loadout[0] = primaryWeapon.weaponStats;
+        //         Debug.Log($"Primary Weapon Selected: {primaryWeapon.WeaponID}");
+        //     }
+        //
+        //     var secondaryWeapon = getClosestSecondaryWeapons();
+        //     if (secondaryWeapon != null)
+        //     {
+        //         _loadout[1] = secondaryWeapon.WeaponID;
+        //         Debug.Log($"Secondary Weapon Selected: {secondaryWeapon.WeaponID}");
+        //     }
+        //
+        //     var meleeWeapon = getClosestMeeleWeapons();
+        //     if (meleeWeapon != null)
+        //     {
+        //         _loadout[2] = meleeWeapon.WeaponID;
+        //         Debug.Log($"Melee Weapon Selected: {meleeWeapon.WeaponID}");
+        //     }
+        //
+        //     return _loadout;
+        // }
         
         // Logs the current selected loadout to the console for testing
         private void PrintLoadout()

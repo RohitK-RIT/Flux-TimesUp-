@@ -48,6 +48,5 @@ namespace _Project.Scripts.Core.Weapons
         [SerializeField] private float range;
         [SerializeField] private float attackSpeed;
 
-        public Sprite itemIcon;
     }
 }
