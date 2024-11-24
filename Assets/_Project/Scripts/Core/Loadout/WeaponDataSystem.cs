@@ -35,7 +35,7 @@ namespace _Project.Scripts.Core.Loadout
         protected override bool IsPersistent => true;
         
         //Sets the selected weapons by copying the provided list of weapon IDs.
-        public void SetSelectedWeapons(List<string> selectedWeapons)
+        public void SetSelectedWeapons(string[] selectedWeapons)
         {
             _selectedWeapons = new List<string>(selectedWeapons);
         }

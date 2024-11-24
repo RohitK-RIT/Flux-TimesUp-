@@ -13005,8 +13005,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 570757213}
-        m_TargetAssemblyTypeName: LoadOutManager, Assembly-CSharp
+      - m_Target: {fileID: 1162976639}
+        m_TargetAssemblyTypeName: _Project.Scripts.Core.Loadout.LoadOutManager, Assembly-CSharp
         m_MethodName: OnContinueButtonClicked
         m_Mode: 1
         m_Arguments:
