@@ -8,8 +8,10 @@ using UnityEngine;
 public class WeaponData
 {
     // The weapon prefab that will be instantiated in the game
-    public Weapon weaponPrefab;
+    [SerializeField] internal Weapon weaponPrefab;
+    
+    [SerializeField] private Sprite icon;
     
     // An array of weapon stats 
-    public WeaponStats[] weaponStats;
+    [SerializeField] internal WeaponStats[] weaponStats;
 }
