@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Fusion;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -43,6 +45,9 @@ namespace _Project.Scripts.Gameplay.PCG
         /// </summary>
         public Vector3 GridOrigin { get; private set; }
 
+        private List<Room> _unconnectedRooms = new List<Room>();
+        private List<Room> _connectedRooms = new List<Room>();
+
         /// <summary>
         /// Initializes the grid system based on the plane's size.
         /// </summary>
@@ -71,24 +76,21 @@ namespace _Project.Scripts.Gameplay.PCG
         /// Generates the dungeon layout, including placing rooms and connecting them with corridors.
         /// </summary>
         private void GenerateDungeon() {
-            Debug.Log("Starting dungeon generation...");
 
             // Start room (bottom-left of the grid)
             var startRoom = startRoomPrefab.GetComponent<Room>();
             var startPosition = GridOrigin + new Vector3(startRoom.size.x / 2, 0, startRoom.size.z / 2); // Bottom-left corner
             roomManager.PlaceRoom(startRoom, startPosition);
-            Debug.Log($"Placed Start Room at {startPosition}");
 
             // Boss room (top-right of the grid)
             var bossRoom = bossRoomPrefab.GetComponent<Room>();
             var bossPosition = GridOrigin + new Vector3(
                 (GridSystem.GridWidth - Mathf.Ceil(bossRoom.size.x / GridSystem.CellSize)) * GridSystem.CellSize,
-                0,
+                bossRoom.transform.position.y,
                 (GridSystem.GridHeight - Mathf.Ceil(bossRoom.size.z / GridSystem.CellSize)) * GridSystem.CellSize
             );
             bossPosition += new Vector3(bossRoom.size.x / 2, 0, bossRoom.size.z / 2);
             roomManager.PlaceRoom(bossRoom, bossPosition);
-            Debug.Log($"Placed Boss Room at {bossPosition}");
 
             // Exploration rooms
             for (var i = 0; i < explorationRoomCount; i++) {
@@ -102,12 +104,15 @@ namespace _Project.Scripts.Gameplay.PCG
                     Debug.LogError($"Failed to place Exploration Room {i} - no valid position found!");
                 }
             }
+            _connectedRooms.Add(startRoom);
+            foreach (var t in roomManager.rooms)
+            {
+                if(t!=startRoom)
+                    _unconnectedRooms.Add(t);
+            }
             ConnectAllRooms();
         }
-
-
-
-        private List<Vector2> AStarSearch(Vector2 startpos,Vector2 goalpos)
+        private List<Vector2> AStarSearch(Vector2 startPos, Vector2 goalPos)
         {
             //Create a list to store the open cells
             var open = new List<Vector2>();
@@ -116,7 +121,7 @@ namespace _Project.Scripts.Gameplay.PCG
             var closed = new List<Vector2>();
             
             //Add the start position to the open list
-            open.Add(startpos);
+            open.Add(startPos);
             
             //Dictionary to store the parent of each cell
             var parent = new Dictionary<Vector2,Vector2>();
@@ -125,19 +130,16 @@ namespace _Project.Scripts.Gameplay.PCG
             var cost = new Dictionary<Vector2,int>();
             
             //Dictionary to store the g value of each cell
-            var g = new Dictionary<Vector2,int>();
-            
-            g[startpos] = 0;
-            // f(x) = g(x) + h(x)
-            
-            cost[startpos]  = g[startpos]+ManhattanDistance((int)startpos.x,(int)startpos.y,(int)goalpos.x,(int)goalpos.y);
-            
-            
+            var g = new Dictionary<Vector2,int>
+            {
+                [startPos] = 0
+            };
+
+            cost[startPos]  = g[startPos] + ManhattanDistance((int)startPos.x, (int)startPos.y, (int)goalPos.x, (int)goalPos.y);
             
             //While the open list is not empty
             while (open.Count != 0)
             {
-                
                 //Get the cell with the lowest cost
                 var current = open[0];
                 foreach (var cell in open)
@@ -147,7 +149,6 @@ namespace _Project.Scripts.Gameplay.PCG
                         current = cell;
                     }
                 }
-                
                 //Remove the current cell from the open list
                 open.Remove(current);
                 
@@ -155,39 +156,40 @@ namespace _Project.Scripts.Gameplay.PCG
                 closed.Add(current);
                 
                 //If the current cell is the goal cell
-                if (current == goalpos)
+                if (current == goalPos)
                 {
                     //Return the path
                     var path = new List<Vector2>();
-                    while (current != startpos)
+                    while (current != startPos)
                     {
                         path.Add(current);
                         current = parent[current];
                     }
-                    path.Add(startpos);
+                    path.Add(startPos);
                     path.Reverse();
                     return path;
                 }
                 // Get the neighbours of the current cell
-                var neighbours = new List<Vector2>();
-                neighbours.Add(new Vector2(current.x+1,current.y));
-                neighbours.Add(new Vector2(current.x-1,current.y));
-                neighbours.Add(new Vector2(current.x,current.y+1));
-                neighbours.Add(new Vector2(current.x,current.y-1));
-                
+                var neighbours = new List<Vector2>
+                {
+                    new Vector2(current.x + 1, current.y),
+                    new Vector2(current.x - 1, current.y),
+                    new Vector2(current.x, current.y+1),
+                    new Vector2(current.x, current.y-1)
+                };
+
                 foreach (var neighbour in neighbours)
                 {
-                    if (neighbour == goalpos)
+                    if (neighbour == goalPos)
                     {
-                        var path = new List<Vector2>();
-                        path.Add(goalpos);
+                        var path = new List<Vector2> { goalPos };
                         var cur = current;
-                        while (cur != startpos)
+                        while (cur != startPos)
                         {
                             path.Add(cur);
                             cur = parent[cur];
                         }
-                        path.Add(startpos);
+                        path.Add(startPos);
                         path.Reverse();
                         return path;
                         
@@ -223,22 +225,57 @@ namespace _Project.Scripts.Gameplay.PCG
                     g[neighbour] = newCost;
                     
                     //Set the cost of the neighbour to the new cost + the heuristic
-                    cost[neighbour] = g[neighbour] + ManhattanDistance((int)neighbour.x,(int)neighbour.y,(int)goalpos.x,(int)goalpos.y);
+                    cost[neighbour] = g[neighbour] + ManhattanDistance((int)neighbour.x,(int)neighbour.y,(int)goalPos.x,(int)goalPos.y);
                 }
-                
-                
             }
-            Debug.Log("No path found "+startpos+" to "+goalpos+"!"+closed.Count);
+            Debug.Log("No path found "+startPos+" to "+goalPos+"!"+closed.Count);
             return null;
         }
 
-        private int ManhattanDistance(int x1,int y1,int x2,int y2)
+        private static int ManhattanDistance(int x1,int y1,int x2,int y2)
         {
             return Math.Abs(x1-x2) + Math.Abs(y1-y2);
         }
 
         private void ConnectAllRooms()
         {
+            while(_unconnectedRooms.Count > 0)
+            { 
+                foreach (var room in _connectedRooms)
+                {
+                    var connected = false;
+                    foreach (var exit in room.Exits)
+                    {
+                        if (exit.isConnected)
+                        {
+                            continue;
+                        }
+                        var (closestExit, closestRoom) = roomManager.FindClosestUnconnectedExitFromUnconnectedRooms(_unconnectedRooms, exit).First();
+                        if (closestExit == null)
+                        {
+                            continue;
+                        }
+                        var path = GetPath(new Vector2(exit.worldPosition.x, exit.worldPosition.z), new Vector2(closestExit.worldPosition.x, closestExit.worldPosition.z));
+                        if (path == null || path.Count == 0)
+                        {
+                            continue;
+                        }
+                        corridorManager.CreatePath(path, GridOrigin);
+                        GridSystem.ResetVisitedCells();
+                        exit.isConnected = true;
+                        closestExit.isConnected = true;
+                        _connectedRooms.Add(closestRoom);
+                        _unconnectedRooms.Remove(closestRoom);
+                        connected = true;
+                        break;
+                    }
+                    if (connected)
+                    {
+                        break;
+                    }
+                }
+            }
+           
             foreach (var room in roomManager.rooms)
             {
                 foreach(var exit in room.Exits)
@@ -252,19 +289,22 @@ namespace _Project.Scripts.Gameplay.PCG
                     {
                         continue;
                     }
-                    List<Vector2> path = GetPath(new Vector2(exit.worldPosition.x, exit.worldPosition.z), new Vector2(closestExit.worldPosition.x, closestExit.worldPosition.z));
+                    var path = GetPath(new Vector2(exit.worldPosition.x, exit.worldPosition.z), new Vector2(closestExit.worldPosition.x, closestExit.worldPosition.z));
                     if (path == null || path.Count == 0)
                     {
                         Debug.Log("Unable to find path between exits" + exit.worldPosition + " and " + closestExit.worldPosition);
                         continue;
                     }
-
+                    foreach (var cell in path)
+                    {
+                        GridSystem.GetCellWorldPosition(cell.x, cell.y, GridOrigin);
+                        GridSystem.MarkCellOccupied((int)cell.x, (int)cell.y, GridOrigin);
+                    }
                     corridorManager.CreatePath(path, GridOrigin);
                     Debug.Log($"Path from {exit.worldPosition} to {closestExit.worldPosition}: {string.Join(" -> ", path)}");
                     GridSystem.ResetVisitedCells();
                     exit.isConnected = true;
                     closestExit.isConnected = true;
-                    
                 }
             }
         }
@@ -276,74 +316,13 @@ namespace _Project.Scripts.Gameplay.PCG
             var endX = (int)end.x;
             var endY = (int)end.y;
             
-            Vector2 startIndexes = GridSystem.GetGridCellPositionFromWorldPosition(startX, startY, GridOrigin);
-            Vector2 endIndexes = GridSystem.GetGridCellPositionFromWorldPosition(endX, endY, GridOrigin);
+            var startIndexes = GridSystem.GetGridCellPositionFromWorldPosition(startX, startY, GridOrigin);
+            var endIndexes = GridSystem.GetGridCellPositionFromWorldPosition(endX, endY, GridOrigin);
             
-            List<Vector2> result = AStarSearch(startIndexes, endIndexes);
+            var result = AStarSearch(startIndexes, endIndexes);
             
             return result;
         }
-        
-        /*private List<Vector2> GeneratePathIterative(int startX, int startY, int endX, int endY)
-        {
-            int rows = GridSystem.VisitedCells.GetLength(0);
-            int cols = GridSystem.VisitedCells.GetLength(1);
-    
-            // Direction vectors: (0, 1) = North, (1, 0) = East, (0, -1) = South, (-1, 0) = West
-            Vector2[] directions = new Vector2[]
-            {
-                new Vector2(0, 1),
-                new Vector2(1, 0),
-                new Vector2(0, -1),
-                new Vector2(-1, 0)
-            };
-
-            // Queue for BFS, storing the current cell and the path taken to reach it
-            Queue<(Vector2 position, List<Vector2> path)> queue = new Queue<(Vector2, List<Vector2>)>();
-
-            // Initialize BFS with the starting position
-            queue.Enqueue((new Vector2(startX, startY), new List<Vector2> { new Vector2(startX, startY) }));
-            GridSystem.VisitedCells[startX, startY] = true;
-
-            while (queue.Count > 0)
-            {
-                var (current, path) = queue.Dequeue();
-                int currentX = (int)current.x;
-                int currentY = (int)current.y;
-
-                // Check if we've reached the destination
-                if (currentX == endX && currentY == endY)
-                {
-                    return path;
-                }
-
-                // Explore neighbors
-                foreach (var direction in directions)
-                {
-                    int newX = currentX + (int)direction.x;
-                    int newY = currentY + (int)direction.y;
-                    
-                    if (newX == endX && newY == endY)
-                    {
-                        return new List<Vector2>(path) { new Vector2(newX, newY) };
-                    }
-                    
-
-                    // Check boundaries and if cell is unvisited
-                    if (newX >= 0 && newX < rows && newY >= 0 && newY < cols && !GridSystem.VisitedCells[newX, newY] && !GridSystem.IsCellOccupied(newX, newY))
-                    {
-                        GridSystem.VisitedCells[newX, newY] = true;
-                        var newPath = new List<Vector2>(path) { new Vector2(newX, newY) };
-                        queue.Enqueue((new Vector2(newX, newY), newPath));
-                    }
-                }
-            }
-
-            // If no path is found
-            return null;
-        }
-        */
-
         private void OnDrawGizmos() {
             if (GridSystem == null) return;
             for (var x = 0; x <= GridSystem.GridWidth; x++) {
