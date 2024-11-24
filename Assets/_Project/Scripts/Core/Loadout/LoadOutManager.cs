@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Project.Scripts.Core.Backend;
+using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Melee;
 using _Project.Scripts.Core.Weapons.Ranged;
 using UnityEngine;
@@ -21,42 +22,81 @@ namespace _Project.Scripts.Core.Loadout
         [SerializeField] private GameObject secondaryWeaponSlotHolder;
         [SerializeField] private GameObject meleeWeaponSlotHolder;
 
-        // Arrays to hold references to individual weapon slots in the UI
-        private GameObject[] _primaryweaponSlots;
-        private GameObject[] _secondaryweaponSlots;
-        private GameObject[] _meleeweaponSlots;
+        // // Arrays to hold references to individual weapon slots in the UI
+        // private GameObject[] _primaryweaponSlots;
+        // private GameObject[] _secondaryweaponSlots;
+        // private GameObject[] _meleeweaponSlots;
 
+        [SerializeField] private GameObject weaponSlotPrefab; // Prefab for weapon slots
+
+        
         // List to store the selected weapon IDs for the loadout
         private List<string> _loadout = new List<string> { null, null, null };
     
         // The name of the next scene to load after selection
         private string _nextSceneName = "Greybox";
     
+        // private void Start()
+        // {
+        //     // Initialize the weapon slot arrays based on the number of child objects in the slot holders
+        //     _primaryweaponSlots = new GameObject[primaryWeaponSlotHolder.transform.childCount];
+        //     _secondaryweaponSlots = new GameObject[secondaryWeaponSlotHolder.transform.childCount];
+        //     _meleeweaponSlots = new GameObject[meleeWeaponSlotHolder.transform.childCount];
+        //
+        //     // Populate the slot arrays with references to the UI elements
+        //     for (int i = 0; i < _primaryweaponSlots.Length; i++)
+        //     {
+        //         _primaryweaponSlots[i] = primaryWeaponSlotHolder.transform.GetChild(i).gameObject;
+        //     }
+        //
+        //     for (int i = 0; i < _secondaryweaponSlots.Length; i++)
+        //     {
+        //         _secondaryweaponSlots[i] = secondaryWeaponSlotHolder.transform.GetChild(i).gameObject;
+        //     }
+        //
+        //     for (int i = 0; i < _meleeweaponSlots.Length; i++)
+        //     {
+        //         _meleeweaponSlots[i] = meleeWeaponSlotHolder.transform.GetChild(i).gameObject;
+        //     }
+        //
+        //     // Populate the weapon slots with icons
+        //     AddIcon();
+        // }
+        
         private void Start()
         {
-            // Initialize the weapon slot arrays based on the number of child objects in the slot holders
-            _primaryweaponSlots = new GameObject[primaryWeaponSlotHolder.transform.childCount];
-            _secondaryweaponSlots = new GameObject[secondaryWeaponSlotHolder.transform.childCount];
-            _meleeweaponSlots = new GameObject[meleeWeaponSlotHolder.transform.childCount];
+            PopulateWeaponSlots(primaryWeaponSlotHolder, primaryRangedWeapons);
+            PopulateWeaponSlots(secondaryWeaponSlotHolder, secondaryRangedWeapons);
+            PopulateWeaponSlots(meleeWeaponSlotHolder, meleeWeapons);
+        }
+        
+        /// <summary>
+        /// Populates weapon slots dynamically for a given weapon category.
+        /// </summary>
+        /// <param name="slotHolder">Parent object to hold the slots.</param>
+        /// <param name="weapons">List of weapons to populate slots for.</param>
+        private void PopulateWeaponSlots<T>(GameObject slotHolder, List<T> weapons) where T : WeaponStats
+        {
+            foreach (var weapon in weapons)
+            {
+                // Instantiate the slot prefab
+                GameObject slot = Instantiate(weaponSlotPrefab, slotHolder.transform);
 
-            // Populate the slot arrays with references to the UI elements
-            for (int i = 0; i < _primaryweaponSlots.Length; i++)
-            {
-                _primaryweaponSlots[i] = primaryWeaponSlotHolder.transform.GetChild(i).gameObject;
+                // Assign the weapon's icon to the slot
+                var slotImage = slot.transform.GetChild(0).GetComponent<Image>();
+                if (slotImage != null)
+                {
+                    slotImage.sprite = weapon.itemIcon;
+                    slotImage.enabled = true;
+                }
+
+                // // Store the weapon's data in a custom component (optional)
+                // var weaponSlot = slot.GetComponent<WeaponSlot>();
+                // if (weaponSlot != null)
+                // {
+                //     weaponSlot.Initialize(weapon.WeaponID);
+                // }
             }
-        
-            for (int i = 0; i < _secondaryweaponSlots.Length; i++)
-            {
-                _secondaryweaponSlots[i] = secondaryWeaponSlotHolder.transform.GetChild(i).gameObject;
-            }
-        
-            for (int i = 0; i < _meleeweaponSlots.Length; i++)
-            {
-                _meleeweaponSlots[i] = meleeWeaponSlotHolder.transform.GetChild(i).gameObject;
-            }
-        
-            // Populate the weapon slots with icons
-            AddIcon();
         }
 
         private void Update()
@@ -69,97 +109,127 @@ namespace _Project.Scripts.Core.Loadout
             }
         }
 
-        // Gets the closest primary weapon slot to the mouse position
+        // // Gets the closest primary weapon slot to the mouse position
+        // private RangedWeaponStats getClosestPrimaryWeapons()
+        // {
+        //     for (int i = 0; i < _primaryweaponSlots.Length; i++)
+        //     {
+        //         if (Vector2.Distance(_primaryweaponSlots[i].transform.position, Input.mousePosition) <= 68)
+        //         {
+        //             return primaryRangedWeapons[i];
+        //         }
+        //     }
+        //
+        //     return null;
+        // }
+        //
+        // // Gets the closest secondary weapon slot to the mouse position
+        // private RangedWeaponStats getClosestSecondaryWeapons()
+        // {
+        //     for (int i = 0; i < _secondaryweaponSlots.Length; i++)
+        //     {
+        //         if (Vector2.Distance(_secondaryweaponSlots[i].transform.position, Input.mousePosition) <= 68)
+        //         {
+        //             return secondaryRangedWeapons[i];
+        //         }
+        //     }
+        //
+        //     return null;
+        // }
+        //
+        //
+        // // Gets the closest melee weapon slot to the mouse position
+        // private MeleeWeaponStats getClosestMeeleWeapons()
+        // {
+        //     for (int i = 0; i < _meleeweaponSlots.Length; i++)
+        //     {
+        //         if (Vector2.Distance(_meleeweaponSlots[i].transform.position, Input.mousePosition) <= 68)
+        //         {
+        //             return meleeWeapons[i];
+        //         }
+        //     }
+        //
+        //     return null;
+        // }
+
         private RangedWeaponStats getClosestPrimaryWeapons()
         {
-            for (int i = 0; i < _primaryweaponSlots.Length; i++)
-            {
-                if (Vector2.Distance(_primaryweaponSlots[i].transform.position, Input.mousePosition) <= 68)
-                {
-                    return primaryRangedWeapons[i];
-                }
-            }
-
-            return null;
+            return GetClosestWeapon(primaryRangedWeapons, primaryWeaponSlotHolder);
         }
-        
-        // Gets the closest secondary weapon slot to the mouse position
+
         private RangedWeaponStats getClosestSecondaryWeapons()
         {
-            for (int i = 0; i < _secondaryweaponSlots.Length; i++)
-            {
-                if (Vector2.Distance(_secondaryweaponSlots[i].transform.position, Input.mousePosition) <= 68)
-                {
-                    return secondaryRangedWeapons[i];
-                }
-            }
-
-            return null;
+            return GetClosestWeapon(secondaryRangedWeapons, secondaryWeaponSlotHolder);
         }
-        
-        
-        // Gets the closest melee weapon slot to the mouse position
+
         private MeleeWeaponStats getClosestMeeleWeapons()
         {
-            for (int i = 0; i < _meleeweaponSlots.Length; i++)
+            return GetClosestWeapon(meleeWeapons, meleeWeaponSlotHolder);
+        }
+
+        private T GetClosestWeapon<T>(List<T> weaponList, GameObject slotHolder) where T : WeaponStats
+        {
+            for (int i = 0; i < weaponList.Count; i++)
             {
-                if (Vector2.Distance(_meleeweaponSlots[i].transform.position, Input.mousePosition) <= 68)
+                GameObject slot = slotHolder.transform.GetChild(i).gameObject;
+                if (Vector2.Distance(slot.transform.position, Input.mousePosition) <= 68)
                 {
-                    return meleeWeapons[i];
+                    return weaponList[i];
                 }
             }
 
             return null;
         }
 
-        // Populates weapon slots in the UI with icons
-        public void AddIcon()
-        {
-            for (int i = 0; i < _primaryweaponSlots.Length; i++)
-            {
-                try
-                {
-                    _primaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = true;
-                    _primaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = primaryRangedWeapons[i].itemIcon;
-                }
-                catch (Exception e)
-                {
-                    _primaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = false;
-                    _primaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = null;
-                }
-            
-            }
         
-            for (int i = 0; i < _secondaryweaponSlots.Length; i++)
-            {
-                try
-                {
-                    _secondaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = true;
-                    _secondaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = secondaryRangedWeapons[i].itemIcon;
-                }
-                catch (Exception e)
-                {
-                    _secondaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = false;
-                    _secondaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = null;
-                }
-            
-            }
-        
-            for (int i = 0; i < _meleeweaponSlots.Length; i++)
-            {
-                try
-                {
-                    _meleeweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = true;
-                    _meleeweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = meleeWeapons[i].itemIcon;
-                }
-                catch (Exception e)
-                {
-                    _meleeweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = false;
-                    _meleeweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = null;
-                }
-            
-            }
-        }
+        // // Populates weapon slots in the UI with icons
+        // public void AddIcon()
+        // {
+        //     for (int i = 0; i < _primaryweaponSlots.Length; i++)
+        //     {
+        //         try
+        //         {
+        //             _primaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = true;
+        //             _primaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = primaryRangedWeapons[i].itemIcon;
+        //         }
+        //         catch (Exception e)
+        //         {
+        //             _primaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = false;
+        //             _primaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = null;
+        //         }
+        //     
+        //     }
+        //
+        //     for (int i = 0; i < _secondaryweaponSlots.Length; i++)
+        //     {
+        //         try
+        //         {
+        //             _secondaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = true;
+        //             _secondaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = secondaryRangedWeapons[i].itemIcon;
+        //         }
+        //         catch (Exception e)
+        //         {
+        //             _secondaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = false;
+        //             _secondaryweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = null;
+        //         }
+        //     
+        //     }
+        //
+        //     for (int i = 0; i < _meleeweaponSlots.Length; i++)
+        //     {
+        //         try
+        //         {
+        //             _meleeweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = true;
+        //             _meleeweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = meleeWeapons[i].itemIcon;
+        //         }
+        //         catch (Exception e)
+        //         {
+        //             _meleeweaponSlots[i].transform.GetChild(0).GetComponent<Image>().enabled = false;
+        //             _meleeweaponSlots[i].transform.GetChild(0).GetComponent<Image>().sprite = null;
+        //         }
+        //     
+        //     }
+        // }
 
         // Gets the selected loadout based on mouse proximity
         internal List<string> getSelectedLoadout()
