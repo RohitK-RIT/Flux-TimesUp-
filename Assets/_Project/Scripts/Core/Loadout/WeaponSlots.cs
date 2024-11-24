@@ -1,22 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using _Project.Scripts.Core.Weapons;
 using UnityEngine;
 
-public class WeaponSlots : MonoBehaviour
+namespace _Project.Scripts.Core.Loadout
 {
-    public string weaponId;
-
-    public WeaponType weaponType;
-    // Start is called before the first frame update
-    void Start()
+    public class WeaponSlots : MonoBehaviour
     {
-        
-    }
+        // The ID of the weapon that this slot represents. 
+        // This ID is used to uniquely identify the weapon in the loadout system.
+        public string weaponId;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // The type of weapon associated with this slot (Primary, Secondary, or Melee).
+        // This helps categorize the weapon and assign it to the correct loadout slot.
+        public WeaponType weaponType;
     }
 }
