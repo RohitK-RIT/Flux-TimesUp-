@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: Rifle2
   weaponType: 0
-  weaponName: TBD
+  weaponName: Mk14
   damage: 40
   range: 100
   attackSpeed: 4

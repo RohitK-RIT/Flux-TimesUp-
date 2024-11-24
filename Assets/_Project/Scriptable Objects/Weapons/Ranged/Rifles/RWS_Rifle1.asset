@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: Rifle1
   weaponType: 0
-  weaponName: TBD
+  weaponName: AK12
   damage: 25
   range: 75
   attackSpeed: 6.5
