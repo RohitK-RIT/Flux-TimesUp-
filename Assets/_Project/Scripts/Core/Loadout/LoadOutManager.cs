@@ -79,7 +79,7 @@ namespace _Project.Scripts.Core.Loadout
         /// </summary>
         /// <param name="slotHolder">Parent object to hold the slots.</param>
         /// <param name="weapons">List of weapons to populate slots for.</param>
-        private void PopulateWeaponSlots<T>(GameObject slotHolder, List<T> weapons) where T : WeaponData
+        public void PopulateWeaponSlots<T>(GameObject slotHolder, List<T> weapons) where T : WeaponData
         {
             foreach (var weapon in weapons)
             {
@@ -94,23 +94,59 @@ namespace _Project.Scripts.Core.Loadout
                     slotImage.enabled = true;
                 }
 
-                // // Store the weapon's data in a custom component (optional)
-                // var weaponSlot = slot.GetComponent<WeaponSlot>();
-                // if (weaponSlot != null)
-                // {
-                //     weaponSlot.Initialize(weapon.WeaponID);
-                // }
+                // Add weapon data to the slot
+                var weaponSlot = slot.GetComponent<WeaponSlots>();
+                if (weaponSlot != null)
+                {
+                    weaponSlot.weaponId = weapon.weaponStats[0].WeaponID; // Assign the weapon's ID
+                    weaponSlot.weaponType = weapon.weaponStats[0].WeaponType; // Assign the weapon's type
+                }
+
+                // Assign the OnClick listener to the button
+                var button = slot.transform.GetChild(0).GetComponent<Button>();
+                if (button != null)
+                {
+                    Debug.Log("hiii");
+                    string weaponID = weapon.weaponStats[0].WeaponID; // Capture the current weapon ID in a local variable
+                    WeaponType weaponType = weapon.weaponStats[0].WeaponType; // Capture the current weapon type in a local variable
+                    // Add the onClick listener
+                    button.onClick.AddListener(() =>
+                    {
+                        Debug.Log($"Button clicked, Weapon ID: {weaponID}, {weaponType}");
+                        OnWeaponSlotClicked(weaponID, weaponType);
+                    });
+                }
             }
         }
 
+        private void OnWeaponSlotClicked(string weaponID, WeaponType weaponType)
+        {
+            Debug.Log($"Weapon Slot Clicked! Weapon ID: {weaponID}, {weaponType}");
+            if (weaponType == WeaponType.Primary)
+            {
+                _loadout[0] = weaponID;
+            }
+            else if (weaponType == WeaponType.Secondary)
+            {
+                _loadout[1] = weaponID;
+            }
+            else if(weaponType == WeaponType.Melee)
+            {
+                _loadout[2] = weaponID;
+            }
+
+            PrintLoadout();
+            // Perform additional logic, such as adding the weapon to the loadout
+            //AddWeaponToLoadout(weaponID);
+        }
         private void Update()
         {
             // Detect a left mouse button click
-            if (Input.GetMouseButtonDown(0))
-            {
-                //getSelectedLoadout(); // Update the selected loadout
-                PrintLoadout();
-            }
+            // if (Input.GetMouseButtonDown(0))
+            // {
+            //     //getSelectedLoadout(); // Update the selected loadout
+            //     PrintLoadout();
+            // }
         }
         
         private void CreatePrimaryWeaponList()
@@ -198,34 +234,34 @@ namespace _Project.Scripts.Core.Loadout
         //     return null;
         // }
 
-        private WeaponData getClosestPrimaryWeapons()
-        {
-            return GetClosestWeapon(_primaryRangedWeapons, primaryWeaponSlotHolder);
-        }
-
-        private WeaponData getClosestSecondaryWeapons()
-        {
-            return GetClosestWeapon(_secondaryRangedWeapons, secondaryWeaponSlotHolder);
-        }
-
-        private WeaponData getClosestMeeleWeapons()
-        {
-            return GetClosestWeapon(_meleeWeapons, meleeWeaponSlotHolder);
-        }
-
-        private T GetClosestWeapon<T>(List<T> weaponList, GameObject slotHolder) where T : WeaponData
-        {
-            for (int i = 0; i < weaponList.Count; i++)
-            {
-                GameObject slot = slotHolder.transform.GetChild(i).gameObject;
-                if (Vector2.Distance(slot.transform.position, Input.mousePosition) <= 68)
-                {
-                    return weaponList[i];
-                }
-            }
-
-            return null;
-        }
+        // private WeaponData getClosestPrimaryWeapons()
+        // {
+        //     return GetClosestWeapon(_primaryRangedWeapons, primaryWeaponSlotHolder);
+        // }
+        //
+        // private WeaponData getClosestSecondaryWeapons()
+        // {
+        //     return GetClosestWeapon(_secondaryRangedWeapons, secondaryWeaponSlotHolder);
+        // }
+        //
+        // private WeaponData getClosestMeeleWeapons()
+        // {
+        //     return GetClosestWeapon(_meleeWeapons, meleeWeaponSlotHolder);
+        // }
+        //
+        // private T GetClosestWeapon<T>(List<T> weaponList, GameObject slotHolder) where T : WeaponData
+        // {
+        //     for (int i = 0; i < weaponList.Count; i++)
+        //     {
+        //         GameObject slot = slotHolder.transform.GetChild(i).gameObject;
+        //         if (Vector2.Distance(slot.transform.position, Input.mousePosition) <= 68)
+        //         {
+        //             return weaponList[i];
+        //         }
+        //     }
+        //
+        //     return null;
+        // }
 
         
         // // Populates weapon slots in the UI with icons
@@ -316,6 +352,7 @@ namespace _Project.Scripts.Core.Loadout
         // Handles the "Continue" button click
         public void OnContinueButtonClicked()
         {
+            PrintLoadout();
             if (_isLoadOutComplete())
             {
                 TransferLoadoutToWeaponDataSystem(); // Save data to WeaponDataSystem
