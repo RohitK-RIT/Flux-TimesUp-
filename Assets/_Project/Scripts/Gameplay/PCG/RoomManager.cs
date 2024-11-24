@@ -13,15 +13,12 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// </summary>
         public List<Room> rooms = new();
         private DungeonGenerator _dungeonGenerator;
-        private CorridorManager _corridorManager;
         /// <summary>
         /// Initializes the RoomManager by getting references to the DungeonGenerator and CorridorManager components.
         /// </summary>
         private void Awake()
         {
             _dungeonGenerator = GetComponent<DungeonGenerator>();
-            _corridorManager = GetComponent<CorridorManager>();
-            
         }
         /// <summary>
         /// Places a room at the specified position and marks the corresponding grid cells as occupied.
@@ -42,13 +39,7 @@ namespace _Project.Scripts.Gameplay.PCG {
             // Adjust the starting indices based on the grid origin
             var startX = Mathf.FloorToInt((position.x - room.size.x / 2));
             var startY = Mathf.FloorToInt((position.z - room.size.z / 2));
-            /*var startX = Mathf.FloorToInt((position.x - room.size.x / 2) / _dungeonGenerator.GridSystem.CellSize);
-            var startY = Mathf.FloorToInt((position.z - room.size.z / 2) / _dungeonGenerator.GridSystem.CellSize);
-            */
-
-            var roomWidthInCells = Mathf.CeilToInt(room.size.x / _dungeonGenerator.GridSystem.CellSize);
-            var roomHeightInCells = Mathf.CeilToInt(room.size.z / _dungeonGenerator.GridSystem.CellSize);
-
+            
             // Ensure indices are within bounds
             for (var x = startX; x < startX + room.size.x+_dungeonGenerator.GridSystem.CellSize; x+=5) {
                 for (var y = startY; y <  startY + room.size.z+_dungeonGenerator.GridSystem.CellSize; y+=5) {
@@ -128,11 +119,29 @@ namespace _Project.Scripts.Gameplay.PCG {
             }
             return closestExit;
         }
-        
-        
-        
 
+        public Dictionary<Exit, Room> FindClosestUnconnectedExitFromUnconnectedRooms(List<Room> unconnectedRooms, Exit closestExit)
+        {
+            Room closestRoom = null;
+            Exit closestExitFromUnconnectedRooms = null;
+            var closestDistance = float.MaxValue;
+            foreach (var room in unconnectedRooms)
+            {
+                if (room.Exits.Contains(closestExit)) continue; // Skip exits in the same room
+                foreach (var exit in room.Exits)
+                {
+                    if (exit.isConnected) continue;
 
+                    var distance = Vector3.Distance(closestExit.worldPosition, exit.worldPosition);
+                    if (!(distance < closestDistance))
+                        continue;
+                    closestDistance = distance;
+                    closestExitFromUnconnectedRooms = exit;
+                    closestRoom = room;
+                }
+            }
 
+            return closestExitFromUnconnectedRooms != null ? new Dictionary<Exit, Room> { { closestExitFromUnconnectedRooms, closestRoom } } : null;
+        }
     }
 }

@@ -28,6 +28,7 @@ namespace _Project.Scripts.Gameplay.PCG
                 exit.worldPosition = transform.position + exit.localPosition;
                 Debug.Log($"Exit at {exit.localPosition} mapped to world position {exit.worldPosition}");
             }
+            
         }
     }
 }
