@@ -57,8 +57,8 @@ namespace _Project.Scripts.Core.Loadout
                 var weaponSlot = slot.GetComponent<WeaponSlots>();
                 if (weaponSlot != null)
                 {
-                    weaponSlot.weaponId = weapon.weaponStats[0].WeaponID; // Assign the weapon's ID
-                    weaponSlot.weaponType = weapon.weaponStats[0].WeaponType; // Assign the weapon's type
+                    weaponSlot.weaponId = weapon.weaponStats.WeaponID; // Assign the weapon's ID
+                    weaponSlot.weaponType = weapon.weaponStats.WeaponType; // Assign the weapon's type
                 }
 
                 // Assign the OnClick listener to the button
@@ -66,10 +66,10 @@ namespace _Project.Scripts.Core.Loadout
                 if (button != null)
                 {
                     // Capture the current weapon ID in a local variable
-                    string weaponID = weapon.weaponStats[0].WeaponID;
+                    string weaponID = weapon.weaponStats.WeaponID;
                     
                     // Capture the current weapon type in a local variable
-                    WeaponType weaponType = weapon.weaponStats[0].WeaponType; 
+                    WeaponType weaponType = weapon.weaponStats.WeaponType; 
                     
                     // Add the onClick listener
                     button.onClick.AddListener(() =>
@@ -104,22 +104,21 @@ namespace _Project.Scripts.Core.Loadout
             foreach (var weaponData in WeaponDataSystem.Instance.weaponDatabase)
             {
                 // Iterate through stats within each weapon
-                foreach (var weaponStat in weaponData.weaponStats) 
+                
+                // Check the WeaponType property
+                if (weaponData.weaponStats.WeaponType == WeaponType.Primary)
                 {
-                    // Check the WeaponType property
-                    if (weaponStat.WeaponType == WeaponType.Primary)
-                    {
-                        _primaryRangedWeapons.Add(weaponData);
-                    }
-                    else if (weaponStat.WeaponType == WeaponType.Secondary)
-                    {
-                        _secondaryRangedWeapons.Add(weaponData);
-                    }
-                    else if (weaponStat.WeaponType == WeaponType.Melee)
-                    {
-                        _meleeWeapons.Add(weaponData);
-                    }
+                    _primaryRangedWeapons.Add(weaponData);
                 }
+                else if (weaponData.weaponStats.WeaponType == WeaponType.Secondary)
+                {
+                    _secondaryRangedWeapons.Add(weaponData);
+                }
+                else if (weaponData.weaponStats.WeaponType == WeaponType.Melee)
+                {
+                    _meleeWeapons.Add(weaponData);
+                }
+                
             }
         }
         

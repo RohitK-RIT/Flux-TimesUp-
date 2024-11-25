@@ -14,5 +14,5 @@ public class WeaponData
     [SerializeField] internal Sprite icon;
     
     // An array of weapon stats 
-    [SerializeField] internal WeaponStats[] weaponStats;
+    [SerializeField] internal WeaponStats weaponStats;
 }

@@ -19,13 +19,11 @@ namespace _Project.Scripts.Core.Loadout
         {
             foreach (var weaponData in weaponDatabase) // Iterate through weapon database
             {
-                foreach (var weaponStat in weaponData.weaponStats) // Iterate through stats within each weapon
+                if (weaponData.weaponStats.WeaponID == weaponID) // Check the WeaponID property
                 {
-                    if (weaponStat.WeaponID == weaponID) // Check the WeaponID property
-                    {
-                        return weaponData.weaponPrefab; // Return the prefab from the current weapon data
-                    }
+                    return weaponData.weaponPrefab; // Return the prefab from the current weapon data
                 }
+                
             }
 
             Debug.LogWarning($"Weapon with ID {weaponID} not found in the database!");
