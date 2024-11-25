@@ -1,4 +1,5 @@
 using System.Collections;
+using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons
@@ -17,6 +18,25 @@ namespace _Project.Scripts.Core.Weapons
         /// Is the weapon currently attacking.
         /// </summary>
         protected bool Attacking { get; private set; }
+
+        /// <summary>
+        /// Current player controller.
+        /// </summary>
+        public PlayerController CurrentPlayerController { get; private set; }
+
+        public virtual void OnPickup(PlayerController currentPlayerController)
+        {
+            CurrentPlayerController = currentPlayerController;
+        }
+
+        public virtual void OnDrop()
+        {
+            CurrentPlayerController = null;
+        }
+
+        public virtual void OnEquip() { }
+
+        public virtual void OnUnequip() { }
 
         /// <summary>
         /// Start attacking.
@@ -50,5 +70,15 @@ namespace _Project.Scripts.Core.Weapons
         /// Coroutine for attacking.
         /// </summary>
         protected abstract IEnumerator OnAttack();
+
+        /// <summary>
+        /// Get the damage of the weapon.
+        /// </summary>
+        /// <returns>damage dealt by the weapon</returns>
+        protected virtual float GetDamage()
+        {
+            // TODO: Implement damage calculation in base classes
+            return 0f;
+        }
     }
 }

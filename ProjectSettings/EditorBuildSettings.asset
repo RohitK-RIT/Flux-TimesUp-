@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Greybox.unity
     guid: 149604c63747645eb8b92e98b9302608
+  - enabled: 1
+    path: Assets/_Project/Scenes/Onboarding Scene.unity
+    guid: dc1c2da4755a7ae45b8218317c313d86
   m_configObjects: {}

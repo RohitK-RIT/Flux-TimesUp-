@@ -1,4 +1,6 @@
+using _Project.Scripts.Core.Weapons.Abilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Character
 {
@@ -14,5 +16,6 @@ namespace _Project.Scripts.Core.Character
         public float reloadSpeed;
         public float aimAccuracy;
         public int cooldown;
+        [SerializeField] public PlayerAbilityType playerAbilityType;
     }
 }

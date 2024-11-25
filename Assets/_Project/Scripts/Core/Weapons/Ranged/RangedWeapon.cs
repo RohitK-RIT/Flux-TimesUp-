@@ -40,6 +40,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         public int MaxAmmo { get; private set; }
 
+        ///<summary>
+        /// Property to check if the weapon is currently reloading.
+        /// </summary>
+        public bool IsReloading => _reloading;
+
         /// <summary>
         /// Is the weapon currently reloading.
         /// </summary>
@@ -64,6 +69,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Object pool for trail renderers.
         /// </summary>
         private ObjectPool<TrailRenderer> _trailRendererPool;
+
+        /// <summary>
+        /// Last time the weapon was shot.
+        /// </summary>
+        private DateTime _lastShootTime = DateTime.MinValue;
 
         private void Start()
         {
@@ -128,13 +138,22 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// <returns></returns>
         protected override IEnumerator OnAttack()
         {
+            // Wait for the attack speed and then fire the bullet.
+            yield return new WaitWhile(() => (DateTime.Now - _lastShootTime).Seconds < 1 / stats.AttackSpeed);
+
+            // yield return new WaitUntil(() => (DateTime.Now - _lastShootTime).Seconds >= 1 / stats.AttackSpeed);
+
             // Find a fire mode strategy and wait for it to finish, else show an error.
             if (_fireModeStrategies.TryGetValue(_currentFireMode, out var strategy))
-            {
                 yield return strategy.Fire(stats, FireBullet);
-            }
             else
                 Debug.LogError($"No fire mode set for {stats.WeaponName}", stats);
+        }
+
+        protected override float GetDamage()
+        {
+            // TODO: Implement era specific damage calculation
+            return stats.Damage;
         }
 
         /// <summary>
@@ -156,21 +175,32 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
 
             // Raycast to check if the bullet hits something. If it does, play the trail to that point, else play the trail to the miss distance.
-            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance))
+            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance, CurrentPlayerController.OpponentLayer))
             {
                 StartCoroutine(PlayTrail(muzzle.position, hit.point));
                 var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
-                if (playerController)
-                    playerController.TakeDamage(stats.Damage);
+                playerController?.TakeDamage(this, GetDamage());
             }
             else
             {
                 StartCoroutine(PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
             }
 
+            _lastShootTime = DateTime.Now;
+
             // Decrease the magazine count and reload if it's empty.
             if (--CurrentAmmo != 0) return;
 
+            StartCoroutine(ReloadCoroutine());
+        }
+
+        /// <summary>
+        /// Reload the weapon.
+        /// </summary>
+        public void OnReload()
+        {
+            if (CurrentAmmo == stats.MagazineSize || _reloading || MaxAmmo == 0)
+                return;
             StartCoroutine(ReloadCoroutine());
         }
 

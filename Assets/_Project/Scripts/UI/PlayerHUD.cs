@@ -1,3 +1,4 @@
+using _Project.Scripts.Core.Backend.Scene_Control;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons.Ranged;
 using TMPro;
@@ -15,7 +16,12 @@ namespace _Project.Scripts.UI
         [SerializeField] public Slider healthBar;
         [SerializeField] public TMP_Text currAmmo;
         [SerializeField] public TMP_Text maxAmmo;
-        [SerializeField] public PlayerController player;
+        [SerializeField] public LocalPlayerController player;
+
+        [SerializeField] public GameObject reloadingText;
+
+        //[SerializeField] private TMP_Text objectiveText;
+        [SerializeField] private TMP_Text coinsText;
 
         private void Start()
         {
@@ -29,6 +35,9 @@ namespace _Project.Scripts.UI
             // Update the health bar and ammo display in real-time
             UpdateHealthBar();
             UpdateAmmoDisplay();
+            UpdateReloadingText();
+            //UpdateObjectiveText();
+            UpdateCoinsText();
         }
 
         // Updates the health bar based on the player's current and max health
@@ -41,17 +50,30 @@ namespace _Project.Scripts.UI
         // Updates the ammo display based on the player's current and total ammo
         private void UpdateAmmoDisplay()
         {
-            switch (player.WeaponController.CurrentWeapon)
-            {
-                case RangedWeapon currentRangedWeapon:
-                    currAmmo.text = currentRangedWeapon.CurrentAmmo.ToString();
-                    maxAmmo.text = currentRangedWeapon.MaxAmmo.ToString();
-                    break;
-                default:
-                    currAmmo.gameObject.SetActive(false);
-                    maxAmmo.gameObject.SetActive(false);
-                    break;
-            }
+            var currentRangedWeapon = player.WeaponController.CurrentWeapon as RangedWeapon;
+            if (!currentRangedWeapon) return;
+            currAmmo.text = currentRangedWeapon.CurrentAmmo.ToString();
+            maxAmmo.text = currentRangedWeapon.MaxAmmo.ToString();
+        }
+
+        // Updates the reloading text based on the player's current weapon state
+        private void UpdateReloadingText()
+        {
+            var currentRangedWeapon = player.WeaponController.CurrentWeapon as RangedWeapon;
+            if (!currentRangedWeapon)
+                return;
+
+            reloadingText.SetActive(currentRangedWeapon.IsReloading);
+        }
+
+        /*private void UpdateObjectiveText()
+        {
+            objectiveText.text = LevelSceneController.Instance.NumberOfEnemies.ToString();
+        }*/
+
+        private void UpdateCoinsText()
+        {
+            coinsText.text = player?.GetCoins().ToString();
         }
     }
 }

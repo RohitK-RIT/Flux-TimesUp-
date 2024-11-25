@@ -1,56 +1,59 @@
 using System.Collections.Generic;
+using _Project.Scripts.Core.Backend;
 using UnityEngine;
 
 namespace _Project.Scripts.UI
 {
-    public class UIManager : MonoBehaviour
+    public class UIManager : BaseSystem<UIManager>
     {
+        protected override bool IsPersistent => false;
+        [SerializeField] private PageID startingPage = PageID.MainMenu;
+
         // Dictionary to store all UI pages
-        private Dictionary<string, UIPage> _pages;
-   
+        private Dictionary<PageID, UIPage> _pages;
+
         // Reference to the current page
         private UIPage _currentPage;
-   
+
         private void Start()
         {
             // Initialize the dictionary
-            _pages = new Dictionary<string, UIPage>();
-   
+            _pages = new Dictionary<PageID, UIPage>();
+
             // Find all UI pages in the scene
-            UIPage[] allPages = FindObjectsOfType<UIPage>();
-            foreach (UIPage page in allPages)
+            var allPages = FindObjectsOfType<UIPage>(true);
+            foreach (var page in allPages)
             {
                 page.Initialize();
-                _pages.Add(page.name, page);  // Add the page to the dictionary
-                page.Hide();  // Hide the page
+                _pages.Add(page.ID, page); // Add the page to the dictionary
+                if (page.ID == startingPage)
+                    continue;
+
+                page.Hide(); // Hide the page
+                _currentPage = page;
             }
         }
+
         // Method to switch between pages
-        public void SwitchPage(string pageName)
+        public void SwitchPage(PageID id)
         {
-            if (_currentPage != null)
+            if (!_pages.TryGetValue(id, out var page))
             {
-                _currentPage.Hide();
+                Debug.LogError($"UI Page {id} not found!");
+                return;
             }
-            if (_pages.ContainsKey(pageName))
-            {
-                _currentPage = _pages[pageName];
-                _currentPage.Show();
-            }
-            else
-            {
-                Debug.LogWarning($"UI Page {pageName} not found!");
-            }
+
+            if (_currentPage.ID != startingPage)
+                _currentPage?.Hide();
+
+            _currentPage = page;
+            _currentPage.Show();
         }
-   
+
         // Update method to update the current page
         private void Update()
         {
-            if (_currentPage != null)
-            {
-                _currentPage.UpdatePage();
-            }
+            _currentPage?.UpdatePage();
         }
     }
 }
-

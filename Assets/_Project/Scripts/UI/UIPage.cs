@@ -4,6 +4,7 @@ namespace _Project.Scripts.UI
 {
     public abstract class UIPage : MonoBehaviour
     {
+        public abstract PageID ID { get; }
         // Flag to check if the page is active
         private bool _isActive;
 
