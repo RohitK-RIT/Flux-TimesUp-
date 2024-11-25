@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: Pistol1
   weaponType: 1
-  weaponName: TBD
+  weaponName: M1911
   damage: 20
   range: 75
   attackSpeed: 3
