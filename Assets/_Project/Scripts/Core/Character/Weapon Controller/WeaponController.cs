@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using _Project.Scripts.Core.Backend.Ability;
+using _Project.Scripts.Core.Loadout;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons;
 using _Project.Scripts.Core.Weapons.Abilities;
@@ -70,15 +72,23 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         {
             base.Initialize(playerController);
 
+            // The player controller has picked up the ability
+            LoadAbility(playerController.CharacterStats.playerAbilityType);
+            
+            // Fetch selected weapons from WeaponDataSystem
+            var selectedLoadoutWeaponIDs = WeaponDataSystem.Instance.GetSelectedWeapons();
+            if (selectedLoadoutWeaponIDs != null && selectedLoadoutWeaponIDs.Count > 0)
+            {
+                LoadWeapon(selectedLoadoutWeaponIDs);
+            }
+            else
+            {
+                Debug.LogError("No selected weapons found in WeaponDataSystem");
+            }
+            
             // The player controller has picked up all the weapons
             foreach (var weapon in weapons)
                 weapon?.OnPickup(PlayerController);
-
-            // The player controller has picked up the ability
-            LoadAbility(playerController.CharacterStats.playerAbilityType);
-
-            // Load the first weapon
-            CurrentWeapon = weapons[_currentWeaponIndex];
         }
 
         /// <summary>
@@ -111,9 +121,56 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// Loads a weapon by its ID.
         /// </summary>
         /// <param name="weaponID">The ID of the weapon to load.</param>
-        private void LoadWeapon(string weaponID)
+        internal void LoadWeapon(List<string> weaponIDs)
         {
-            // Load the weapon
+            // Validate input
+            if (weaponIDs == null || weaponIDs.Count == 0)
+            {
+                Debug.LogError("No weapon IDs provided!");
+                return;
+            }
+
+            // Initialize the weapons array
+            weapons = new Weapon[weaponIDs.Count];
+
+            // Instantiate all weapons but only activate the first one
+            for (int i = 0; i < weaponIDs.Count; i++)
+            {
+                var weapon = InstantiateWeapon(weaponIDs[i]);
+
+                if (i == 0 & currentWeapon== null)
+                {
+                    // Equip and activate the first weapon
+                    currentWeapon = weapon;
+                    currentWeapon.gameObject.SetActive(true);
+                    currentWeapon.OnEquip();
+                }
+                else
+                {
+                    // Deactivate all other weapons
+                    weapon.gameObject.SetActive(false);
+                }
+
+                weapons[i] = weapon; // Add weapon to the array
+            }
+
+            _currentWeaponIndex = 0; // Set the initial index to 0
+
+        }
+        
+        // Method to instantiate a weapon prefab based on weapon ID
+        private Weapon InstantiateWeapon(string weaponID)
+        {
+            Weapon weaponPrefab = WeaponDataSystem.Instance.GetWeaponPrefab(weaponID);
+            if (weaponPrefab != null)
+            {
+                return Instantiate(weaponPrefab, weaponParent);
+            }
+            else
+            {
+                Debug.LogError($"Weapon with ID {weaponID} not found in the database!");
+                return null;
+            }
         }
 
         /// <summary>
@@ -127,7 +184,7 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
                 _currentWeaponIndex = weapons.Length - 1;
             else if (_currentWeaponIndex >= weapons.Length)
                 _currentWeaponIndex = 0;
-
+            
             CurrentWeapon = weapons[_currentWeaponIndex];
         }
 
