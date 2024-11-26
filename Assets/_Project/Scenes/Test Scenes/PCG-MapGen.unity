@@ -693,6 +693,8 @@ MonoBehaviour:
   - {fileID: 8157591511556919253, guid: 63d431526ad924d70a7d5b124e737063, type: 3}
   bossRoomPrefab: {fileID: 1546850383188257028, guid: adf05c05dce05496a9ab004dfb628c66,
     type: 3}
+  doorPrefab: {fileID: 8002412865680437720, guid: 3f9489e5a36ed41f392f958f67a1636a,
+    type: 3}
   explorationRoomCount: 6
 --- !u!114 &601565728
 MonoBehaviour:
@@ -706,7 +708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16fa7d599804d949ab3d70f88cf08ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  corridorPrefab: {fileID: 126278, guid: 5409c9ff5a9c7b045a9809d71ccdcab8, type: 3}
+  corridorPrefab: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
 --- !u!114 &601565729
 MonoBehaviour:
   m_ObjectHideFlags: 0

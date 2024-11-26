@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Gameplay.PCG
@@ -12,37 +12,33 @@ namespace _Project.Scripts.Gameplay.PCG
     /// </summary>
     public class DungeonGenerator : MonoBehaviour
     {
-        /// <summary>
-        /// Reference to the RoomManager component.
-        /// </summary>
+       
+        // Reference to the RoomManager component.
         [SerializeField] private RoomManager roomManager;
-        /// <summary>
+     
         /// Reference to the CorridorManager component.
-        /// </summary> 
         [SerializeField] private CorridorManager corridorManager;
-        /// <summary>
-        /// Prefab for the starting room.
-        /// </summary>
+        
+        // Prefab for the starting room.
         public GameObject startRoomPrefab;
-        /// <summary>
-        /// Array of exploration room prefabs.
-        /// </summary>
+        
+        // Array of exploration room prefabs.
         public Room[] explorationRooms;
-        /// <summary>
-        /// Prefab for the boss room.
-        /// </summary>
+        
+        // Prefab for the boss room.
         public GameObject bossRoomPrefab;
-        /// <summary>
-        /// Number of exploration rooms to generate.
-        /// </summary>
+        
+        // Prefab for the door.
+        public GameObject doorPrefab;
+        
+        
+        // Number of exploration rooms to generate.
         public int explorationRoomCount;
-        /// <summary>
-        /// Gets the grid system used for cell-based placement.
-        /// </summary>
+
+        // Gets the grid system used for cell-based placement.
         public GridSystem GridSystem { get; private set; }
-        /// <summary>
-        /// Gets the origin point of the grid in the world.
-        /// </summary>
+        // Gets the origin point of the grid in the world.
+        
         public Vector3 GridOrigin { get; private set; }
 
         private List<Room> _unconnectedRooms = new List<Room>();
@@ -52,6 +48,12 @@ namespace _Project.Scripts.Gameplay.PCG
         /// Initializes the grid system based on the plane's size.
         /// </summary>
         private void Awake()
+        {
+            InitializeGrid();
+            
+        }
+
+        private void InitializeGrid()
         {
             // Assuming the plane is scaled in X and Z axes
             var planeSizeX = transform.localScale.x * 10; 
@@ -65,6 +67,7 @@ namespace _Project.Scripts.Gameplay.PCG
             );
             GridOrigin = transform.position - new Vector3(planeSizeX / 2, 0, planeSizeZ / 2); // Bottom-left corner
         }
+
         /// <summary>
         /// Starts the dungeon generation process.
         /// </summary>
@@ -111,7 +114,27 @@ namespace _Project.Scripts.Gameplay.PCG
                     _unconnectedRooms.Add(t);
             }
             ConnectAllRooms();
+            CloseUnconnectedRooms();
         }
+
+        private void DestroyDungeon()
+        {
+            foreach (var room in roomManager.rooms)
+            {
+                Destroy(room.gameObject);
+                
+            }
+
+            roomManager.rooms.Clear();
+
+            foreach (var corridor in corridorManager.corridors)
+            {
+                Destroy(corridor);
+            }
+            corridorManager.corridors.Clear();
+        }
+
+        #region AStarSearch
         private List<Vector2> AStarSearch(Vector2 startPos, Vector2 goalPos)
         {
             //Create a list to store the open cells
@@ -231,6 +254,7 @@ namespace _Project.Scripts.Gameplay.PCG
             Debug.Log("No path found "+startPos+" to "+goalPos+"!"+closed.Count);
             return null;
         }
+        #endregion
 
         private static int ManhattanDistance(int x1,int y1,int x2,int y2)
         {
@@ -239,7 +263,8 @@ namespace _Project.Scripts.Gameplay.PCG
 
         private void ConnectAllRooms()
         {
-            while(_unconnectedRooms.Count > 0)
+            var counter = 0;
+            while(_unconnectedRooms.Count > 0 && counter<100)
             { 
                 foreach (var room in _connectedRooms)
                 {
@@ -274,8 +299,19 @@ namespace _Project.Scripts.Gameplay.PCG
                         break;
                     }
                 }
+                counter += 1;
             }
-           
+
+            if (counter == 100)
+            {
+                Debug.Log("Triggerred loop break");
+                //Should Retry
+                DestroyDungeon();
+                InitializeGrid();
+                GenerateDungeon();
+                return;
+            }
+
             foreach (var room in roomManager.rooms)
             {
                 foreach(var exit in room.Exits)
@@ -323,6 +359,32 @@ namespace _Project.Scripts.Gameplay.PCG
             
             return result;
         }
+
+        private void CloseUnconnectedRooms()
+        {
+            foreach (var room in roomManager.rooms)
+            {
+                if(room.roomType == RoomType.Start)
+                {
+                    continue;
+                }
+                foreach (var exit in room.Exits)
+                {
+                    if (!exit.isConnected)
+                    {
+                        var rotation = exit.transform.rotation.y switch
+                        {
+                            0 => Quaternion.Euler(0, 0, 0),
+                            180 => Quaternion.Euler(0, -90, 0),
+                            _ => default
+                        };
+                        var door = Instantiate(doorPrefab, exit.worldPosition, Quaternion.identity);
+                        door.transform.rotation = rotation;
+                    }
+                }
+            }
+        }
+
         private void OnDrawGizmos() {
             if (GridSystem == null) return;
             for (var x = 0; x <= GridSystem.GridWidth; x++) {
