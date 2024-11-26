@@ -25,13 +25,13 @@ namespace _Project.Scripts.Core.Weapons.Abilities.Heal
         /// </summary>
         private void UseHeal()
         {
-            if (_isAbilityActive || _isCooldownActive)
+            if (IsAbilityActive || IsCooldownActive)
             {
                 Debug.Log("Ability is on cooldown or already active.");
                 return;
             }
 
-            _isAbilityActive = true;
+            IsAbilityActive = true;
             //Heal the player
             Debug.Log("Player is using the heal ability!!");
             CurrentPlayerController.StartCoroutine(DeactivateAbility(stats.AbilityDuration));

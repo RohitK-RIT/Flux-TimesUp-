@@ -50,9 +50,16 @@ namespace _Project.Scripts.Core.Weapons.Melee
                 if (angle > stats.AttackFOV)
                     continue;
 
+                // Check if the enemy is a player and deal damage
                 var playerController = enemiesColliders[i].gameObject.GetComponent<PlayerController>();
-                playerController?.TakeDamage(stats.Damage);
+                playerController?.TakeDamage(this, GetDamage());
             }
+        }
+
+        protected override float GetDamage()
+        {
+            // TODO: Implement era specific damage calculation
+            return stats.Damage;
         }
     }
 }

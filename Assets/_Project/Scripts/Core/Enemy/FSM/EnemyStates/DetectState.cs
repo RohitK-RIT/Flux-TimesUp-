@@ -38,22 +38,24 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
 
             if (_isPlayerInRange)
             {
-                // If the player is detected, rotate towards them and transition to Chase state
+                // If the player is detected, rotate towards them
                 _enemyInputController.RotateTowardsPlayer();
-                _enemyInputController.StateManager.TransitionToState(EnemyState.Chase);
-            }
-            else
-            {
-                // If the player is not detected, remain in Detect state
-                _enemyInputController.StateManager.TransitionToState(EnemyState.Detect);
             }
         }
-
-        // Returns the current state key, indicating this is still AttackState
+        
         public override EnemyState GetNextState()
         {
-            // No need for transition logic here as it is handled in UpdateState
-            return EnemyState.Detect;
+            // check if the closest player in range
+            if (_isPlayerInRange)
+            {
+                return EnemyState.Chase;
+            }
+            
+            // check if any player is in the player detection range
+            return _enemyInputController.IsPlayerInDetectionRange() ? 
+                // If player is in Detect range, stay in detected state
+                EnemyState.Detect :
+                EnemyState.Patrol;
         }
     }
 }
