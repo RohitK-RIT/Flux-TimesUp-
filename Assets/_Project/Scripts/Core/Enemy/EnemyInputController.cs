@@ -80,6 +80,8 @@ namespace _Project.Scripts.Core.Enemy
             _playerDetection = GetComponent<PlayerDetection>();
 
             _playerDetection.Initialize(playerController);
+            
+            Enemy.speed = playerController.CharacterStats.movementSpeed;
         }
 
         public void Disable()
