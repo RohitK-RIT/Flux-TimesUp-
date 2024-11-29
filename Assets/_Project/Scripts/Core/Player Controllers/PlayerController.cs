@@ -9,7 +9,7 @@ namespace _Project.Scripts.Core.Player_Controllers
     /// <summary>
     /// Base class for player controllers.
     /// </summary>
-    [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(CharacterStats))]
+    [RequireComponent(typeof(MovementController), typeof(WeaponController))]
     public abstract class PlayerController : MonoBehaviour
     {
         /// <summary>
