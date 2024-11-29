@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Character
 {
@@ -101,6 +100,7 @@ namespace _Project.Scripts.Core.Character
 
             // Applying gravity for the y value
             HandleGravity();
+            
             // Can add jump here if needed by modifying the y component of the movement vector. 
 
             // Move the character via the character controller.
