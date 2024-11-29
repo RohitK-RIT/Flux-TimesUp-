@@ -596,6 +596,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 779021029706645871}
+    - targetCorrespondingSourceObject: {fileID: 3286456909812954785, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7866510627497523019}
   m_SourcePrefab: {fileID: 100100000, guid: c45c0f2125881ab4abfe55c2eb6f5ec0, type: 3}
 --- !u!4 &4083512241357911797 stripped
 Transform:
@@ -718,7 +722,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79814992f22f4054cbb177d2c2854414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 1648401529503449849}
+  animator: {fileID: 7866510627497523019}
+--- !u!95 &7866510627497523019
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4518910825798227448}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: fd7d68a65822e4a44a9ef78850e64cfc, type: 3}
+  m_Controller: {fileID: 9100000, guid: d3a73e2c3f035e048b71fefe57ba016e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &8310930443649989964 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6952407069893139989, guid: c45c0f2125881ab4abfe55c2eb6f5ec0,
@@ -781,17 +806,12 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: d3a73e2c3f035e048b71fefe57ba016e, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9505110, guid: 8cd752dc36d412b4bba2efd06775153a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8cd752dc36d412b4bba2efd06775153a, type: 3}
---- !u!95 &1648401529503449849 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 9505110, guid: 8cd752dc36d412b4bba2efd06775153a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1648401529512823727}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1648401529512967485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 407186, guid: 8cd752dc36d412b4bba2efd06775153a,
