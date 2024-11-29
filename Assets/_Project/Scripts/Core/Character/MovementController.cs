@@ -39,6 +39,11 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         [SerializeField] private Transform weaponParent;
 
+        ///<summary>
+        /// Property to access Movement Speed
+        /// </summary>
+        public float MoveSpeed => moveSpeed;
+
         /// <summary>
         /// The speed at which the player moves.
         /// </summary>
