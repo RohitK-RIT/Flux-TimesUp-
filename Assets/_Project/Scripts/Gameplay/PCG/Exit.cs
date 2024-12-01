@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Gameplay.PCG {
     
@@ -10,7 +9,6 @@ namespace _Project.Scripts.Gameplay.PCG {
         public Vector3 localPosition; // Position relative to the room's origin
         public Vector3 worldPosition; // Absolute position in the world
         public bool isConnected; // Whether this exit has been connected
-        public Quaternion rotation; // Rotation of the exit
         public GameObject closingTile;
     }
 }

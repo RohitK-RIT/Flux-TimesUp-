@@ -41,8 +41,8 @@ namespace _Project.Scripts.Gameplay.PCG {
             var startY = Mathf.FloorToInt((position.z - room.size.z / 2));
             
             // Ensure indices are within bounds
-            for (var x = startX; x < startX + room.size.x+_dungeonGenerator.GridSystem.CellSize; x+=5) {
-                for (var y = startY; y <  startY + room.size.z+_dungeonGenerator.GridSystem.CellSize; y+=5) {
+            for (var x = startX; x < startX + room.size.x + _dungeonGenerator.GridSystem.CellSize; x+=5) {
+                for (var y = startY; y <  startY + room.size.z + _dungeonGenerator.GridSystem.CellSize; y+=5) {
                     _dungeonGenerator.GridSystem.MarkCellOccupied(x, y,_dungeonGenerator.GridOrigin);
                 }
             }
@@ -86,8 +86,8 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <param name="height">The height of the area in cells.</param>
         /// <returns>True if the area is free, false otherwise.</returns>
         private bool IsAreaFree(int startX, int startY, int width, int height) {
-            for (var x = startX; x < startX + width + 5; x++) {
-                for (var y = startY; y < startY + height + 5; y++) {
+            for (var x = startX; x < startX + width + 2; x++) {
+                for (var y = startY; y < startY + height + 2; y++) {
                     if (_dungeonGenerator.GridSystem.IsCellOccupied(x, y)) {
                         return false; // Found an occupied cell
                     }
@@ -120,7 +120,7 @@ namespace _Project.Scripts.Gameplay.PCG {
             return closestExit;
         }
 
-        public Dictionary<Exit, Room> FindClosestUnconnectedExitFromUnconnectedRooms(List<Room> unconnectedRooms, Exit closestExit)
+        public (Exit, Room) FindClosestUnconnectedExitFromUnconnectedRooms(List<Room> unconnectedRooms, Exit closestExit)
         {
             Room closestRoom = null;
             Exit closestExitFromUnconnectedRooms = null;
@@ -141,7 +141,8 @@ namespace _Project.Scripts.Gameplay.PCG {
                 }
             }
 
-            return closestExitFromUnconnectedRooms != null ? new Dictionary<Exit, Room> { { closestExitFromUnconnectedRooms, closestRoom } } : null;
+            return closestExitFromUnconnectedRooms != null ?    (closestExitFromUnconnectedRooms, closestRoom) : (null,
+                null);
         }
     }
 }

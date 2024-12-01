@@ -1237,7 +1237,6 @@ MonoBehaviour:
   localPosition: {x: 2.03, y: 5, z: 29.81}
   worldPosition: {x: 0, y: 0, z: 0}
   isConnected: 0
-  rotation: {x: 0, y: 0, z: 0, w: 0}
   closingTile: {fileID: 0}
 --- !u!1 &7409063444212716856
 GameObject:
@@ -1286,7 +1285,6 @@ MonoBehaviour:
   localPosition: {x: 2.03, y: 5, z: -29.52}
   worldPosition: {x: 0, y: 0, z: 0}
   isConnected: 0
-  rotation: {x: 0, y: 0, z: 0, w: 0}
   closingTile: {fileID: 0}
 --- !u!1 &7574957610570214937
 GameObject:
@@ -13261,7 +13259,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 139220, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 468454, guid: 704795cfbb02b844591f900d2b76342e, type: 3}
       propertyPath: m_LocalPosition.x

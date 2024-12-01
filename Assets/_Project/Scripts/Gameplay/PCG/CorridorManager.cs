@@ -12,9 +12,13 @@ namespace _Project.Scripts.Gameplay.PCG {
         public GameObject corridorPrefab;
         private DungeonGenerator _dungeonGenerator; // Reference to the dungeon generator
         public List<GameObject> corridors;
+        public GameObject doorPrefab;
+        private RoomManager _roomManager;
         
         private void Awake() {
             _dungeonGenerator = GetComponent<DungeonGenerator>();
+            corridors = new List<GameObject>();
+            _roomManager = GetComponent<RoomManager>();
         }
         
         /// <summary>
@@ -24,43 +28,50 @@ namespace _Project.Scripts.Gameplay.PCG {
         {                                
             for (var i = 0; i < path.Count; i++)
             {
-                /*var current = path[i];
-                var next = path[i + 1];*/
-                
                 var position = _dungeonGenerator.GridSystem.GetCellWorldPosition(path[i].x, path[i].y, gridOrigin);
-                corridors.Add(Instantiate(corridorPrefab, position, Quaternion.identity));
+                corridors.Add(Instantiate(corridorPrefab, position, Quaternion.identity)); 
+            }
+        }
+        public void CloseUnconnectedRooms()
+        {
+            foreach (var room in _roomManager.rooms)
+            {
+                if(room.roomType == RoomType.Start)
+                {
+                    continue;
+                }
+                foreach (var exit in room.Exits)
+                {
+                    if (!exit.isConnected)
+                    {
+                        var rotation = exit.transform.localRotation.eulerAngles.y switch
+                        {
+                            0 => Quaternion.Euler(0, 0, 0),
+                            180 => Quaternion.Euler(0, -90, 0),
+                            _ => default
+                        };
+                        Instantiate(doorPrefab, exit.worldPosition, rotation);
+                    }
+                }
+            }
+        }
 
-                /*//Determine the direction of the path to close the corridor with a wall
-                if (next.x > current.x)
+        public void CleanUp()
+        {
+            foreach (var corridor in corridors)
+            {
+                foreach (var room in _roomManager.rooms)
                 {
-                    corridorPrefab.transform.Find("WallW").gameObject.SetActive(true);
-                    corridorPrefab.transform.Find("WallE").gameObject.SetActive(true);
-                    corridorPrefab.transform.Find("WallN").gameObject.SetActive(false);
-                    corridorPrefab.transform.Find("WallS").gameObject.SetActive(false);
+                    var roomWidth = room.size.x;
+                    var roomHeight = room.size.z;
+                    if(corridor.transform.position.x >= room.transform.position.x - roomWidth / 2 
+                       && corridor.transform.position.x <= room.transform.position.x + roomWidth / 2 
+                       && corridor.transform.position.z >= room.transform.position.z - roomHeight / 2 
+                       && corridor.transform.position.z <= room.transform.position.z + roomHeight / 2)
+                    {
+                        Destroy(corridor);
+                    }
                 }
-                else if (next.x < current.x)
-                {
-                    corridorPrefab.transform.Find("WallE").gameObject.SetActive(true);
-                    corridorPrefab.transform.Find("WallW").gameObject.SetActive(true);
-                    corridorPrefab.transform.Find("WallN").gameObject.SetActive(false);
-                    corridorPrefab.transform.Find("WallS").gameObject.SetActive(false);
-                }
-                else if (next.y > current.y)
-                {
-                    corridorPrefab.transform.Find("WallS").gameObject.SetActive(true);
-                    corridorPrefab.transform.Find("WallN").gameObject.SetActive(true);
-                    corridorPrefab.transform.Find("WallE").gameObject.SetActive(false);
-                    corridorPrefab.transform.Find("WallW").gameObject.SetActive(false);
-                }
-                else if (next.y < current.y)
-                {
-                    corridorPrefab.transform.Find("WallN").gameObject.SetActive(true);
-                    corridorPrefab.transform.Find("WallS").gameObject.SetActive(true);
-                    corridorPrefab.transform.Find("WallE").gameObject.SetActive(false);
-                    corridorPrefab.transform.Find("WallW").gameObject.SetActive(false);
-                }
-                */
-
             }
         }
     }

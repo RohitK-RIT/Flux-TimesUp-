@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Gameplay.PCG
@@ -28,10 +26,6 @@ namespace _Project.Scripts.Gameplay.PCG
         // Prefab for the boss room.
         public GameObject bossRoomPrefab;
         
-        // Prefab for the door.
-        public GameObject doorPrefab;
-        
-        
         // Number of exploration rooms to generate.
         public int explorationRoomCount;
 
@@ -41,8 +35,8 @@ namespace _Project.Scripts.Gameplay.PCG
         
         public Vector3 GridOrigin { get; private set; }
 
-        private List<Room> _unconnectedRooms = new List<Room>();
-        private List<Room> _connectedRooms = new List<Room>();
+        private List<Room> _unconnectedRooms;
+        private List<Room> _connectedRooms;
 
         /// <summary>
         /// Initializes the grid system based on the plane's size.
@@ -50,7 +44,6 @@ namespace _Project.Scripts.Gameplay.PCG
         private void Awake()
         {
             InitializeGrid();
-            
         }
 
         private void InitializeGrid()
@@ -66,6 +59,8 @@ namespace _Project.Scripts.Gameplay.PCG
                 5
             );
             GridOrigin = transform.position - new Vector3(planeSizeX / 2, 0, planeSizeZ / 2); // Bottom-left corner
+            _unconnectedRooms = new List<Room>();
+            _connectedRooms = new List<Room>();
         }
 
         /// <summary>
@@ -73,13 +68,16 @@ namespace _Project.Scripts.Gameplay.PCG
         /// </summary>
         private void Start()
         {
+            GridSystem.ResetVisitedCells();
             GenerateDungeon();
+            corridorManager.CleanUp();
         }
         /// <summary>
         /// Generates the dungeon layout, including placing rooms and connecting them with corridors.
         /// </summary>
         private void GenerateDungeon() {
-
+            _unconnectedRooms.Clear();
+            _connectedRooms.Clear();
             // Start room (bottom-left of the grid)
             var startRoom = startRoomPrefab.GetComponent<Room>();
             var startPosition = GridOrigin + new Vector3(startRoom.size.x / 2, 0, startRoom.size.z / 2); // Bottom-left corner
@@ -107,14 +105,14 @@ namespace _Project.Scripts.Gameplay.PCG
                     Debug.LogError($"Failed to place Exploration Room {i} - no valid position found!");
                 }
             }
-            _connectedRooms.Add(startRoom);
+            _connectedRooms.Add(roomManager.rooms[0]);
             foreach (var t in roomManager.rooms)
             {
-                if(t!=startRoom)
+                if(t!=roomManager.rooms[0])
                     _unconnectedRooms.Add(t);
             }
             ConnectAllRooms();
-            CloseUnconnectedRooms();
+            corridorManager.CloseUnconnectedRooms();
         }
 
         private void DestroyDungeon()
@@ -122,7 +120,6 @@ namespace _Project.Scripts.Gameplay.PCG
             foreach (var room in roomManager.rooms)
             {
                 Destroy(room.gameObject);
-                
             }
 
             roomManager.rooms.Clear();
@@ -256,7 +253,7 @@ namespace _Project.Scripts.Gameplay.PCG
         }
         #endregion
 
-        private static int ManhattanDistance(int x1,int y1,int x2,int y2)
+        private int ManhattanDistance(int x1,int y1,int x2,int y2)
         {
             return Math.Abs(x1-x2) + Math.Abs(y1-y2);
         }
@@ -264,8 +261,10 @@ namespace _Project.Scripts.Gameplay.PCG
         private void ConnectAllRooms()
         {
             var counter = 0;
-            while(_unconnectedRooms.Count > 0 && counter<100)
-            { 
+            while(_unconnectedRooms.Count > 0 && counter < 100)
+            {
+                counter++;
+
                 foreach (var room in _connectedRooms)
                 {
                     var connected = false;
@@ -275,7 +274,7 @@ namespace _Project.Scripts.Gameplay.PCG
                         {
                             continue;
                         }
-                        var (closestExit, closestRoom) = roomManager.FindClosestUnconnectedExitFromUnconnectedRooms(_unconnectedRooms, exit).First();
+                        var (closestExit, closestRoom) = roomManager.FindClosestUnconnectedExitFromUnconnectedRooms(_unconnectedRooms, exit);
                         if (closestExit == null)
                         {
                             continue;
@@ -299,19 +298,16 @@ namespace _Project.Scripts.Gameplay.PCG
                         break;
                     }
                 }
-                counter += 1;
             }
-
-            if (counter == 100)
+            if(counter >= 100)
             {
-                Debug.Log("Triggerred loop break");
-                //Should Retry
+                Debug.LogError("Failed to connect all rooms!");
                 DestroyDungeon();
                 InitializeGrid();
                 GenerateDungeon();
                 return;
             }
-
+            
             foreach (var room in roomManager.rooms)
             {
                 foreach(var exit in room.Exits)
@@ -359,32 +355,6 @@ namespace _Project.Scripts.Gameplay.PCG
             
             return result;
         }
-
-        private void CloseUnconnectedRooms()
-        {
-            foreach (var room in roomManager.rooms)
-            {
-                if(room.roomType == RoomType.Start)
-                {
-                    continue;
-                }
-                foreach (var exit in room.Exits)
-                {
-                    if (!exit.isConnected)
-                    {
-                        var rotation = exit.transform.rotation.y switch
-                        {
-                            0 => Quaternion.Euler(0, 0, 0),
-                            180 => Quaternion.Euler(0, -90, 0),
-                            _ => default
-                        };
-                        var door = Instantiate(doorPrefab, exit.worldPosition, Quaternion.identity);
-                        door.transform.rotation = rotation;
-                    }
-                }
-            }
-        }
-
         private void OnDrawGizmos() {
             if (GridSystem == null) return;
             for (var x = 0; x <= GridSystem.GridWidth; x++) {
@@ -395,6 +365,11 @@ namespace _Project.Scripts.Gameplay.PCG
                 }
             }
             GridSystem.DrawOccupiedCellsGizmos(GridOrigin);
+        }
+
+        private void OnDisable()
+        {
+            DestroyDungeon();
         }
     }
 }
