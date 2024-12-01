@@ -51,6 +51,10 @@ namespace _Project.Scripts.Gameplay.PCG {
                             _ => default
                         };
                         Instantiate(doorPrefab, exit.worldPosition, rotation);
+                        foreach (Transform childExit in exit.transform)
+                        {
+                            childExit.gameObject.SetActive(false);  
+                        }
                     }
                 }
             }
