@@ -26,7 +26,6 @@ namespace _Project.Scripts.Gameplay.PCG
         {
             foreach (var exit in Exits) {
                 exit.worldPosition = transform.position + exit.localPosition;
-                exit.rotation = transform.rotation;
                 Debug.Log($"Exit at {exit.localPosition} mapped to world position {exit.worldPosition}");
             }
         }
