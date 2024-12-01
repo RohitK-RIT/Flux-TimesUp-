@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Character
 {
@@ -39,6 +38,11 @@ namespace _Project.Scripts.Core.Character
         /// Weapon parent of the character.
         /// </summary>
         [SerializeField] private Transform weaponParent;
+
+        ///<summary>
+        /// Property to access Movement Speed
+        /// </summary>
+        public float MoveSpeed => moveSpeed;
 
         /// <summary>
         /// The speed at which the player moves.
@@ -101,6 +105,7 @@ namespace _Project.Scripts.Core.Character
 
             // Applying gravity for the y value
             HandleGravity();
+            
             // Can add jump here if needed by modifying the y component of the movement vector. 
 
             // Move the character via the character controller.
