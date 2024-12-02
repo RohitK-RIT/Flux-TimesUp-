@@ -29,13 +29,81 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// </summary>
         public void CreatePath(List<Vector2> path, Vector3 gridOrigin)
         {                                
-            for (var i = 0; i < path.Count; i++)
+            for (var i = 0; i < path.Count - 1; i++)
             {
                 var position = _dungeonGenerator.GridSystem.GetCellWorldPosition(path[i].x, path[i].y, gridOrigin);
                 corridors.Add(Instantiate(corridorPrefab, position, Quaternion.identity)); 
             }
         }
         
+        /// <summary>
+        /// Method to remove overlapping corridor walls.
+        /// </summary>
+        public void RemoveOverlappingCorridorWalls()
+        {
+            foreach (var room in _roomManager.rooms)
+            {
+                foreach (var exit in room.Exits)
+                {
+                    foreach (Transform child in exit.transform)
+                    {
+                        if (child.CompareTag($"Corridor"))
+                        {
+                            var corridor = child.gameObject;
+                            corridors.Add(corridor);
+                        }
+                    }
+                }
+            }
+
+            for (var i = 0; i < corridors.Count; i++)
+            {
+                var corridor = corridors[i];
+                for (var j = 0; j < corridors.Count; j++)
+                {
+                    if (i == j) continue;
+                    var otherCorridor = corridors[j];
+                    CheckOverlappingWalls(corridor, otherCorridor);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Method to check if the walls of two corridors are overlapping.
+        /// </summary>
+        /// <param name="corridor"></param>
+        /// <param name="otherCorridor"></param>
+        private void CheckOverlappingWalls(GameObject corridor, GameObject otherCorridor)
+        {
+            foreach (Transform wallChild in corridor.transform)
+            {
+                foreach (Transform wallChildOfOtherCorridor in otherCorridor.transform)
+                {
+                    if (wallChild.CompareTag($"Wall") && wallChildOfOtherCorridor.CompareTag($"Wall"))
+                    {
+                        var wall = wallChild.gameObject;
+                        var otherWall = wallChildOfOtherCorridor.gameObject;
+                        if (IsWallsOverlapping(wall.GetComponent<BoxCollider>().bounds, otherWall))
+                        {
+                            wall.gameObject.SetActive(false);
+                            otherWall.gameObject.SetActive(false);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if the corridor is overlapping with any adjacent walls.
+        /// </summary>
+        /// <param name="wallOneBounds"></param>
+        /// <param name="wallTwo"></param>
+        /// <returns></returns>
+        private bool IsWallsOverlapping(Bounds wallOneBounds, GameObject wallTwo)
+        {
+            var wallTwoCollider = wallTwo.GetComponent<BoxCollider>();
+            return wallOneBounds.Intersects(wallTwoCollider.bounds);
+        }
         /// <summary>
         /// Method to close all unconnected rooms with doors.
         /// </summary>

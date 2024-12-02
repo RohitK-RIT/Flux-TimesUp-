@@ -79,6 +79,7 @@ namespace _Project.Scripts.Gameplay.PCG
         {
             GridSystem.ResetVisitedCells();
             GenerateDungeon();
+            corridorManager.RemoveOverlappingCorridorWalls();
             corridorManager.CleanUp();
         }
         
@@ -404,9 +405,9 @@ namespace _Project.Scripts.Gameplay.PCG
             GridSystem.DrawOccupiedCellsGizmos(GridOrigin);
         }
 
-        private void OnDisable()
+        /*private void OnDisable()
         {
             DestroyDungeon();
-        }
+        }*/
     }
 }

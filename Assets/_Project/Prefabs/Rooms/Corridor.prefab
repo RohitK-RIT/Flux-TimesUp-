@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1285280164641127267}
   m_Layer: 6
   m_Name: WallE
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,8 +54,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.996979, y: 5.194953, z: 5.341909}
-  m_Center: {x: 0.6301019, y: 0.49347878, z: -0.729465}
+  m_Size: {x: 1.0346735, y: 2.9169345, z: 2.8680923}
+  m_Center: {x: 0.64894915, y: 0.6513965, z: -0.6840861}
 --- !u!1 &2121118714752739171
 GameObject:
   m_ObjectHideFlags: 0
@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 3053862563281057193}
   m_Layer: 6
   m_Name: WallS
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,8 +110,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.86456037, y: 5.1835437, z: 5.391059}
-  m_Center: {x: -4.268542, y: 0.5998974, z: -0.56516314}
+  m_Size: {x: 1.1616879, y: 2.55687, z: 3.0837245}
+  m_Center: {x: -4.15979, y: 0.338274, z: -0.5594089}
 --- !u!1 &5919391689597036322
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 7114428786195983124}
   m_Layer: 0
   m_Name: Corridor
-  m_TagString: Untagged
+  m_TagString: Corridor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 4295163939688068191}
   m_Layer: 6
   m_Name: WallN
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -203,8 +203,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.1000896, y: 5.194953, z: 5.525374}
-  m_Center: {x: 0.5692605, y: 0.49347878, z: -0.63773274}
+  m_Size: {x: 1.216792, y: 3.3803658, z: 2.5582952}
+  m_Center: {x: 0.6276117, y: 0.74146485, z: -0.5890683}
 --- !u!1 &6889430914430197051
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 5900943952136819856}
   m_Layer: 6
   m_Name: WallW
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -259,8 +259,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.93750405, y: 5.194953, z: 5.341909}
-  m_Center: {x: -4.196268, y: 0.49347878, z: -0.729465}
+  m_Size: {x: 1.0084167, y: 3.6568587, z: 3.0190551}
+  m_Center: {x: -4.231724, y: 0.6919216, z: -0.8317232}
 --- !u!1001 &314647055465910452
 PrefabInstance:
   m_ObjectHideFlags: 0
