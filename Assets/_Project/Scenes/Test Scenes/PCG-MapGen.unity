@@ -706,7 +706,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16fa7d599804d949ab3d70f88cf08ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  corridorPrefab: {fileID: 137298, guid: 9830f561f80768b4f92139c1c15bc835, type: 3}
+  corridorPrefab: {fileID: 5919391689597036322, guid: 4f3cc16438a27464db4fcc562877563c,
+    type: 3}
   corridors: []
   doorPrefab: {fileID: 8002412865680437720, guid: 3f9489e5a36ed41f392f958f67a1636a,
     type: 3}
