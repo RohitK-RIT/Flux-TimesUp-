@@ -8,11 +8,13 @@ namespace _Project.Scripts.Gameplay.PCG {
     /// Manages the placement and tracking of rooms within the dungeon.
     /// </summary>
     public class RoomManager : MonoBehaviour {
+        
         /// <summary>
         /// List of all rooms in the dungeon.
         /// </summary>
         public List<Room> rooms = new();
         private DungeonGenerator _dungeonGenerator;
+        
         /// <summary>
         /// Initializes the RoomManager by getting references to the DungeonGenerator and CorridorManager components.
         /// </summary>
@@ -20,6 +22,7 @@ namespace _Project.Scripts.Gameplay.PCG {
         {
             _dungeonGenerator = GetComponent<DungeonGenerator>();
         }
+        
         /// <summary>
         /// Places a room at the specified position and marks the corresponding grid cells as occupied.
         /// </summary>
@@ -30,6 +33,7 @@ namespace _Project.Scripts.Gameplay.PCG {
             rooms.Add(roomInstance);
             MarkRoomCellsOccupied(roomInstance, position);
         }
+        
         /// <summary>
         /// Marks the grid cells occupied by the specified room.
         /// </summary>
@@ -47,6 +51,7 @@ namespace _Project.Scripts.Gameplay.PCG {
                 }
             }
         }
+        
         /// <summary>
         /// Finds a valid position for the specified room within the grid.
         /// </summary>
@@ -119,12 +124,19 @@ namespace _Project.Scripts.Gameplay.PCG {
             }
             return closestExit;
         }
-
+        
+        /// <summary>
+        /// Finds the closest unconnected exit to the specified exit from a list of unconnected rooms.
+        /// </summary>
+        /// <param name="unconnectedRooms"></param>
+        /// <param name="closestExit"></param>
+        /// <returns>The pair of Closest Unconnected Exit and the Room it belongs to.</returns>
         public (Exit, Room) FindClosestUnconnectedExitFromUnconnectedRooms(List<Room> unconnectedRooms, Exit closestExit)
         {
             Room closestRoom = null;
             Exit closestExitFromUnconnectedRooms = null;
             var closestDistance = float.MaxValue;
+            
             foreach (var room in unconnectedRooms)
             {
                 if (room.Exits.Contains(closestExit)) continue; // Skip exits in the same room

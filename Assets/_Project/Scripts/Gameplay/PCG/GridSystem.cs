@@ -40,19 +40,28 @@ namespace _Project.Scripts.Gameplay.PCG {
             _occupiedCells = new bool[width, height];
             VisitedCells = new bool[width, height];
         }
-
+        
+        /// <summary>
+        /// Resets the visited cells array.
+        /// </summary>
         public void ResetVisitedCells()
         {
             VisitedCells = new bool[GridWidth, GridHeight];
         }
-
-        public Vector2 
-            GetGridCellPositionFromWorldPosition(int x, int y, Vector3 gridOrigin)
+        
+        /// <summary>
+        /// Gets the Vector2 grid cell position from the specified world position.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="gridOrigin"></param>
+        /// <returns></returns>
+        public Vector2 GetGridCellPositionFromWorldPosition(int x, int y, Vector3 gridOrigin)
         {
             var startX = gridOrigin.x;
-            var endX = gridOrigin.x + (GridWidth*CellSize);
+            var endX = gridOrigin.x + (GridWidth * CellSize);
             var startY = gridOrigin.z;
-            var endY = gridOrigin.z + (GridHeight*CellSize);
+            var endY = gridOrigin.z + (GridHeight * CellSize);
             if (x < startX || x > endX || y < startY || y > endY) {
                 Debug.LogWarning($"Cannot mark cell outside of grid bounds: {x}, {y}");
                 return Vector2.zero;
@@ -72,20 +81,10 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <param name="y">The y-coordinate of the cell.</param>
         /// <param name="gridOrigin"></param>
         public void MarkCellOccupied(int x, int y, Vector3 gridOrigin) {
-            var startX = gridOrigin.x;
-            var endX = gridOrigin.x + (GridWidth*CellSize);
-            var startY = gridOrigin.z;
-            var endY = gridOrigin.z + (GridHeight*CellSize);
-            if (x < startX || x > endX || y < startY || y > endY) {
-                Debug.LogWarning($"Cannot mark cell outside of grid bounds: {x}, {y}");
-                return;
-            }
-            x = Mathf.FloorToInt((x - gridOrigin.x) / CellSize);
-            y = Mathf.FloorToInt((y - gridOrigin.z) / CellSize);
-            x = Mathf.Clamp(x, 0, _occupiedCells.GetLength(0) - 1);
-            y = Mathf.Clamp(y, 0, _occupiedCells.GetLength(1) - 1);
-            _occupiedCells[x, y] = true;
+            var newVec2 = GetGridCellPositionFromWorldPosition(x, y, gridOrigin);
+            _occupiedCells[(int)newVec2.x, (int)newVec2.y] = true;
         }
+        
         /// <summary>
         /// Checks if the specified cell is occupied.
         /// </summary>
@@ -98,6 +97,7 @@ namespace _Project.Scripts.Gameplay.PCG {
             y = Mathf.Clamp(y, 0, GridHeight - 1);
             return _occupiedCells[x, y];
         }
+        
         /// <summary>
         /// Gets the world position of the specified cell.
         /// </summary>
@@ -108,6 +108,11 @@ namespace _Project.Scripts.Gameplay.PCG {
         public Vector3 GetCellWorldPosition(float x, float y, Vector3 gridOrigin) {
             return gridOrigin + new Vector3(x * CellSize, 0, y * CellSize);
         }
+        
+        /// <summary>
+        /// Gizmos drawing method to visualize occupied cells.
+        /// </summary>
+        /// <param name="gridOrigin"></param>
         public void DrawOccupiedCellsGizmos(Vector3 gridOrigin) {
             Gizmos.color = Color.red;
             for (int x = 0; x < GridWidth; x++) {
