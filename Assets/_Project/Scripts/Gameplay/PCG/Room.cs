@@ -11,7 +11,7 @@ namespace _Project.Scripts.Gameplay.PCG
         Boss
     }
     /// <summary>
-    /// Represents a room within the dungeon, containing exits and other properties.
+    /// Represents a room within the dungeon, containing exits and other properties such as Size, RoomType, etc.
     /// </summary>
     public class Room : MonoBehaviour
     {

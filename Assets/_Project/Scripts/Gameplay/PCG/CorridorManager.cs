@@ -9,12 +9,15 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <summary>
         /// Prefab used for creating corridor segments.
         /// </summary>
-        public GameObject corridorPrefab;
+        public GameObject corridorPrefab; // Prefab used for creating corridor segments.
         private DungeonGenerator _dungeonGenerator; // Reference to the dungeon generator
-        public List<GameObject> corridors;
-        public GameObject doorPrefab;
-        private RoomManager _roomManager;
+        public List<GameObject> corridors; // List of all corridor segments in the dungeon.
+        public GameObject doorPrefab; // Prefab used for creating doors.
+        private RoomManager _roomManager; // Reference to the room manager.
         
+        /// <summary>
+        /// Initializes the required components.
+        /// </summary>
         private void Awake() {
             _dungeonGenerator = GetComponent<DungeonGenerator>();
             corridors = new List<GameObject>();
@@ -32,6 +35,10 @@ namespace _Project.Scripts.Gameplay.PCG {
                 corridors.Add(Instantiate(corridorPrefab, position, Quaternion.identity)); 
             }
         }
+        
+        /// <summary>
+        /// Method to close all unconnected rooms with doors.
+        /// </summary>
         public void CloseUnconnectedRooms()
         {
             foreach (var room in _roomManager.rooms)
@@ -60,6 +67,9 @@ namespace _Project.Scripts.Gameplay.PCG {
             }
         }
 
+        /// <summary>
+        /// Method to clean up corridors that are inside rooms.
+        /// </summary>
         public void CleanUp()
         {
             foreach (var corridor in corridors)

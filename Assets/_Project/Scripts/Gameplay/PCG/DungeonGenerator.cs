@@ -10,7 +10,8 @@ namespace _Project.Scripts.Gameplay.PCG
     /// </summary>
     public class DungeonGenerator : MonoBehaviour
     {
-       
+        #region Variables
+        
         // Reference to the RoomManager component.
         [SerializeField] private RoomManager roomManager;
      
@@ -31,12 +32,17 @@ namespace _Project.Scripts.Gameplay.PCG
 
         // Gets the grid system used for cell-based placement.
         public GridSystem GridSystem { get; private set; }
-        // Gets the origin point of the grid in the world.
         
+        // Gets the origin point of the grid in the world.
         public Vector3 GridOrigin { get; private set; }
-
+        
+        // List of unconnected rooms.
         private List<Room> _unconnectedRooms;
+        
+        // List of connected rooms.
         private List<Room> _connectedRooms;
+
+        #endregion
 
         /// <summary>
         /// Initializes the grid system based on the plane's size.
@@ -45,7 +51,10 @@ namespace _Project.Scripts.Gameplay.PCG
         {
             InitializeGrid();
         }
-
+        
+        /// <summary>
+        /// Method to initialize the grid system based on the plane's size and List for both connected and Unconnected Rooms.
+        /// </summary>
         private void InitializeGrid()
         {
             // Assuming the plane is scaled in X and Z axes
@@ -72,12 +81,15 @@ namespace _Project.Scripts.Gameplay.PCG
             GenerateDungeon();
             corridorManager.CleanUp();
         }
+        
         /// <summary>
         /// Generates the dungeon layout, including placing rooms and connecting them with corridors.
         /// </summary>
         private void GenerateDungeon() {
+            
             _unconnectedRooms.Clear();
             _connectedRooms.Clear();
+            
             // Start room (bottom-left of the grid)
             var startRoom = startRoomPrefab.GetComponent<Room>();
             var startPosition = GridOrigin + new Vector3(startRoom.size.x / 2, 0, startRoom.size.z / 2); // Bottom-left corner
@@ -114,7 +126,10 @@ namespace _Project.Scripts.Gameplay.PCG
             ConnectAllRooms();
             corridorManager.CloseUnconnectedRooms();
         }
-
+        
+        /// <summary>
+        /// Method to destroy the dungeon layout.
+        /// </summary>
         private void DestroyDungeon()
         {
             foreach (var room in roomManager.rooms)
@@ -131,6 +146,12 @@ namespace _Project.Scripts.Gameplay.PCG
             corridorManager.corridors.Clear();
         }
 
+        /// <summary>
+        /// Method to find the path between two points using the A* algorithm.
+        /// </summary>
+        /// <param name="startPos"></param>
+        /// <param name="goalPos"></param>
+        /// <returns></returns>
         #region AStarSearch
         private List<Vector2> AStarSearch(Vector2 startPos, Vector2 goalPos)
         {
@@ -253,11 +274,17 @@ namespace _Project.Scripts.Gameplay.PCG
         }
         #endregion
 
+        /// <summary>
+        /// Method to calculate the Manhattan distance between two points.
+        /// </summary>
         private int ManhattanDistance(int x1,int y1,int x2,int y2)
         {
             return Math.Abs(x1-x2) + Math.Abs(y1-y2);
         }
 
+        /// <summary>
+        /// Method to connect all rooms with corridors finding suitable path between the exits.
+        /// </summary>
         private void ConnectAllRooms()
         {
             var counter = 0;
@@ -341,6 +368,12 @@ namespace _Project.Scripts.Gameplay.PCG
             }
         }
         
+        /// <summary>
+        /// Method to get the path between two exit points.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
         private List<Vector2> GetPath(Vector2 start, Vector2 end)
         {
             var startX = (int)start.x; 
@@ -355,6 +388,10 @@ namespace _Project.Scripts.Gameplay.PCG
             
             return result;
         }
+        
+        /// <summary>
+        /// Gizmos drawing for the grid system and occupied cells.
+        /// </summary>
         private void OnDrawGizmos() {
             if (GridSystem == null) return;
             for (var x = 0; x <= GridSystem.GridWidth; x++) {

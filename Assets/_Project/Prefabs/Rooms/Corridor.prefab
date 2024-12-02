@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7081737507948896218}
-  m_Layer: 0
+  - component: {fileID: 1285280164641127267}
+  m_Layer: 6
   m_Name: WallE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,6 +35,27 @@ Transform:
   - {fileID: 8050830235469132267}
   m_Father: {fileID: 7114428786195983124}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!65 &1285280164641127267
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 498773214598997883}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.996979, y: 5.194953, z: 5.341909}
+  m_Center: {x: 0.6301019, y: 0.49347878, z: -0.729465}
 --- !u!1 &2121118714752739171
 GameObject:
   m_ObjectHideFlags: 0
@@ -43,7 +65,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2890771335109287843}
-  m_Layer: 0
+  - component: {fileID: 3053862563281057193}
+  m_Layer: 6
   m_Name: WallS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,6 +91,27 @@ Transform:
   - {fileID: 7298274806467186855}
   m_Father: {fileID: 7114428786195983124}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3053862563281057193
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2121118714752739171}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.86456037, y: 5.1835437, z: 5.391059}
+  m_Center: {x: -4.268542, y: 0.5998974, z: -0.56516314}
 --- !u!1 &5919391689597036322
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,7 +158,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3156005639123993221}
-  m_Layer: 0
+  - component: {fileID: 4295163939688068191}
+  m_Layer: 6
   m_Name: WallN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,6 +184,27 @@ Transform:
   - {fileID: 2430505526746910769}
   m_Father: {fileID: 7114428786195983124}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4295163939688068191
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6244852123057105692}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.1000896, y: 5.194953, z: 5.525374}
+  m_Center: {x: 0.5692605, y: 0.49347878, z: -0.63773274}
 --- !u!1 &6889430914430197051
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +214,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4883831034328547083}
-  m_Layer: 0
+  - component: {fileID: 5900943952136819856}
+  m_Layer: 6
   m_Name: WallW
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,6 +240,27 @@ Transform:
   - {fileID: 7563816373559726894}
   m_Father: {fileID: 7114428786195983124}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!65 &5900943952136819856
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6889430914430197051}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.93750405, y: 5.194953, z: 5.341909}
+  m_Center: {x: -4.196268, y: 0.49347878, z: -0.729465}
 --- !u!1001 &314647055465910452
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -726,6 +814,10 @@ PrefabInstance:
     - target: {fileID: 184820, guid: 9e2131326fc97464987f58ebcb08832a, type: 3}
       propertyPath: m_Name
       value: SM_Env_Tiles_04 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 184820, guid: 9e2131326fc97464987f58ebcb08832a, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 491958, guid: 9e2131326fc97464987f58ebcb08832a, type: 3}
       propertyPath: m_RootOrder
