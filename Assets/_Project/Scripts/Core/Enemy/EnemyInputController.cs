@@ -55,22 +55,18 @@ namespace _Project.Scripts.Core.Enemy
 
         internal float FleeTimeout { get; private set; } = 5f; // Timeout threshold for FleeState
         
-        // The enemy type (can be set in the inspector or at runtime)
-        public EnemyType enemyType;
+        public EnemyType enemyType; // The enemy type
         
         private void Awake()
         {
             Enemy = GetComponent<NavMeshAgent>();
             StateManager = GetComponent<StateManager>();
-            InitializeStateMappings();
+            InitializeState();
             EnemyHUD = GetComponentInChildren<EnemyHUD>();
-
-            // Initialize state mappings (centralized setup)
         }
         
-        internal void InitializeStateMappings()
+        internal void InitializeState()
         {
-            Debug.Log("chk 1");
             var states = new Dictionary<EnemyState, BaseState>();
             states.Clear();
             switch (enemyType)
