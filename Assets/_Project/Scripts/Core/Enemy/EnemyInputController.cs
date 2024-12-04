@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Scripts.Core.Enemy.FSM;
 using _Project.Scripts.Core.Enemy.FSM.EnemyStates;
 using _Project.Scripts.Core.Player_Controllers;
@@ -53,15 +54,25 @@ namespace _Project.Scripts.Core.Enemy
         internal float LastFleeDuration { get; set; } // Stores the duration of the last FleeState
 
         internal float FleeTimeout { get; private set; } = 5f; // Timeout threshold for FleeState
-
+        
+        // The enemy type (can be set in the inspector or at runtime)
+        public EnemyType enemyType;
+        
         private void Awake()
         {
             Enemy = GetComponent<NavMeshAgent>();
-            StateManager = gameObject.AddComponent<StateManager>();
+            StateManager = GetComponent<StateManager>();
+            InitializeStateMappings();
             EnemyHUD = GetComponentInChildren<EnemyHUD>();
 
-            // Initializing the dictionary for states
-            var states = new Dictionary<EnemyState, BaseState>
+            // Initialize state mappings (centralized setup)
+        }
+        
+        internal void InitializeStateMappings()
+        {
+            Debug.Log("chk 1");
+            // Basic enemy states
+            StateManager.EnemyStateMappings[EnemyType.Basic] = new Dictionary<EnemyState, BaseState>
             {
                 { EnemyState.Patrol, new PatrolState(this) },
                 { EnemyState.Detect, new DetectState(this) },
@@ -70,7 +81,16 @@ namespace _Project.Scripts.Core.Enemy
                 { EnemyState.Flee, new FleeState(this) }
             };
 
-            StateManager.InitializeStates(states, EnemyState.Patrol);
+            // Boss enemy states (only the necessary ones)
+            StateManager.EnemyStateMappings[EnemyType.Boss] = new Dictionary<EnemyState, BaseState>
+            {
+                { EnemyState.Detect, new DetectState(this) },
+                { EnemyState.Chase, new ChaseState(this) },
+                { EnemyState.Attack, new AttackState(this) }
+            };
+
+            Debug.Log("chk 2 count ="+StateManager.EnemyStateMappings.Count);
+            // Add additional enemy types and their states as needed
         }
 
         public override void Initialize(PlayerController playerController)

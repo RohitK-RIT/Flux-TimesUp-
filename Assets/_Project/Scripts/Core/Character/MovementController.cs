@@ -47,7 +47,7 @@ namespace _Project.Scripts.Core.Character
         /// <summary>
         /// The speed at which the player moves.
         /// </summary>
-        //[SerializeField] private float moveSpeed = 5f;
+        [SerializeField] private float moveSpeed = 5f;
 
         /// <summary>
         /// The CharacterController component attached to the character.

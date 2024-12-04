@@ -615,9 +615,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a6d5758395c849f18c1b34ac8c212bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimTransform: {fileID: 0}
-  body: {fileID: 0}
-  weaponParent: {fileID: 0}
+  aimTransform: {fileID: 752811551642384924}
+  body: {fileID: 5026216742606392283}
+  weaponParent: {fileID: 6695076461426248051}
   moveSpeed: 5
 --- !u!114 &3690793666480787308
 MonoBehaviour:
@@ -647,7 +647,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55640ec42f1b34384b0d8b7c5ad45bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCooldown: 5
+  attackCooldown: 2
+  enemyType: 1
 --- !u!114 &7350352694099059543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,7 +661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5cea77b5ed4e3895ca6ef53545191e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponParent: {fileID: 0}
+  weaponParent: {fileID: 6695076461426248051}
   currentWeapon: {fileID: 0}
   weapons: []
 --- !u!114 &532219490356528344
@@ -675,7 +676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed21777d048d4403dbedff777d7d84f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterStats: {fileID: 11400000, guid: 72c3c8a87f21a3a4894c6a42c8bd0fbc, type: 2}
+  characterStats: {fileID: 11400000, guid: 556ee833bf81543bd8076a5a0acc7183, type: 2}
   friendlyLayer:
     serializedVersion: 2
     m_Bits: 2048
@@ -695,8 +696,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b493d000be6ad7f4990bb40a6350721a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthBar: {fileID: 0}
-  enemy: {fileID: 0}
+  healthBar: {fileID: 7861042817652133291}
+  enemy: {fileID: 532219490356528344}
 --- !u!114 &4835280015181220465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,7 +720,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.72
-  m_Speed: 3.5
+  m_Speed: 0
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

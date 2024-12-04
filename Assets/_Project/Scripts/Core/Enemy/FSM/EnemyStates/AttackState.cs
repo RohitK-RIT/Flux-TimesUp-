@@ -32,7 +32,7 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
             if (_enemyInputController.EnemyHUD.enemy.CurrentHealth < 50)
             {
                 // Check if the enemy has been in FleeState recently and exceeded timeout
-                if (_enemyInputController.LastFleeDuration >= _enemyInputController.FleeTimeout)
+                if (_enemyInputController.LastFleeDuration >= _enemyInputController.FleeTimeout || _enemyInputController.enemyType == EnemyType.Boss)
                 {
                     // Continue attacking as timeout condition overrides health
                     AttackPlayer();
