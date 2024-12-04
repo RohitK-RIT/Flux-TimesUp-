@@ -9,7 +9,7 @@ namespace _Project.Scripts.Core.Player_Controllers
     /// <summary>
     /// Base class for player controllers.
     /// </summary>
-    [RequireComponent(typeof(MovementController), typeof(WeaponController))]
+    [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(AnimationController) )]
     public abstract class PlayerController : MonoBehaviour
     {
         /// <summary>
@@ -21,6 +21,8 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Property to access the weapon controller.
         /// </summary>
         public WeaponController WeaponController { get; private set; }
+        
+        public AnimationController AnimationController { get; private set; }
 
         /// <summary>
         /// Property to access the char stats.
@@ -67,6 +69,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Get the CharacterMovement and CharacterWeaponController component attached to the player
             MovementController = GetComponent<MovementController>();
             WeaponController = GetComponent<WeaponController>();
+            AnimationController = GetComponent<AnimationController>();
         }
 
         protected virtual void Start()
@@ -74,6 +77,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             // Initialize the player's movement and weapon controller
             MovementController.Initialize(this);
             WeaponController.Initialize(this);
+            AnimationController.Initialize(this);
 
             // Initialize the player's health
             currentHealth = CharacterStats.maxHealth;

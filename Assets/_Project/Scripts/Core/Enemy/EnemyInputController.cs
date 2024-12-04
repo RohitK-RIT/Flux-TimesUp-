@@ -71,26 +71,31 @@ namespace _Project.Scripts.Core.Enemy
         internal void InitializeStateMappings()
         {
             Debug.Log("chk 1");
-            // Basic enemy states
-            StateManager.EnemyStateMappings[EnemyType.Basic] = new Dictionary<EnemyState, BaseState>
+            var states = new Dictionary<EnemyState, BaseState>();
+            states.Clear();
+            switch (enemyType)
             {
-                { EnemyState.Patrol, new PatrolState(this) },
-                { EnemyState.Detect, new DetectState(this) },
-                { EnemyState.Chase, new ChaseState(this) },
-                { EnemyState.Attack, new AttackState(this) },
-                { EnemyState.Flee, new FleeState(this) }
-            };
+                case EnemyType.Basic:
+                    states[EnemyState.Patrol] = new PatrolState(this);
+                    states[EnemyState.Detect] = new DetectState(this);
+                    states[EnemyState.Chase] = new ChaseState(this);
+                    states[EnemyState.Attack] = new AttackState(this);
+                    states[EnemyState.Flee] = new FleeState(this);
+                    StateManager.InitializeStates(states, EnemyState.Patrol);
+                    break;
 
-            // Boss enemy states (only the necessary ones)
-            StateManager.EnemyStateMappings[EnemyType.Boss] = new Dictionary<EnemyState, BaseState>
-            {
-                { EnemyState.Detect, new DetectState(this) },
-                { EnemyState.Chase, new ChaseState(this) },
-                { EnemyState.Attack, new AttackState(this) }
-            };
+                case EnemyType.Boss:
+                    states[EnemyState.Detect] = new DetectState(this);
+                    states[EnemyState.Chase] = new ChaseState(this);
+                    states[EnemyState.Attack] = new AttackState(this);
+                    StateManager.InitializeStates(states, EnemyState.Detect);
+                    break;
 
-            Debug.Log("chk 2 count ="+StateManager.EnemyStateMappings.Count);
-            // Add additional enemy types and their states as needed
+                // Add additional cases for other enemy types
+                default:
+                    Debug.LogError($"Unhandled enemy type: {enemyType}");
+                    break;
+            }
         }
 
         public override void Initialize(PlayerController playerController)
