@@ -79,7 +79,7 @@ namespace _Project.Scripts.Gameplay.PCG
         {
             GridSystem.ResetVisitedCells();
             GenerateDungeon();
-            corridorManager.RemoveOverlappingCorridorWalls();
+            //corridorManager.RemoveOverlappingCorridorWalls();
             corridorManager.CleanUp();
         }
         
@@ -124,6 +124,8 @@ namespace _Project.Scripts.Gameplay.PCG
                 if(t!=roomManager.rooms[0])
                     _unconnectedRooms.Add(t);
             }
+
+            //corridorManager.CheckExitCorridors();
             ConnectAllRooms();
             corridorManager.CloseUnconnectedRooms();
         }
@@ -145,6 +147,7 @@ namespace _Project.Scripts.Gameplay.PCG
                 Destroy(corridor);
             }
             corridorManager.corridors.Clear();
+            corridorManager.CorridorDictionary.Clear();
         }
 
         /// <summary>

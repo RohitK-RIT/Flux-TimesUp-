@@ -12,6 +12,7 @@ namespace _Project.Scripts.Gameplay.PCG {
         public GameObject corridorPrefab; // Prefab used for creating corridor segments.
         private DungeonGenerator _dungeonGenerator; // Reference to the dungeon generator
         public List<GameObject> corridors; // List of all corridor segments in the dungeon.
+        public Dictionary<Vector2Int, GameObject> CorridorDictionary; // Dictionary of all corridor segments with their position as key in the dungeon.
         public GameObject doorPrefab; // Prefab used for creating doors.
         private RoomManager _roomManager; // Reference to the room manager.
         
@@ -21,18 +22,137 @@ namespace _Project.Scripts.Gameplay.PCG {
         private void Awake() {
             _dungeonGenerator = GetComponent<DungeonGenerator>();
             corridors = new List<GameObject>();
+            CorridorDictionary = new Dictionary<Vector2Int, GameObject>();
             _roomManager = GetComponent<RoomManager>();
         }
-        
+
+        public void CheckExitCorridors()
+        {
+            foreach (var room in _roomManager.rooms)
+            {
+                foreach (var exit in room.Exits)
+                {
+                    foreach (Transform child in exit.transform)
+                    {
+                        if (child.CompareTag($"Corridor"))
+                        {
+                            var corridor = child.gameObject;
+                            Vector2Int corridorPosVec2 = new Vector2Int((int)corridor.transform.position.x, (int)corridor.transform.position.z); 
+                            var keyPosFloat = _dungeonGenerator.GridSystem.GetGridCellPositionFromWorldPosition(corridorPosVec2.x, corridorPosVec2.y, _dungeonGenerator.GridOrigin);
+                            var keyPos = new Vector2Int((int)keyPosFloat.x, (int)keyPosFloat.y);
+                            CorridorDictionary[keyPos] = corridor;
+                            corridors.Add(corridor);
+                        }
+                    }
+                }
+            }
+        }
         /// <summary>
         /// Instantiates corridor on the path between two points.
         /// </summary>
         public void CreatePath(List<Vector2> path, Vector3 gridOrigin)
-        {                                
-            for (var i = 0; i < path.Count - 1; i++)
+        {
+            for (var i = 0; i < path.Count; i++)
             {
+                GameObject corridorSegment = null;
+                Vector2Int keyPos;
+                if (i - 1 < 0)
+                {
+                    //starting block
+                    keyPos = new Vector2Int((int)path[i].x, (int)path[i].y);
+                    var positionStartingBlock = _dungeonGenerator.GridSystem.GetCellWorldPosition(path[i].x, path[i].y, gridOrigin);
+                    var startingCorridor = Instantiate(corridorPrefab, positionStartingBlock, Quaternion.identity);
+                    corridors.Add(startingCorridor);
+                    CorridorDictionary[keyPos] = startingCorridor;
+                    continue;
+                }
+                
+                if(i + 1 >= path.Count)
+                {
+                    //ending block
+                    keyPos = new Vector2Int((int)path[i].x, (int)path[i].y);
+                    var positionEndingBlock = _dungeonGenerator.GridSystem.GetCellWorldPosition(path[i].x, path[i].y, gridOrigin);
+                    var endingCorridor = Instantiate(corridorPrefab, positionEndingBlock, Quaternion.identity);
+                    corridors.Add(endingCorridor);
+                    CorridorDictionary[keyPos] = endingCorridor;
+                    continue;
+                }
+                
+                var previous = path[i - 1];
+                var current = path[i];
+                var next = path[i + 1];
+                
                 var position = _dungeonGenerator.GridSystem.GetCellWorldPosition(path[i].x, path[i].y, gridOrigin);
-                corridors.Add(Instantiate(corridorPrefab, position, Quaternion.identity)); 
+                keyPos = new Vector2Int((int)path[i].x, (int)path[i].y);
+                
+                if(CorridorDictionary.ContainsKey(keyPos))
+                {
+                    corridorSegment = CorridorDictionary[keyPos];
+                    Debug.Log("Corridor already exists");
+                }
+                else
+                {
+                    corridorSegment = Instantiate(corridorPrefab, position, Quaternion.identity);
+                    corridors.Add(corridorSegment);
+                    CorridorDictionary[keyPos] = corridorSegment;
+                }
+                
+                if(previous.x == current.x && next.x == current.x)
+                {
+                    corridorSegment.transform.Find("WallS").gameObject.SetActive(false);
+                    corridorSegment.transform.Find("WallN").gameObject.SetActive(false);
+                }
+                else if(previous.y == current.y && next.y == current.y)
+                {
+                    corridorSegment.transform.Find("WallE").gameObject.SetActive(false);
+                    corridorSegment.transform.Find("WallW").gameObject.SetActive(false);
+                }
+                else if(previous.x == current.x && next.y == current.y)
+                {
+                    if(previous.y > current.y && next.x > current.x)
+                    {
+                        corridorSegment.transform.Find("WallE").gameObject.SetActive(false);
+                        corridorSegment.transform.Find("WallN").gameObject.SetActive(false);
+                    }
+                    else if(previous.y > current.y && next.x < current.x)
+                    {
+                        corridorSegment.transform.Find("WallW").gameObject.SetActive(false);
+                        corridorSegment.transform.Find("WallS").gameObject.SetActive(false);
+                    }
+                    else if (previous.y < current.y && next.x < current.x)
+                    {
+                        corridorSegment.transform.Find("WallE").gameObject.SetActive(false);
+                        corridorSegment.transform.Find("WallS").gameObject.SetActive(false);
+                    }
+                    else if(previous.y < current.y && next.x > current.x)
+                    {
+                        corridorSegment.transform.Find("WallE").gameObject.SetActive(false);
+                        corridorSegment.transform.Find("WallS").gameObject.SetActive(false);
+                    }
+                }
+                else if(previous.y == current.y && next.x == current.x)
+                {
+                    if(previous.x > current.x && next.y > current.y)
+                    {
+                        corridorSegment.transform.Find("WallN").gameObject.SetActive(false);
+                        corridorSegment.transform.Find("WallE").gameObject.SetActive(false);
+                    }
+                    else if(previous.x > current.x && next.y < current.y)
+                    {
+                        corridorSegment.transform.Find("WallS").gameObject.SetActive(false);
+                        corridorSegment.transform.Find("WallE").gameObject.SetActive(false);
+                    }
+                    else if (previous.x < current.x && next.y < current.y)
+                    {
+                        corridorSegment.transform.Find("WallS").gameObject.SetActive(false);
+                        corridorSegment.transform.Find("WallW").gameObject.SetActive(false);
+                    }
+                    else if(previous.x < current.x && next.y > current.y)
+                    {
+                        corridorSegment.transform.Find("WallN").gameObject.SetActive(false);
+                        corridorSegment.transform.Find("WallW").gameObject.SetActive(false);
+                    }
+                }
             }
         }
         
@@ -41,6 +161,7 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// </summary>
         public void RemoveOverlappingCorridorWalls()
         {
+            //can be removed since corridors are already added to the list in the checkexitcorridors method
             foreach (var room in _roomManager.rooms)
             {
                 foreach (var exit in room.Exits)
