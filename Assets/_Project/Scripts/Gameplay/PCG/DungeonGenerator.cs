@@ -80,7 +80,7 @@ namespace _Project.Scripts.Gameplay.PCG
             GridSystem.ResetVisitedCells();
             GenerateDungeon();
             //corridorManager.RemoveOverlappingCorridorWalls();
-            corridorManager.CleanUp();
+            //corridorManager.CleanUp();
         }
         
         /// <summary>
@@ -147,7 +147,7 @@ namespace _Project.Scripts.Gameplay.PCG
                 Destroy(corridor);
             }
             corridorManager.corridors.Clear();
-            corridorManager.CorridorDictionary.Clear();
+            //corridorManager.CorridorDictionary.Clear();
         }
 
         /// <summary>
