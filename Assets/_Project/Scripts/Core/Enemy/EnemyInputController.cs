@@ -110,7 +110,31 @@ namespace _Project.Scripts.Core.Enemy
             // Disable AI logic
             _currentTarget = null;
         }
+        
 
+        internal bool IsPlayerOnNavMesh()
+        {
+            NavMeshHit hit;
+            // bool isOnNavMesh = NavMesh.SamplePosition(EnemyController.Player.transform.position, out hit, 1.0f, NavMesh.AllAreas);
+            if (ClosestPlayer)
+            {
+
+
+                int roomAreaMask = 1 << NavMesh.GetAreaFromName("Room");
+                bool isOnNavMesh =
+                    NavMesh.SamplePosition(ClosestPlayer.transform.position, out hit, 1.0f, roomAreaMask);
+
+
+                Debug.Log($"Player NavMesh check: {isOnNavMesh}, Position: {ClosestPlayer.transform.position}");
+                return isOnNavMesh;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        
         // Method to find the closest player and check if its in detection range and in conical field of view
         internal bool FindPlayer()
         {
@@ -121,7 +145,7 @@ namespace _Project.Scripts.Core.Enemy
         // Method to check if any players are in range
         internal bool IsPlayerInDetectionRange()
         {
-            return _playerDetection._playersInRange.Count > 0;
+            return (_playerDetection._playersInRange.Count > 0);
         }
 
         // Method to check if player is in chase range and conical field of view
@@ -143,7 +167,7 @@ namespace _Project.Scripts.Core.Enemy
         // ReSharper disable Unity.PerformanceAnalysis
         internal void StartChasing()
         {
-            if (IsPlayerInCone())
+            if (IsPlayerInCone() && IsPlayerOnNavMesh())
             {
                 StartCoroutine(FollowPlayer()); // Start following the player
             }
@@ -159,7 +183,7 @@ namespace _Project.Scripts.Core.Enemy
         // ReSharper disable Unity.PerformanceAnalysis
         internal bool CanAttack()
         {
-            return IsPlayerInCone() && IsPlayerInAttackRange(ClosestPlayer); // Check if the player is within attack range
+            return IsPlayerInCone() && IsPlayerInAttackRange(ClosestPlayer) && IsPlayerOnNavMesh(); // Check if the player is within attack range
         }
 
         //method to check if the player is within attack range and cool down is not active
@@ -339,6 +363,7 @@ namespace _Project.Scripts.Core.Enemy
         private void Update()
         {
             OnMoveInputUpdated?.Invoke(Enemy.velocity.normalized);
+            //IsPlayerOnNavMesh();
         }
     }
 }
