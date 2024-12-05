@@ -112,26 +112,21 @@ namespace _Project.Scripts.Core.Enemy
         }
         
 
+        //Method to check if the player in present on the navmesh rooms
         internal bool IsPlayerOnNavMesh()
         {
             NavMeshHit hit;
-            // bool isOnNavMesh = NavMesh.SamplePosition(EnemyController.Player.transform.position, out hit, 1.0f, NavMesh.AllAreas);
-            if (ClosestPlayer)
-            {
+            // Ensure the ClosestPlayer object exists before proceeding.
+            if (!ClosestPlayer) return false;
+            
+            // Create a mask for the "Room" area on the NavMesh. 
+            // NavMesh.GetAreaFromName("Room") fetches the index of the "Room" area,
+            // and the bitwise shift (1 << index) creates a mask for this area.
+            int roomAreaMask = 1 << NavMesh.GetAreaFromName("Room");
+            bool isOnNavMesh = NavMesh.SamplePosition(ClosestPlayer.transform.position, out hit, 1.0f, roomAreaMask);
 
-
-                int roomAreaMask = 1 << NavMesh.GetAreaFromName("Room");
-                bool isOnNavMesh =
-                    NavMesh.SamplePosition(ClosestPlayer.transform.position, out hit, 1.0f, roomAreaMask);
-
-
-                Debug.Log($"Player NavMesh check: {isOnNavMesh}, Position: {ClosestPlayer.transform.position}");
-                return isOnNavMesh;
-            }
-            else
-            {
-                return false;
-            }
+            // Return true if the player's position is on the NavMesh within the specified area.
+            return isOnNavMesh;
         }
         
         
