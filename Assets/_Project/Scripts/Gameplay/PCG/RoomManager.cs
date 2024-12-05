@@ -29,6 +29,12 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <param name="roomPrefab">The room prefab to instantiate.</param>
         /// <param name="position">The position to place the room.</param>
         public void PlaceRoom(Room roomPrefab, Vector3 position) {
+            if(roomPrefab.roomType is RoomType.Start or RoomType.Boss)
+            {
+                rooms.Add(roomPrefab);
+                MarkRoomCellsOccupied(roomPrefab, position);
+                return;
+            }
             var roomInstance = Instantiate(roomPrefab, position, Quaternion.identity);
             rooms.Add(roomInstance);
             MarkRoomCellsOccupied(roomInstance, position);

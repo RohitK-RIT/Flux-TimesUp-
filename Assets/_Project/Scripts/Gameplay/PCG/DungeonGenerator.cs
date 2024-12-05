@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using _Project.Scripts.Core.Backend.Scene_Control;
+using _Project.Scripts.Core.Enemy;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -41,6 +43,9 @@ namespace _Project.Scripts.Gameplay.PCG
         
         // List of connected rooms.
         private List<Room> _connectedRooms;
+        
+        //Reference to LevelSceneController
+        private LevelSceneController _levelSceneController;
 
         #endregion
 
@@ -50,6 +55,7 @@ namespace _Project.Scripts.Gameplay.PCG
         private void Awake()
         {
             InitializeGrid();
+            _levelSceneController = LevelSceneController.Instance;
         }
         
         /// <summary>
@@ -79,10 +85,29 @@ namespace _Project.Scripts.Gameplay.PCG
         {
             GridSystem.ResetVisitedCells();
             GenerateDungeon();
+            PopulatePlayer();
+            PopulateEnemies();
             //corridorManager.RemoveOverlappingCorridorWalls();
             //corridorManager.CleanUp();
         }
-        
+
+        private void PopulatePlayer()
+        {
+            
+        }
+        private void PopulateEnemies()
+        {
+            foreach (var room in roomManager.rooms)
+            {
+                //no enemies in the start room
+                if (room == roomManager.rooms[0])
+                {
+                    continue;
+                }
+                var enemies = FindObjectsOfType<EnemyController>();
+                _levelSceneController.enemies = enemies;
+            }
+        }
         /// <summary>
         /// Generates the dungeon layout, including placing rooms and connecting them with corridors.
         /// </summary>
@@ -93,17 +118,19 @@ namespace _Project.Scripts.Gameplay.PCG
             
             // Start room (bottom-left of the grid)
             var startRoom = startRoomPrefab.GetComponent<Room>();
-            var startPosition = GridOrigin + new Vector3(startRoom.size.x / 2, 0, startRoom.size.z / 2); // Bottom-left corner
+            //var startPosition = GridOrigin + new Vector3(startRoom.size.x / 2, 0, startRoom.size.z / 2); // Bottom-left corner
+            var startPosition = new Vector3(-60, 0, -55);
             roomManager.PlaceRoom(startRoom, startPosition);
 
             // Boss room (top-right of the grid)
             var bossRoom = bossRoomPrefab.GetComponent<Room>();
-            var bossPosition = GridOrigin + new Vector3(
+            /*var bossPosition = GridOrigin + new Vector3(
                 (GridSystem.GridWidth - Mathf.Ceil(bossRoom.size.x / GridSystem.CellSize)) * GridSystem.CellSize,
                 bossRoom.transform.position.y,
                 (GridSystem.GridHeight - Mathf.Ceil(bossRoom.size.z / GridSystem.CellSize)) * GridSystem.CellSize
-            );
-            bossPosition += new Vector3(bossRoom.size.x / 2, 0, bossRoom.size.z / 2);
+            );*/
+            //bossPosition += new Vector3(bossRoom.size.x / 2, 0, bossRoom.size.z / 2);
+            var bossPosition = new Vector3(60, 0, 55);
             roomManager.PlaceRoom(bossRoom, bossPosition);
 
             // Exploration rooms
