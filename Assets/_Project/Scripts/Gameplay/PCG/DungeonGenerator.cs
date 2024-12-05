@@ -43,9 +43,6 @@ namespace _Project.Scripts.Gameplay.PCG
         
         // List of connected rooms.
         private List<Room> _connectedRooms;
-        
-        //Reference to LevelSceneController
-        private LevelSceneController _levelSceneController;
 
         #endregion
 
@@ -55,7 +52,6 @@ namespace _Project.Scripts.Gameplay.PCG
         private void Awake()
         {
             InitializeGrid();
-            _levelSceneController = LevelSceneController.Instance;
         }
         
         /// <summary>
@@ -104,8 +100,8 @@ namespace _Project.Scripts.Gameplay.PCG
                 {
                     continue;
                 }
-                var enemies = FindObjectsOfType<EnemyController>();
-                _levelSceneController.enemies = enemies;
+                var enemies = FindObjectsOfType<EnemyController>(true);
+                LevelSceneController.Instance.enemies = enemies;
             }
         }
         /// <summary>
@@ -164,6 +160,10 @@ namespace _Project.Scripts.Gameplay.PCG
         {
             foreach (var room in roomManager.rooms)
             {
+                if(room.roomType == RoomType.Start || room.roomType == RoomType.Boss)
+                {
+                    continue;
+                }
                 Destroy(room.gameObject);
             }
 

@@ -1174,8 +1174,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 800343614}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -63.4, y: 1.5, z: -46.8}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: -1}
+  m_LocalPosition: {x: -70.01, y: 1.636, z: -49.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1513,6 +1513,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossRoom
       objectReference: {fileID: 0}
+    - target: {fileID: 7726538383708812998, guid: ceda586b1b494a646ac15b4fb70c5e4b,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7726538383708812998, guid: ceda586b1b494a646ac15b4fb70c5e4b,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9169344966066913423, guid: ceda586b1b494a646ac15b4fb70c5e4b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1592,6 +1602,26 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 800343618}
+    - target: {fileID: 2639302913354191400, guid: fa2d0ea1a7d63a4429ad577f03bc7d2d,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10.010002
+      objectReference: {fileID: 0}
+    - target: {fileID: 2639302913354191400, guid: fa2d0ea1a7d63a4429ad577f03bc7d2d,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.636
+      objectReference: {fileID: 0}
+    - target: {fileID: 2639302913354191400, guid: fa2d0ea1a7d63a4429ad577f03bc7d2d,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 5.4000015
+      objectReference: {fileID: 0}
+    - target: {fileID: 9095725240299283155, guid: fa2d0ea1a7d63a4429ad577f03bc7d2d,
+        type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 800343618}
     - target: {fileID: 9169344966066913423, guid: fa2d0ea1a7d63a4429ad577f03bc7d2d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1653,6 +1683,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1103105604}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1103105606 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2636232490435568817, guid: fa2d0ea1a7d63a4429ad577f03bc7d2d,
+    type: 3}
+  m_PrefabInstance: {fileID: 1103105604}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e559bbdc9b3e45678a387662f720f87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1151406846
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1908,7 +1950,7 @@ MonoBehaviour:
   pauseMenuPage: {fileID: 282868529}
   winPage: {fileID: 762427771}
   loosePage: {fileID: 1151406847}
-  player: {fileID: 0}
+  player: {fileID: 1103105606}
   enemies: []
 --- !u!114 &1493662880
 MonoBehaviour:
@@ -2150,7 +2192,7 @@ PrefabInstance:
         type: 3}
       propertyPath: player
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1103105606}
     - target: {fileID: 4119309460457582721, guid: 2a784e46f5e48c042bd7896f14b38ee2,
         type: 3}
       propertyPath: m_Name
