@@ -40,6 +40,25 @@ namespace _Project.Scripts.Core.Backend.Ability
             return null;
         }
 
+        public AbilityPickup GetAbilityPickupPrefab(AbilityType type)
+        {
+            // Get the ability data
+            var data = GetAbilityData(type);
+            // If the data is null, return null
+            if (data.Equals(null))
+                return null;
+
+            // Get the ability pickup
+            var pickup = data.AbilityPickup;
+            // If the pickup is not null, return the pickup
+            if (pickup)
+                return pickup;
+
+            // Log an error if the pickup is not found
+            Debug.LogError($"Ability pickup for {type} not found.");
+            return null;
+        }
+
         /// <summary>
         /// Gets the ability data.
         /// </summary>

@@ -3,6 +3,7 @@ using _Project.Scripts.Core.Character;
 using _Project.Scripts.Core.Character.Weapon_Controller;
 using _Project.Scripts.Core.Weapons;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Player_Controllers
 {
@@ -30,7 +31,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Property to access the char stats.
         /// </summary>
-        public CharacterStats CharacterStats => characterStats;
+        public CharacterStats Stats => stats;
 
         /// <summary>
         /// Property to access the player's current health.
@@ -50,7 +51,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Component that handles Character Stats.
         /// </summary>
-        [SerializeField] private CharacterStats characterStats;
+        [SerializeField] private CharacterStats stats;
 
         /// <summary>
         /// Layer mask for the friendly.
@@ -83,7 +84,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             AnimationController.Initialize(this);
 
             // Initialize the player's health
-            currentHealth = CharacterStats.maxHealth;
+            currentHealth = Stats.maxHealth;
         }
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         public virtual void TakeDamage(Weapon weapon, float damageDealt)
         {
             currentHealth -= damageDealt;
-            currentHealth = Mathf.Clamp(currentHealth, 0f, CharacterStats.maxHealth);
+            currentHealth = Mathf.Clamp(currentHealth, 0f, Stats.maxHealth);
             OnHitConfirmed(weapon.CurrentPlayerController);
 
             if (currentHealth <= 0)
@@ -147,7 +148,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         public void Heal(int healAmount)
         {
             currentHealth += healAmount;
-            currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
+            currentHealth = Mathf.Clamp(currentHealth, 0, Stats.maxHealth);
         }
 
         /// <summary>

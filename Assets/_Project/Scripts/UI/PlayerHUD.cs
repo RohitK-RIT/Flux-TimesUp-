@@ -44,7 +44,7 @@ namespace _Project.Scripts.UI
         private void UpdateHealthBar()
         {
             healthBar.value = player.CurrentHealth;
-            healthBar.maxValue = player.CharacterStats.maxHealth;
+            healthBar.maxValue = player.Stats.maxHealth;
         }
 
         // Updates the ammo display based on the player's current and total ammo

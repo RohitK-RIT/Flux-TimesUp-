@@ -31,6 +31,11 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// The ability prefab.
         /// </summary>
         public Weapons.Abilities.Ability AbilityPrefab => abilityPrefab;
+        
+        /// <summary>
+        /// The ability pickup prefab.
+        /// </summary>
+        public AbilityPickup AbilityPickup => abilityPickup;
 
         [SerializeField] private string name;
         [SerializeField] private AbilityType type;
@@ -38,5 +43,6 @@ namespace _Project.Scripts.Core.Backend.Ability
         [SerializeField] private Sprite icon;
 
         [Space] [SerializeField] private Weapons.Abilities.Ability abilityPrefab;
+        [SerializeField] private AbilityPickup abilityPickup;
     }
 }
