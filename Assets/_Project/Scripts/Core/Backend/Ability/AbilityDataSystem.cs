@@ -30,7 +30,7 @@ namespace _Project.Scripts.Core.Backend.Ability
                 return null;
 
             // Get the ability prefab
-            var prefab = data.GetAbilityPrefab();
+            var prefab = data.AbilityPrefab;
             // If the prefab is not null, return the prefab
             if (prefab)
                 return prefab;

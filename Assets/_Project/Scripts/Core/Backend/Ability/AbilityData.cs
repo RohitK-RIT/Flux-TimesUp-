@@ -27,6 +27,11 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// </summary>
         public Sprite Icon => icon;
 
+        /// <summary>
+        /// The ability prefab.
+        /// </summary>
+        public Weapons.Abilities.Ability AbilityPrefab => abilityPrefab;
+
         [SerializeField] private string name;
         [SerializeField] private AbilityType type;
         [SerializeField, Multiline] private string description;
@@ -40,11 +45,6 @@ namespace _Project.Scripts.Core.Backend.Ability
         internal AbilityStats GetAbilityStats(int level)
         {
             return abilityStats[level - 1];
-        }
-
-        internal Weapons.Abilities.Ability GetAbilityPrefab()
-        {
-            return abilityPrefab;
         }
     }
 }
