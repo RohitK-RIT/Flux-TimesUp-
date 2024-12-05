@@ -39,31 +39,6 @@ namespace _Project.Scripts.Core.Backend.Ability
             Debug.LogError($"Ability prefab for {type} not found.");
             return null;
         }
-        
-        /// <summary>
-        /// Gets the ability stats.
-        /// </summary>
-        /// <param name="type">type of the ability</param>
-        /// <param name="level">level of the ability stat you require</param>
-        /// <returns>ability stats so of the specified type and level</returns>
-        public AbilityStats GetAbilityStats(AbilityType type, int level)
-        {
-            // Get the ability data
-            var data = GetAbilityData(type);
-            // If the data is null, return null
-            if (data.Equals(null))
-                return null;
-
-            // Get the ability stats
-            var stats = data.GetAbilityStats(level);
-            // If the stats are not null, return the stats
-            if (stats)
-                return stats;
-
-            // Log an error if the stats are not found
-            Debug.LogError($"Ability stats for {type} at level {level} not found.");
-            return null;
-        }
 
         /// <summary>
         /// Gets the ability data.

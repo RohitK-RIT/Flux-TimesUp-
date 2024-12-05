@@ -38,13 +38,5 @@ namespace _Project.Scripts.Core.Backend.Ability
         [SerializeField] private Sprite icon;
 
         [Space] [SerializeField] private Weapons.Abilities.Ability abilityPrefab;
-
-        [Header("Ability Stats (follow the order of levels)")] [SerializeField]
-        private AbilityStats[] abilityStats;
-
-        internal AbilityStats GetAbilityStats(int level)
-        {
-            return abilityStats[level - 1];
-        }
     }
 }
