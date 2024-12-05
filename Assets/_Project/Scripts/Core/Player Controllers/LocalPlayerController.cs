@@ -1,4 +1,5 @@
 using _Project.Scripts.Core.Backend.Currency;
+using _Project.Scripts.Core.Backend.Interfaces;
 using _Project.Scripts.Core.Enemy;
 using _Project.Scripts.Core.Player_Controllers.Input_Controllers;
 using _Project.Scripts.Core.Weapons;
@@ -11,7 +12,7 @@ namespace _Project.Scripts.Core.Player_Controllers
     /// This class is responsible for handling the player's input.
     /// </summary>
     [RequireComponent(typeof(LocalInputController), typeof(CameraController))]
-    public class LocalPlayerController : PlayerController
+    public sealed class LocalPlayerController : PlayerController
     {
         /// <summary>
         /// Component that handles player input.
@@ -30,6 +31,8 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// The wallet ID for the player.
         /// </summary>
         private string _walletID;
+        
+        private IPickupItem _currentPickupItem;
 
         protected override void Awake()
         {
@@ -147,6 +150,17 @@ namespace _Project.Scripts.Core.Player_Controllers
         public int GetCoins()
         {
             return CurrencySystem.Instance.GetCoins(_walletID);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            // Check if player has picked up a pickup
+            if (other.TryGetComponent(out IPickupItem pickupItem))
+            {
+                // Call the OnPickup method
+                pickupItem.OnItemPickup();
+                _currentPickupItem = pickupItem;    
+            }
         }
     }
 }
