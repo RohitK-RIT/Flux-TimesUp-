@@ -162,6 +162,10 @@ namespace _Project.Scripts.Gameplay.PCG
             {
                 if(room.roomType == RoomType.Start || room.roomType == RoomType.Boss)
                 {
+                    foreach(var exit in room.Exits)
+                    {
+                        exit.isConnected = false;
+                    }
                     continue;
                 }
                 Destroy(room.gameObject);
