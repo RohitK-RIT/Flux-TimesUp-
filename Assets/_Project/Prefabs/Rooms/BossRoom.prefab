@@ -163,7 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 30, y: 1, z: 40}
-  roomType: 0
+  roomType: 2
   exits:
   - {fileID: 1568030878896645475}
 --- !u!1 &2242813232345749178

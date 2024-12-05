@@ -22,7 +22,7 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
         private PlayerController player; // Drag your player here
 
         
-        [SerializeField] private EnemyController[] enemies; // Array to store all enemies in the scene
+        [SerializeField] public EnemyController[] enemies; // Array to store all enemies in the scene
 
         private bool _isPaused; // Variable to check if the game is paused
 
