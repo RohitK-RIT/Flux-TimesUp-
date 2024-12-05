@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _Project.Scripts.Core.Enemy.FSM;
 using _Project.Scripts.Core.Enemy.FSM.EnemyStates;
 using _Project.Scripts.Core.Player_Controllers;
@@ -53,24 +54,44 @@ namespace _Project.Scripts.Core.Enemy
         internal float LastFleeDuration { get; set; } // Stores the duration of the last FleeState
 
         internal float FleeTimeout { get; private set; } = 5f; // Timeout threshold for FleeState
-
+        
+        public EnemyType enemyType; // The enemy type
+        
         private void Awake()
         {
             Enemy = GetComponent<NavMeshAgent>();
-            StateManager = gameObject.AddComponent<StateManager>();
+            StateManager = GetComponent<StateManager>();
+            InitializeState();
             EnemyHUD = GetComponentInChildren<EnemyHUD>();
-
-            // Initializing the dictionary for states
-            var states = new Dictionary<EnemyState, BaseState>
+        }
+        
+        internal void InitializeState()
+        {
+            var states = new Dictionary<EnemyState, BaseState>();
+            states.Clear();
+            switch (enemyType)
             {
-                { EnemyState.Patrol, new PatrolState(this) },
-                { EnemyState.Detect, new DetectState(this) },
-                { EnemyState.Chase, new ChaseState(this) },
-                { EnemyState.Attack, new AttackState(this) },
-                { EnemyState.Flee, new FleeState(this) }
-            };
+                case EnemyType.Basic:
+                    states[EnemyState.Patrol] = new PatrolState(this);
+                    states[EnemyState.Detect] = new DetectState(this);
+                    states[EnemyState.Chase] = new ChaseState(this);
+                    states[EnemyState.Attack] = new AttackState(this);
+                    states[EnemyState.Flee] = new FleeState(this);
+                    StateManager.InitializeStates(states, EnemyState.Patrol);
+                    break;
 
-            StateManager.InitializeStates(states, EnemyState.Patrol);
+                case EnemyType.Boss:
+                    states[EnemyState.Detect] = new DetectState(this);
+                    states[EnemyState.Chase] = new ChaseState(this);
+                    states[EnemyState.Attack] = new AttackState(this);
+                    StateManager.InitializeStates(states, EnemyState.Detect);
+                    break;
+
+                // Add additional cases for other enemy types
+                default:
+                    Debug.LogError($"Unhandled enemy type: {enemyType}");
+                    break;
+            }
         }
 
         public override void Initialize(PlayerController playerController)
@@ -80,6 +101,8 @@ namespace _Project.Scripts.Core.Enemy
             _playerDetection = GetComponent<PlayerDetection>();
 
             _playerDetection.Initialize(playerController);
+            
+            Enemy.speed = playerController.CharacterStats.movementSpeed;
         }
 
         public void Disable()

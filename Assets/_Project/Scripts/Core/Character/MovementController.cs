@@ -39,16 +39,7 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         [SerializeField] private Transform weaponParent;
 
-        ///<summary>
-        /// Property to access Movement Speed
-        /// </summary>
-        public float MoveSpeed => moveSpeed;
-
-        /// <summary>
-        /// The speed at which the player moves.
-        /// </summary>
-        [SerializeField] private float moveSpeed = 5f;
-
+       
         /// <summary>
         /// The CharacterController component attached to the character.
         /// </summary>
@@ -109,7 +100,7 @@ namespace _Project.Scripts.Core.Character
             // Can add jump here if needed by modifying the y component of the movement vector. 
 
             // Move the character via the character controller.
-            _characterController.Move(_currentMovement * (moveSpeed * Time.deltaTime));
+            _characterController.Move(_currentMovement * (PlayerController.CharacterStats.movementSpeed * Time.deltaTime));
         }
 
         /// <summary>

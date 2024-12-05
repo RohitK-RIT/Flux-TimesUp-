@@ -11,11 +11,9 @@ namespace _Project.Scripts.Core.Character
         private static readonly int IsWalking = Animator.StringToHash("IsWalking");
         [SerializeField] private Animator animator;
         private InputController _inputController;
-        private MovementController _movementController;
         private void Awake()
         {
             _inputController = GetComponent<InputController>();
-            _movementController = GetComponent<MovementController>();
         }
         private void OnEnable()
         {
@@ -48,8 +46,8 @@ namespace _Project.Scripts.Core.Character
         {
             animator.SetBool(IsWalking, moveInput.magnitude > 0);
             //Set Movement Blend Tree Parameters
-            animator.SetFloat(Horizontal, moveInput.x * _movementController.MoveSpeed , 0.1f, Time.deltaTime);
-            animator.SetFloat(Vertical, moveInput.y * _movementController.MoveSpeed, 0.1f, Time.deltaTime);
+            animator.SetFloat(Horizontal, moveInput.x * PlayerController.CharacterStats.movementSpeed , 0.1f, Time.deltaTime);
+            animator.SetFloat(Vertical, moveInput.y * PlayerController.CharacterStats.movementSpeed, 0.1f, Time.deltaTime);
         }
         private void SetMeleeAttackAnimation(bool isFighting)
         {

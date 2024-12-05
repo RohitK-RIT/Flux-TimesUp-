@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 938cc1d937e8c0546b8eb23a7d57b24c, type: 3}
-  m_Name: Static Enemy
+  m_Name: BossEnemy
   m_EditorClassIdentifier: 
-  maxHealth: 80
-  movementSpeed: 10
-  reloadSpeed: 1.2
+  maxHealth: 300
+  movementSpeed: 1
+  reloadSpeed: 1
   aimAccuracy: 0.9
-  cooldown: 18
-  playerAbilityType: 0
+  cooldown: 10
+  playerAbilityType: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TheKnight
   m_EditorClassIdentifier: 
   maxHealth: 200
-  movementSpeed: 1.2
+  movementSpeed: 3
   reloadSpeed: 1.2
   aimAccuracy: 0.9
   cooldown: 18
