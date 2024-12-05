@@ -25,7 +25,7 @@ namespace _Project.Scripts.Core.Loadout
         private readonly string[] _loadout = new string[3];
     
         // The name of the next scene to load after selection
-        private readonly string _nextSceneName = "PCG-Level";
+        private string _nextSceneName = "PCG-Level";
         
         private void Start()
         {
@@ -159,5 +159,9 @@ namespace _Project.Scripts.Core.Loadout
             WeaponDataSystem.Instance.SetSelectedWeapons(_loadout);
         }
 
+        public void SetSceneName(string sceneName)
+        {
+            _nextSceneName = sceneName;
+        }
     }
 }
