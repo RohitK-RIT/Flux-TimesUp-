@@ -9,6 +9,8 @@ namespace _Project.Scripts.Core.Weapons.Abilities.Shield
     /// </summary>
     public class ShieldAbility : Ability
     {
+        public override AbilityType Type => AbilityType.Shield;
+
         /// <summary>
         /// Gets a value indicating whether the shield is active.
         /// </summary>

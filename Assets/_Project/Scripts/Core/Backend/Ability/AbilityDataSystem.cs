@@ -45,7 +45,7 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// </summary>
         /// <param name="type">type of the ability</param>
         /// <returns>ability data of the specified type</returns>
-        private AbilityData GetAbilityData(AbilityType type)
+        public AbilityData GetAbilityData(AbilityType type)
         {
             // Get the ability data
             var data = abilityData.FirstOrDefault(data => data.Type == type);

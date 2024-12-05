@@ -144,7 +144,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Function to heal character's health by increasing the stat's value.
         /// </summary>
         /// <param name="healAmount"></param>
-        protected void Heal(int healAmount)
+        public void Heal(int healAmount)
         {
             currentHealth += healAmount;
             currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);

@@ -6,14 +6,26 @@ namespace _Project.Scripts.Core.Weapons.Abilities
 {
     public class AbilityPickup : MonoBehaviour, IPickupItem
     {
-        public AbilityType AbilityType => abilityType;
-
         [SerializeField] private AbilityType abilityType;
 
         public void OnItemPickup()
         {
-            // Switch the ability equipped to the new ability
-            LevelSceneController.Instance.Player.WeaponController.SwitchAbility(AbilityType);
+            var playerWeaponController = LevelSceneController.Instance.Player.WeaponController;
+            // Check if the player has an ability.
+            if (!playerWeaponController.CurrentAbility)
+            {
+                // If not, switch to the new ability.
+                playerWeaponController.SwitchAbility(abilityType);
+            }
+            // Check if the player has the same ability.
+            else if (playerWeaponController.CurrentAbility.Type != abilityType)
+            {
+                // If not, show the ability selection page.
+                LevelSceneController.Instance.AbilitySelectionPage.NextAbilityType = abilityType;
+                LevelSceneController.Instance.AbilitySelectionPage.Show();
+            }
+
+            // Destroy the pickup item.
             Destroy(gameObject);
         }
     }

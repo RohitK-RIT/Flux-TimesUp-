@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b119aba1073e4703a340035e4d0137bd, type: 3}
-  m_Name: SAS_Level2
+  m_Script: {fileID: 11500000, guid: 55d7361413ca4cb2a7ebbe30030e1406, type: 3}
+  m_Name: AS_Heal
   m_EditorClassIdentifier: 
   cooldown: 5
-  duration: 7
+  abilityDuration: 0

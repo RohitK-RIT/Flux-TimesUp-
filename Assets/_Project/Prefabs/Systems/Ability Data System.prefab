@@ -47,11 +47,13 @@ MonoBehaviour:
   abilityData:
   - name: Knight's Shield
     type: 1
-    description: A knight's shield
+    description: Get an unbreakable shield for certain duration
     icon: {fileID: 0}
     abilityPrefab: {fileID: 6273341532945828471, guid: f974981273515154fa599c4e936c8d71,
       type: 3}
-    abilityStats:
-    - {fileID: 11400000, guid: e7b0573282746e546a6bf8ae4e7f73e2, type: 2}
-    - {fileID: 11400000, guid: 743fac22fab6eb143974320ed5ba8896, type: 2}
-    - {fileID: 11400000, guid: f139e146c2af7c641ba8f3123c462000, type: 2}
+  - name: Nurse's Heal
+    type: 3
+    description: Heal yourself!!!
+    icon: {fileID: 0}
+    abilityPrefab: {fileID: -2087349204070215225, guid: 8a84414d93377824ea1d591a3b534da8,
+      type: 3}

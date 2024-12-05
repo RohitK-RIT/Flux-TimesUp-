@@ -9,6 +9,11 @@ namespace _Project.Scripts.Core.Weapons.Abilities
     public abstract class Ability : Weapon
     {
         /// <summary>
+        /// The type of the ability.
+        /// </summary>
+        public abstract AbilityType Type { get; }
+
+        /// <summary>
         /// Indicates if the cooldown is active.
         /// </summary>
         protected bool IsCooldownActive;
@@ -31,7 +36,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
             base.OnEquip();
             Used = false;
         }
-        
+
         public virtual void OnUpgrade()
         {
             Debug.Log("Ability has been upgraded!");

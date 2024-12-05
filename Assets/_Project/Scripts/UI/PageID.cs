@@ -4,6 +4,7 @@
     {
         MainMenu,
         SessionsPage,
-        LobbyPage
+        LobbyPage,
+        AbilitySelection
     }
 }
