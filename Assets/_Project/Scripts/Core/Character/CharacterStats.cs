@@ -16,6 +16,5 @@ namespace _Project.Scripts.Core.Character
         public float reloadSpeed;
         public float aimAccuracy;
         public int cooldown;
-        [FormerlySerializedAs("playerAbilityType")] [SerializeField] public AbilityType abilityType;
     }
 }

@@ -15,6 +15,11 @@ namespace _Project.Scripts.Core.Player_Controllers
     public sealed class LocalPlayerController : PlayerController
     {
         /// <summary>
+        /// The current pickup item the player has.
+        /// </summary>
+        public IPickupItem CurrentPickupItem { get; private set; }
+
+        /// <summary>
         /// Component that handles player input.
         /// </summary>
         private LocalInputController _localInputController;
@@ -31,8 +36,6 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// The wallet ID for the player.
         /// </summary>
         private string _walletID;
-        
-        private IPickupItem _currentPickupItem;
 
         protected override void Awake()
         {
@@ -159,7 +162,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             {
                 // Call the OnPickup method
                 pickupItem.OnItemPickup();
-                _currentPickupItem = pickupItem;    
+                CurrentPickupItem = pickupItem;
             }
         }
     }

@@ -71,13 +71,10 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         public override void Initialize(PlayerController playerController)
         {
             base.Initialize(playerController);
-
-            // The player controller has picked up the ability
-            LoadAbility(playerController.CharacterStats.abilityType);
             
             // Fetch selected weapons from WeaponDataSystem
             var selectedLoadoutWeaponIDs = WeaponDataSystem.Instance.GetSelectedWeapons();
-            if (selectedLoadoutWeaponIDs != null && selectedLoadoutWeaponIDs.Count > 0)
+            if (selectedLoadoutWeaponIDs is { Count: > 0 })
             {
                 LoadWeapon(selectedLoadoutWeaponIDs);
             }
@@ -239,6 +236,26 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         public void EndAttack()
         {
             CurrentWeapon.EndAttack();
+        }
+        
+        /// <summary>
+        /// Switches the ability to the specified type.
+        /// </summary>
+        /// <param name="abilityType">type of the ability</param>
+        public void SwitchAbility(AbilityType abilityType)
+        {
+            if (abilityType == AbilityType.None)
+            {
+                Debug.LogError("Ability type is None");
+                return;
+            }
+
+            // Destroy the current ability
+            if (CurrentAbility)
+                Destroy(CurrentAbility.gameObject);
+
+            // Load the new ability
+            LoadAbility(abilityType);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Core.Backend.Interfaces;
+using _Project.Scripts.Core.Backend.Scene_Control;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons.Abilities
@@ -11,7 +12,9 @@ namespace _Project.Scripts.Core.Weapons.Abilities
 
         public void OnItemPickup()
         {
-            Debug.Log("Picked up ability: " + AbilityType);
+            // Switch the ability equipped to the new ability
+            LevelSceneController.Instance.Player.WeaponController.SwitchAbility(AbilityType);
+            Destroy(gameObject);
         }
     }
 }
