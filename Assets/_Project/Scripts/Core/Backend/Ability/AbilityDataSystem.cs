@@ -21,7 +21,7 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// </summary>
         /// <param name="type">type of ability</param>
         /// <returns>player ability prefab</returns>
-        public PlayerAbility GetAbilityPrefab(PlayerAbilityType type)
+        public Weapons.Abilities.Ability GetAbilityPrefab(AbilityType type)
         {
             // Get the ability data
             var data = GetAbilityData(type);
@@ -46,7 +46,7 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// <param name="type">type of the ability</param>
         /// <param name="level">level of the ability stat you require</param>
         /// <returns>ability stats so of the specified type and level</returns>
-        public AbilityStats GetAbilityStats(PlayerAbilityType type, int level)
+        public AbilityStats GetAbilityStats(AbilityType type, int level)
         {
             // Get the ability data
             var data = GetAbilityData(type);
@@ -70,7 +70,7 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// </summary>
         /// <param name="type">type of the ability</param>
         /// <returns>ability data of the specified type</returns>
-        private AbilityData GetAbilityData(PlayerAbilityType type)
+        private AbilityData GetAbilityData(AbilityType type)
         {
             // Get the ability data
             var data = abilityData.FirstOrDefault(data => data.Type == type);

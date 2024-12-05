@@ -6,7 +6,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities.Heal
     /// <summary>
     /// Represents the heal ability for the player.
     /// </summary>
-    public class HealAbility : PlayerAbility
+    public class HealAbility : Ability
     {
         [SerializeField] private HealAbilityStats stats;
 

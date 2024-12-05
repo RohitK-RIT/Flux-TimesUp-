@@ -6,7 +6,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
     /// <summary>
     /// Abstract base class for player abilities, inheriting from Weapon.
     /// </summary>
-    public abstract class PlayerAbility : Weapon
+    public abstract class Ability : Weapon
     {
         /// <summary>
         /// Indicates if the cooldown is active.
