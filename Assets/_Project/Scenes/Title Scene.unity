@@ -224,7 +224,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 790130004cddc6f42bf04bbd89a24af5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d198e7523a26e2b4987390bcb8baf0de, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -596,40 +596,40 @@ MonoBehaviour:
   weaponDatabase:
   - weaponPrefab: {fileID: 7052611767422597503, guid: aa63e3324934bac429ef80736eae850f,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: 22bbb6c749db0db488c411f36c9e466c, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
   - weaponPrefab: {fileID: 7052611767422597503, guid: df921edb9f49c4d6db60534cf7030cc6,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: 9206cd9a80cc94535895cc526f898687, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
   - weaponPrefab: {fileID: 7052611767422597503, guid: 2b29e3926fe1e43f2ab1ee7f18898532,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: b47e1c628636e4dcf9497816a23a3b62, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
   - weaponPrefab: {fileID: 7052611767422597503, guid: c5aa4b92531134ff790546e5fec10324,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: cfa420581ccd44113ba917707e2539e0, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
   - weaponPrefab: {fileID: 7052611767422597503, guid: 94c751cde20c341418dd8ecbf7ed29dd,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: 32d7407868afb401a843cb8671c8fadb, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
   - weaponPrefab: {fileID: 7052611767422597503, guid: b7ada101e3eea4e6aaa8f801e37c600b,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: 9e3a00cfd4cb44694bfbd32d71dcf170, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
   - weaponPrefab: {fileID: 1210268584845851345, guid: 12bf25de04169a047b37eb23e5f18c0e,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: c11ac6f87a666944f90b7c95ded1c8f9, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
   - weaponPrefab: {fileID: 1210268584845851345, guid: 298cf0879a4e440bdb2d9332db9d9c98,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: 914aa36391224451f8abaa53f6fed93e, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
   - weaponPrefab: {fileID: 1210268584845851345, guid: 6906ec865774943a4b605177bacee637,
       type: 3}
-    weaponStats:
-    - {fileID: 11400000, guid: 87af9c2bfce48474fae6c5c2394b032a, type: 2}
+    icon: {fileID: 0}
+    weaponStats: {fileID: 0}
 --- !u!4 &1207818839
 Transform:
   m_ObjectHideFlags: 0

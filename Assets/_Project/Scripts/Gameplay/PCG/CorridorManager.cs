@@ -12,7 +12,7 @@ namespace _Project.Scripts.Gameplay.PCG {
         public GameObject corridorPrefab; // Prefab used for creating corridor segments.
         private DungeonGenerator _dungeonGenerator; // Reference to the dungeon generator
         public List<GameObject> corridors; // List of all corridor segments in the dungeon.
-        public Dictionary<Vector2Int, GameObject> CorridorDictionary; // Dictionary of all corridor segments with their position as key in the dungeon.
+        //public Dictionary<Vector2Int, GameObject> CorridorDictionary; // Dictionary of all corridor segments with their position as key in the dungeon.
         public GameObject doorPrefab; // Prefab used for creating doors.
         private RoomManager _roomManager; // Reference to the room manager.
         
@@ -22,11 +22,11 @@ namespace _Project.Scripts.Gameplay.PCG {
         private void Awake() {
             _dungeonGenerator = GetComponent<DungeonGenerator>();
             corridors = new List<GameObject>();
-            CorridorDictionary = new Dictionary<Vector2Int, GameObject>();
+            //CorridorDictionary = new Dictionary<Vector2Int, GameObject>();
             _roomManager = GetComponent<RoomManager>();
         }
 
-        public void CheckExitCorridors()
+        /*public void CheckExitCorridors()
         {
             foreach (var room in _roomManager.rooms)
             {
@@ -40,13 +40,13 @@ namespace _Project.Scripts.Gameplay.PCG {
                             Vector2Int corridorPosVec2 = new Vector2Int((int)corridor.transform.position.x, (int)corridor.transform.position.z); 
                             var keyPosFloat = _dungeonGenerator.GridSystem.GetGridCellPositionFromWorldPosition(corridorPosVec2.x, corridorPosVec2.y, _dungeonGenerator.GridOrigin);
                             var keyPos = new Vector2Int((int)keyPosFloat.x, (int)keyPosFloat.y);
-                            CorridorDictionary[keyPos] = corridor;
+                            //CorridorDictionary[keyPos] = corridor;
                             corridors.Add(corridor);
                         }
                     }
                 }
             }
-        }
+        }*/
         /// <summary>
         /// Instantiates corridor on the path between two points.
         /// </summary>
@@ -55,7 +55,7 @@ namespace _Project.Scripts.Gameplay.PCG {
             for (var i = 0; i < path.Count; i++)
             {
                 GameObject corridorSegment = null;
-                Vector2Int keyPos;
+                /*Vector2Int keyPos;
                 if (i - 1 < 0)
                 {
                     //starting block
@@ -80,10 +80,12 @@ namespace _Project.Scripts.Gameplay.PCG {
                 
                 var previous = path[i - 1];
                 var current = path[i];
-                var next = path[i + 1];
+                var next = path[i + 1];*/
                 
                 var position = _dungeonGenerator.GridSystem.GetCellWorldPosition(path[i].x, path[i].y, gridOrigin);
-                keyPos = new Vector2Int((int)path[i].x, (int)path[i].y);
+                corridorSegment = Instantiate(corridorPrefab, position, Quaternion.identity);
+                corridors.Add(corridorSegment);
+                /*keyPos = new Vector2Int((int)path[i].x, (int)path[i].y);
                 
                 if(CorridorDictionary.ContainsKey(keyPos))
                 {
@@ -152,14 +154,14 @@ namespace _Project.Scripts.Gameplay.PCG {
                         corridorSegment.transform.Find("WallN").gameObject.SetActive(false);
                         corridorSegment.transform.Find("WallW").gameObject.SetActive(false);
                     }
-                }
+                }*/
             }
         }
         
         /// <summary>
         /// Method to remove overlapping corridor walls.
         /// </summary>
-        public void RemoveOverlappingCorridorWalls()
+        /*public void RemoveOverlappingCorridorWalls()
         {
             //can be removed since corridors are already added to the list in the checkexitcorridors method
             foreach (var room in _roomManager.rooms)
@@ -187,14 +189,14 @@ namespace _Project.Scripts.Gameplay.PCG {
                     CheckOverlappingWalls(corridor, otherCorridor);
                 }
             }
-        }
+        }*/
         
         /// <summary>
         /// Method to check if the walls of two corridors are overlapping.
         /// </summary>
         /// <param name="corridor"></param>
         /// <param name="otherCorridor"></param>
-        private void CheckOverlappingWalls(GameObject corridor, GameObject otherCorridor)
+        /*private void CheckOverlappingWalls(GameObject corridor, GameObject otherCorridor)
         {
             foreach (Transform wallChild in corridor.transform)
             {
@@ -212,7 +214,7 @@ namespace _Project.Scripts.Gameplay.PCG {
                     }
                 }
             }
-        }
+        }*/
 
         /// <summary>
         /// Check if the corridor is overlapping with any adjacent walls.
@@ -220,14 +222,16 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <param name="wallOneBounds"></param>
         /// <param name="wallTwo"></param>
         /// <returns></returns>
-        private bool IsWallsOverlapping(Bounds wallOneBounds, GameObject wallTwo)
+        /*private bool IsWallsOverlapping(Bounds wallOneBounds, GameObject wallTwo)
         {
             var wallTwoCollider = wallTwo.GetComponent<BoxCollider>();
             return wallOneBounds.Intersects(wallTwoCollider.bounds);
-        }
+        }*/
+        
         /// <summary>
         /// Method to close all unconnected rooms with doors.
         /// </summary>
+        
         public void CloseUnconnectedRooms()
         {
             foreach (var room in _roomManager.rooms)
@@ -259,7 +263,7 @@ namespace _Project.Scripts.Gameplay.PCG {
         /// <summary>
         /// Method to clean up corridors that are inside rooms.
         /// </summary>
-        public void CleanUp()
+        /*public void CleanUp()
         {
             foreach (var corridor in corridors)
             {
@@ -276,6 +280,6 @@ namespace _Project.Scripts.Gameplay.PCG {
                     }
                 }
             }
-        }
+        }*/
     }
 }
