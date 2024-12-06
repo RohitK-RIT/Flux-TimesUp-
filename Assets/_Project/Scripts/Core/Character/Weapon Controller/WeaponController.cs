@@ -63,6 +63,8 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// </summary>
         public Ability CurrentAbility { get; private set; }
 
+        [SerializeField] private bool hasPreMadeLoadout;
+
         /// <summary>
         /// The index of the current weapon.
         /// </summary>
@@ -73,14 +75,17 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
             base.Initialize(playerController);
             
             // Fetch selected weapons from WeaponDataSystem
-            var selectedLoadoutWeaponIDs = WeaponDataSystem.Instance.GetSelectedWeapons();
-            if (selectedLoadoutWeaponIDs is { Count: > 0 })
+            if (!hasPreMadeLoadout)
             {
-                LoadWeapon(selectedLoadoutWeaponIDs);
-            }
-            else
-            {
-                Debug.LogError("No selected weapons found in WeaponDataSystem");
+                var selectedLoadoutWeaponIDs = WeaponDataSystem.Instance.GetSelectedWeapons();
+                if (selectedLoadoutWeaponIDs is { Count: > 0 })
+                {
+                    LoadWeapon(selectedLoadoutWeaponIDs);
+                }
+                else
+                {
+                    Debug.LogError("No selected weapons found in WeaponDataSystem");
+                }
             }
             
             // The player controller has picked up all the weapons
