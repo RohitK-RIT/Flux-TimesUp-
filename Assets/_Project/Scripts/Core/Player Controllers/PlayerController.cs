@@ -3,15 +3,18 @@ using _Project.Scripts.Core.Character;
 using _Project.Scripts.Core.Character.Weapon_Controller;
 using _Project.Scripts.Core.Weapons;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Player_Controllers
 {
     /// <summary>
     /// Base class for player controllers.
     /// </summary>
-    [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(AnimationController) )]
+    [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(AnimationController))]
     public abstract class PlayerController : MonoBehaviour
     {
+        public event Action<PlayerController> OnDeath;
+
         /// <summary>
         /// Component that handles movement.
         /// </summary>
@@ -21,7 +24,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Property to access the weapon controller.
         /// </summary>
         public WeaponController WeaponController { get; private set; }
-        
+
         /// <summary>
         /// Property to access the animation controller.
         /// </summary>
@@ -30,7 +33,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Property to access the char stats.
         /// </summary>
-        public CharacterStats CharacterStats => characterStats;
+        public CharacterStats Stats => stats;
 
         /// <summary>
         /// Property to access the player's current health.
@@ -50,7 +53,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// <summary>
         /// Component that handles Character Stats.
         /// </summary>
-        [SerializeField] private CharacterStats characterStats;
+        [SerializeField] private CharacterStats stats;
 
         /// <summary>
         /// Layer mask for the friendly.
@@ -83,7 +86,7 @@ namespace _Project.Scripts.Core.Player_Controllers
             AnimationController.Initialize(this);
 
             // Initialize the player's health
-            currentHealth = CharacterStats.maxHealth;
+            currentHealth = Stats.maxHealth;
         }
 
         /// <summary>
@@ -133,7 +136,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         public virtual void TakeDamage(Weapon weapon, float damageDealt)
         {
             currentHealth -= damageDealt;
-            currentHealth = Mathf.Clamp(currentHealth, 0f, CharacterStats.maxHealth);
+            currentHealth = Mathf.Clamp(currentHealth, 0f, Stats.maxHealth);
             OnHitConfirmed(weapon.CurrentPlayerController);
 
             if (currentHealth <= 0)
@@ -144,10 +147,10 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Function to heal character's health by increasing the stat's value.
         /// </summary>
         /// <param name="healAmount"></param>
-        protected void Heal(int healAmount)
+        public void Heal(int healAmount)
         {
             currentHealth += healAmount;
-            currentHealth = Mathf.Clamp(currentHealth, 0, CharacterStats.maxHealth);
+            currentHealth = Mathf.Clamp(currentHealth, 0, Stats.maxHealth);
         }
 
         /// <summary>
@@ -158,6 +161,8 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             // Handle the character's death
             enemyPlayer.OnKillConfirmed(this);
+            
+            OnDeath?.Invoke(this);
         }
 
         protected virtual void OnKillConfirmed(PlayerController enemyPlayer)

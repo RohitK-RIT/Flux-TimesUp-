@@ -102,7 +102,7 @@ namespace _Project.Scripts.Core.Enemy
 
             _playerDetection.Initialize(playerController);
             
-            Enemy.speed = playerController.CharacterStats.movementSpeed;
+            Enemy.speed = playerController.Stats.movementSpeed;
         }
 
         public void Disable()

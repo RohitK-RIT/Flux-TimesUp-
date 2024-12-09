@@ -6,8 +6,13 @@ namespace _Project.Scripts.Core.Weapons.Abilities
     /// <summary>
     /// Abstract base class for player abilities, inheriting from Weapon.
     /// </summary>
-    public abstract class PlayerAbility : Weapon
+    public abstract class Ability : Weapon
     {
+        /// <summary>
+        /// The type of the ability.
+        /// </summary>
+        public abstract AbilityType Type { get; }
+
         /// <summary>
         /// Indicates if the cooldown is active.
         /// </summary>
@@ -31,7 +36,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
             base.OnEquip();
             Used = false;
         }
-        
+
         public virtual void OnUpgrade()
         {
             Debug.Log("Ability has been upgraded!");

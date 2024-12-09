@@ -511,7 +511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e559bbdc9b3e45678a387662f720f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterStats: {fileID: 11400000, guid: 16e91a3ba8307664e97e940872c372e1, type: 2}
+  stats: {fileID: 11400000, guid: 16e91a3ba8307664e97e940872c372e1, type: 2}
   friendlyLayer:
     serializedVersion: 2
     m_Bits: 1024

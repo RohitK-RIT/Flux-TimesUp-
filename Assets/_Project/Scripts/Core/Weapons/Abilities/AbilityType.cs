@@ -1,6 +1,6 @@
 namespace _Project.Scripts.Core.Weapons.Abilities
 { 
-    public enum PlayerAbilityType
+    public enum AbilityType
         {
             None,
             Shield,

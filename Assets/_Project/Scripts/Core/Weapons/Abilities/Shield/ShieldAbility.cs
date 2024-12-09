@@ -7,8 +7,10 @@ namespace _Project.Scripts.Core.Weapons.Abilities.Shield
     /// <summary>
     /// Represents the shield ability for the player.
     /// </summary>
-    public class ShieldAbility : PlayerAbility
+    public class ShieldAbility : Ability
     {
+        public override AbilityType Type => AbilityType.Shield;
+
         /// <summary>
         /// Gets a value indicating whether the shield is active.
         /// </summary>

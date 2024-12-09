@@ -92,7 +92,7 @@ namespace _Project.Scripts.Core.Character
             if (MoveInput == Vector2.zero) return;
 
             // Assign horizontal and vertical inputs to the movement vector
-            _moveDirection = (body.right * MoveInput.x + body.forward * MoveInput.y) * PlayerController.CharacterStats.movementSpeed;
+            _moveDirection = (body.right * MoveInput.x + body.forward * MoveInput.y) * PlayerController.Stats.movementSpeed;
 
             // Applying gravity for the y value
             HandleGravity();
@@ -100,7 +100,7 @@ namespace _Project.Scripts.Core.Character
             // Can add jump here if needed by modifying the y component of the movement vector. 
 
             // Move the character via the character controller.
-            _characterController.Move(_currentMovement * (PlayerController.CharacterStats.movementSpeed * Time.deltaTime));
+            _characterController.Move(_currentMovement * (PlayerController.Stats.movementSpeed * Time.deltaTime));
         }
 
         /// <summary>
