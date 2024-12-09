@@ -10,9 +10,11 @@ namespace _Project.Scripts.Core.Player_Controllers
     /// <summary>
     /// Base class for player controllers.
     /// </summary>
-    [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(AnimationController) )]
+    [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(AnimationController))]
     public abstract class PlayerController : MonoBehaviour
     {
+        public event Action<PlayerController> OnDeath;
+
         /// <summary>
         /// Component that handles movement.
         /// </summary>
@@ -22,7 +24,7 @@ namespace _Project.Scripts.Core.Player_Controllers
         /// Property to access the weapon controller.
         /// </summary>
         public WeaponController WeaponController { get; private set; }
-        
+
         /// <summary>
         /// Property to access the animation controller.
         /// </summary>
@@ -159,6 +161,8 @@ namespace _Project.Scripts.Core.Player_Controllers
         {
             // Handle the character's death
             enemyPlayer.OnKillConfirmed(this);
+            
+            OnDeath?.Invoke(this);
         }
 
         protected virtual void OnKillConfirmed(PlayerController enemyPlayer)
