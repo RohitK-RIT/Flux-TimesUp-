@@ -56,7 +56,7 @@ namespace _Project.Scripts.Gameplay.PCG
         
         private void OnAllEnemiesDead()
         {
-            AbilitySpawner.SpawnRandomAbilities(this);
+            AbilitySpawner.SpawnRandomAbilities(transform, size);
         }
     }
 }
