@@ -46,7 +46,7 @@ namespace _Project.Scripts.Core.Backend.Ability
 
                     if (IsValidSpawnPosition(spawnPosition))
                     {
-                        SpawnAbility(parent.transform, abilityType, spawnPosition);
+                        SpawnAbility(abilityType, parent.transform, spawnPosition);
                         i++; // Increment the counter
                     }
                     else
@@ -76,10 +76,10 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// <summary>
         /// Spawns the ability in the room.
         /// </summary>
-        /// <param name="parent"></param>
-        /// <param name="type"></param>
-        /// <param name="position"></param>
-        private static void SpawnAbility(Transform parent, AbilityType type, Vector3 position)
+        /// <param name="type">type of ability to spawn</param>
+        /// <param name="parent">parent to spawn the ability in</param>
+        /// <param name="position">position at which the ability should spawn</param>
+        private static void SpawnAbility(AbilityType type, Transform parent, Vector3 position)
         {
             // Get the ability pickup prefab
             var abilityPrefab = AbilityDataSystem.Instance.GetAbilityPickupPrefab(type);
