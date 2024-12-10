@@ -161,7 +161,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private void FireBullet()
         {
-            if (_reloading)
+            if (CurrentAmmo == 0)
                 return;
 
             var spreadOffset = new Vector3(Random.Range(-stats.Spread, stats.Spread),
@@ -189,7 +189,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             _lastShootTime = DateTime.Now;
 
             // Decrease the magazine count and reload if it's empty.
-            if (--CurrentAmmo != 0) return;
+            if (--CurrentAmmo != 0)
+                return;
 
             StartCoroutine(ReloadCoroutine());
         }
@@ -244,6 +245,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private IEnumerator ReloadCoroutine()
         {
+            if (MaxAmmo == 0)
+                yield break;
+
             if (AttackCoroutine != null)
                 StopCoroutine(AttackCoroutine);
 
@@ -251,8 +255,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             _reloading = true;
             yield return new WaitForSeconds(stats.ReloadTime);
 
-            CurrentAmmo = MaxAmmo < stats.MagazineSize ? MaxAmmo : stats.MagazineSize;
-            MaxAmmo = math.clamp(MaxAmmo - stats.MagazineSize, 0, int.MaxValue);
+            CurrentAmmo = math.min(stats.MagazineSize, MaxAmmo);
+            MaxAmmo -= CurrentAmmo;
 
             _reloading = false;
 
