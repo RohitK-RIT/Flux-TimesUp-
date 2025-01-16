@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: Pistol4
   weaponType: 1
-  weaponName: TBD
+  weaponName: B34R
   damage: 15
   range: 75
   attackSpeed: 9

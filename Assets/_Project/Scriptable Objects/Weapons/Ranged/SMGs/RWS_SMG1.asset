@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: SMG1
   weaponType: 0
-  weaponName: TBD
+  weaponName: Thompson
   damage: 18
   range: 75
   attackSpeed: 9

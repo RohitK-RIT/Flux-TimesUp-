@@ -52,7 +52,7 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
             }
             
             // check if any player is in the player detection range
-            return _enemyInputController.IsPlayerInDetectionRange() ? 
+            return _enemyInputController.IsPlayerInDetectionRange()? 
                 // If player is in Detect range, stay in detected state
                 EnemyState.Detect :
                 EnemyState.Patrol;

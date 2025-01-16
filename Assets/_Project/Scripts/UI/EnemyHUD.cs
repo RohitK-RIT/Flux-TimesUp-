@@ -28,7 +28,7 @@ namespace _Project.Scripts.UI
         private void UpdateHealthBar()
         {
             healthBar.value = enemy.CurrentHealth;
-            healthBar.maxValue = enemy.CharacterStats.maxHealth;
+            healthBar.maxValue = enemy.Stats.maxHealth;
         }
     }
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: Shotgun1
   weaponType: 0
-  weaponName: TBD
+  weaponName: SPAS-12
   damage: 80
   range: 50
   attackSpeed: 0.6

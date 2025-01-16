@@ -1,178 +1,447 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using _Project.Scripts.Core.Backend.Scene_Control;
+using _Project.Scripts.Core.Enemy;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Gameplay.PCG
 {
     /// <summary>
-    /// Generates a dungeon layout by placing rooms and a boss room on a plane.
+    /// Generates the dungeon layout, including rooms and corridors.
     /// </summary>
     public class DungeonGenerator : MonoBehaviour
     {
-        /// <summary>
-        /// Array of room prefabs to be used in the dungeon.
-        /// </summary>
-        [SerializeField] private GameObject[] roomPrefabs;
-        /// <summary>
-        /// Prefab for the boss room.
-        /// </summary>
-        [SerializeField] private GameObject bossRoomPrefab;
-        /// <summary>
-        /// Number of players, which influences the number of rooms generated.
-        /// </summary>
-        [SerializeField] private int playerCount;
-        /// <summary>
-        /// List of positions that are already occupied by rooms.
-        /// </summary>
-        private List<Vector3> _occupiedPositions = new List<Vector3>();
-        /// <summary>
-        /// Dimensions of the plane on which the dungeon is generated.
-        /// </summary>
-        private Vector2 _planeDimensions; 
+        #region Variables
         
+        // Reference to the RoomManager component.
+        [SerializeField] private RoomManager roomManager;
+     
+        /// Reference to the CorridorManager component.
+        [SerializeField] private CorridorManager corridorManager;
+        
+        // Prefab for the starting room.
+        public GameObject startRoomPrefab;
+        
+        // Array of exploration room prefabs.
+        public Room[] explorationRooms;
+        
+        // Prefab for the boss room.
+        public GameObject bossRoomPrefab;
+        
+        // Number of exploration rooms to generate.
+        public int explorationRoomCount;
+
+        // Gets the grid system used for cell-based placement.
+        public GridSystem GridSystem { get; private set; }
+        
+        // Gets the origin point of the grid in the world.
+        public Vector3 GridOrigin { get; private set; }
+        
+        // List of unconnected rooms.
+        private List<Room> _unconnectedRooms;
+        
+        // List of connected rooms.
+        private List<Room> _connectedRooms;
+
+        #endregion
+
+        /// <summary>
+        /// Initializes the grid system based on the plane's size.
+        /// </summary>
+        private void Awake()
+        {
+            InitializeGrid();
+        }
+        
+        /// <summary>
+        /// Method to initialize the grid system based on the plane's size and List for both connected and Unconnected Rooms.
+        /// </summary>
+        private void InitializeGrid()
+        {
+            // Assuming the plane is scaled in X and Z axes
+            var planeSizeX = transform.localScale.x * 10; 
+            var planeSizeZ = transform.localScale.z * 10;
+
+            // Initialize the GridSystem
+            GridSystem = new GridSystem(
+                Mathf.FloorToInt(planeSizeX / 5), // Divide plane width by cell size
+                Mathf.FloorToInt(planeSizeZ / 5), // Divide plane height by cell size
+                5
+            );
+            GridOrigin = transform.position - new Vector3(planeSizeX / 2, 0, planeSizeZ / 2); // Bottom-left corner
+            _unconnectedRooms = new List<Room>();
+            _connectedRooms = new List<Room>();
+        }
+
+        /// <summary>
+        /// Starts the dungeon generation process.
+        /// </summary>
         private void Start()
         {
-            SetDungeonDimensions();
+            GridSystem.ResetVisitedCells();
             GenerateDungeon();
+            PopulatePlayer();
+            PopulateEnemies();
+            //corridorManager.RemoveOverlappingCorridorWalls();
+            //corridorManager.CleanUp();
         }
-        
-        /// <summary>
-        /// Sets the dimensions of the dungeon based on its scale.
-        /// This is will modified in the future dynamically based on the number of players connected in the game.
-        /// </summary>
-        private void SetDungeonDimensions()
-        {
-            var planeObject = GameObject.Find("Dungeon");
-            if (planeObject != null)
-            {
-                var scale = planeObject.transform.localScale;
-                _planeDimensions = new Vector2(10 * scale.x, 10 * scale.z);
-            }
-            else
-            {
-                Debug.LogWarning("Plane object not found. Using default dimensions.");
-                _planeDimensions = new Vector2(100, 100); // Default size if "Plane" is missing
-            }
-        }
-        /// <summary>
-        /// Generates the dungeon by placing rooms and the boss room.
-        /// </summary>
-        private void GenerateDungeon()
-        {
-            PlaceBossRoom();
-            var roomCount = GetRoomCount();
-        
-            // Create a list of possible grid positions based on the calculated dungeon dimensions
-            var availablePositions = GenerateGridPositions();
 
-            // Randomly place composite rooms without overlap
-            for (var i = 0; i < roomCount; i++)
+        private void PopulatePlayer()
+        {
+            
+        }
+        private void PopulateEnemies()
+        {
+            foreach (var room in roomManager.rooms)
             {
-                if (availablePositions.Count == 0)
+                //no enemies in the start room
+                if (room == roomManager.rooms[0])
                 {
-                    Debug.LogWarning("No more available positions for rooms.");
-                    break;
+                    continue;
                 }
-
-                // Choose a random position from the available grid positions
-                var randomIndex = Random.Range(0, availablePositions.Count);
-                var position = availablePositions[randomIndex];
-                availablePositions.RemoveAt(randomIndex); // Remove position to avoid reuse
-
-                // Randomly select a room prefab from the array
-                var roomPrefab = roomPrefabs[Random.Range(0, roomPrefabs.Length)];
-            
-                // Calculate the room size based on the number of tiles under the "Ground" parent
-                var roomSize = CalculateRoomSize(roomPrefab);
-            
-                // Check for overlap and instantiate if there's no overlap
-                if (IsOverlapping(position, roomSize)) continue;
-                _occupiedPositions.Add(position);
-                // Set parent as dungeon
-                var instantiatedRoom = Instantiate(roomPrefab, position, Quaternion.identity);
-                instantiatedRoom.transform.parent = GameObject.Find("Dungeon").transform;
+                var enemies = FindObjectsOfType<EnemyController>(true);
+                LevelSceneController.Instance.enemies = enemies;
             }
         }
         /// <summary>
-        /// Places the boss room at a specific position.
+        /// Generates the dungeon layout, including placing rooms and connecting them with corridors.
         /// </summary>
-        private void PlaceBossRoom()
-        {
-            var bossRoomPosition = Vector3.zero; // Place at the center or a specific offset
-            var bossRoomSize = CalculateRoomSize(bossRoomPrefab);
+        private void GenerateDungeon() {
+            
+            _unconnectedRooms.Clear();
+            _connectedRooms.Clear();
+            
+            // Start room (bottom-left of the grid)
+            var startRoom = startRoomPrefab.GetComponent<Room>();
+            //var startPosition = GridOrigin + new Vector3(startRoom.size.x / 2, 0, startRoom.size.z / 2); // Bottom-left corner
+            var startPosition = new Vector3(-60, 0, -55);
+            roomManager.PlaceRoom(startRoom, startPosition);
 
-            if (!IsOverlapping(bossRoomPosition, bossRoomSize))
-            {
-                _occupiedPositions.Add(bossRoomPosition);
-                var instantiatedBossRoom = Instantiate(bossRoomPrefab, bossRoomPosition, Quaternion.identity);
-                instantiatedBossRoom.transform.parent = GameObject.Find("Dungeon").transform;
+            // Boss room (top-right of the grid)
+            var bossRoom = bossRoomPrefab.GetComponent<Room>();
+            /*var bossPosition = GridOrigin + new Vector3(
+                (GridSystem.GridWidth - Mathf.Ceil(bossRoom.size.x / GridSystem.CellSize)) * GridSystem.CellSize,
+                bossRoom.transform.position.y,
+                (GridSystem.GridHeight - Mathf.Ceil(bossRoom.size.z / GridSystem.CellSize)) * GridSystem.CellSize
+            );*/
+            //bossPosition += new Vector3(bossRoom.size.x / 2, 0, bossRoom.size.z / 2);
+            var bossPosition = new Vector3(60, 0, 55);
+            roomManager.PlaceRoom(bossRoom, bossPosition);
+
+            // Exploration rooms
+            for (var i = 0; i < explorationRoomCount; i++) {
+                var explorationRoomPrefab = explorationRooms[Random.Range(0, explorationRooms.Length)];
+                var explorationRoom = explorationRoomPrefab.GetComponent<Room>();
+
+                var position = roomManager.FindValidPosition(explorationRoom);
+                if (position != Vector3.zero) {
+                    roomManager.PlaceRoom(explorationRoom, position);
+                } else {
+                    Debug.LogError($"Failed to place Exploration Room {i} - no valid position found!");
+                }
             }
-            else
+            _connectedRooms.Add(roomManager.rooms[0]);
+            foreach (var t in roomManager.rooms)
             {
-                Debug.LogWarning("Could not place boss room at the desired position due to overlap.");
+                if(t!=roomManager.rooms[0])
+                    _unconnectedRooms.Add(t);
             }
+
+            //corridorManager.CheckExitCorridors();
+            ConnectAllRooms();
+            corridorManager.CloseUnconnectedRooms();
         }
+        
         /// <summary>
-        /// Determines the number of rooms to generate based on the player count.
+        /// Method to destroy the dungeon layout.
         /// </summary>
-        /// <returns>The number of rooms to generate.</returns>
-        private int GetRoomCount()
+        private void DestroyDungeon()
         {
-            return playerCount switch
+            foreach (var room in roomManager.rooms)
             {
-                1 => 7,
-                2 => 13,
-                3 => 15,
-                _ => 7
+                if(room.roomType == RoomType.Start || room.roomType == RoomType.Boss)
+                {
+                    foreach(var exit in room.Exits)
+                    {
+                        exit.isConnected = false;
+                    }
+                    continue;
+                }
+                Destroy(room.gameObject);
+            }
+
+            roomManager.rooms.Clear();
+
+            foreach (var corridor in corridorManager.corridors)
+            {
+                Destroy(corridor);
+            }
+            corridorManager.corridors.Clear();
+            //corridorManager.CorridorDictionary.Clear();
+        }
+
+        /// <summary>
+        /// Method to find the path between two points using the A* algorithm.
+        /// </summary>
+        /// <param name="startPos"></param>
+        /// <param name="goalPos"></param>
+        /// <returns></returns>
+        #region AStarSearch
+        private List<Vector2> AStarSearch(Vector2 startPos, Vector2 goalPos)
+        {
+            //Create a list to store the open cells
+            var open = new List<Vector2>();
+
+            //Create a list to store the closed cells
+            var closed = new List<Vector2>();
+            
+            //Add the start position to the open list
+            open.Add(startPos);
+            
+            //Dictionary to store the parent of each cell
+            var parent = new Dictionary<Vector2,Vector2>();
+            
+            //Dictionary to store the cost of each cell
+            var cost = new Dictionary<Vector2,int>();
+            
+            //Dictionary to store the g value of each cell
+            var g = new Dictionary<Vector2,int>
+            {
+                [startPos] = 0
             };
-        }
-        /// <summary>
-        /// Generates a list of possible grid positions for room placement.
-        /// </summary>
-        /// <returns>A list of possible grid positions.</returns>
-        private List<Vector3> GenerateGridPositions()
-        {
-            var positions = new List<Vector3>();
-        
-            var xCount = Mathf.FloorToInt(_planeDimensions.x / 20); // Approximate grid spacing
-            var zCount = Mathf.FloorToInt(_planeDimensions.y / 20); // to be adjusted based on level designs.
 
-            for (var x = 0; x < xCount; x++)
+            cost[startPos]  = g[startPos] + ManhattanDistance((int)startPos.x, (int)startPos.y, (int)goalPos.x, (int)goalPos.y);
+            
+            //While the open list is not empty
+            while (open.Count != 0)
             {
-                for (var z = 0; z < zCount; z++)
+                //Get the cell with the lowest cost
+                var current = open[0];
+                foreach (var cell in open)
                 {
-                    var posX = x * 20 - _planeDimensions.x / 2 + 10; // to be adjusted based on level designs.
-                    var posZ = z * 20 - _planeDimensions.y / 2 + 10;
-                    positions.Add(new Vector3(posX, 0, posZ));
+                    if (cost[cell] < cost[current])
+                    {
+                        current = cell;
+                    }
+                }
+                //Remove the current cell from the open list
+                open.Remove(current);
+                
+                //Add the current cell to the closed list
+                closed.Add(current);
+                
+                //If the current cell is the goal cell
+                if (current == goalPos)
+                {
+                    //Return the path
+                    var path = new List<Vector2>();
+                    while (current != startPos)
+                    {
+                        path.Add(current);
+                        current = parent[current];
+                    }
+                    path.Add(startPos);
+                    path.Reverse();
+                    return path;
+                }
+                // Get the neighbours of the current cell
+                var neighbours = new List<Vector2>
+                {
+                    new Vector2(current.x + 1, current.y),
+                    new Vector2(current.x - 1, current.y),
+                    new Vector2(current.x, current.y+1),
+                    new Vector2(current.x, current.y-1)
+                };
+
+                foreach (var neighbour in neighbours)
+                {
+                    if (neighbour == goalPos)
+                    {
+                        var path = new List<Vector2> { goalPos };
+                        var cur = current;
+                        while (cur != startPos)
+                        {
+                            path.Add(cur);
+                            cur = parent[cur];
+                        }
+                        path.Add(startPos);
+                        path.Reverse();
+                        return path;
+                        
+                    }
+                    //If the neighbour is not walkable or is in the closed list, skip it
+                    if (neighbour.x < 0 || neighbour.x >= GridSystem.VisitedCells.GetLength(0) || neighbour.y < 0 || neighbour.y >= GridSystem.VisitedCells.GetLength(1))
+                    {
+                        continue;
+                    }
+                    if (GridSystem.IsCellOccupied((int)neighbour.x,(int)neighbour.y) || closed.Contains(neighbour))
+                    {
+                        continue;
+                    }
+                    
+                    //Calculate the cost of the neighbour
+                    var newCost = g[current] + 1;
+                    
+                    //If the neighbour is not in the open list, add it
+                    if (!open.Contains(neighbour))
+                    {
+                        open.Add(neighbour);
+                    }
+                    //If the new cost is greater than the cost of the neighbour, skip it
+                    if (g.ContainsKey(neighbour) && newCost >= g[neighbour])
+                    {
+                        continue;
+                    }
+                    
+                    //Set the parent of the neighbour to the current cell
+                    parent[neighbour] = current;
+                    
+                    //Set the cost of the neighbour to the new cost
+                    g[neighbour] = newCost;
+                    
+                    //Set the cost of the neighbour to the new cost + the heuristic
+                    cost[neighbour] = g[neighbour] + ManhattanDistance((int)neighbour.x,(int)neighbour.y,(int)goalPos.x,(int)goalPos.y);
                 }
             }
+            Debug.Log("No path found "+startPos+" to "+goalPos+"!"+closed.Count);
+            return null;
+        }
+        #endregion
 
-            return positions;
-        }
         /// <summary>
-        /// Calculates the size of a room based on its prefab.
+        /// Method to calculate the Manhattan distance between two points.
         /// </summary>
-        /// <param name="roomPrefab">The room prefab.</param>
-        /// <returns>The size of the room.</returns>
-        private static Vector3 CalculateRoomSize(GameObject roomPrefab)
+        private int ManhattanDistance(int x1,int y1,int x2,int y2)
         {
-            var ground = roomPrefab.transform.Find("Ground");
-            if (ground == null) return new Vector3(5f, 1, 4f); // Default size if "Ground" is missing
-            var tileCount = ground.childCount;
-            var tilesPerRow = Mathf.CeilToInt(Mathf.Sqrt(tileCount));
-            var roomWidth = tilesPerRow * 5f;
-            var roomDepth = Mathf.Ceil(tileCount / (float)tilesPerRow) * 4f;
-            return new Vector3(roomWidth, 1, roomDepth);
+            return Math.Abs(x1-x2) + Math.Abs(y1-y2);
         }
+
         /// <summary>
-        /// Checks if a room overlaps with any existing rooms.
+        /// Method to connect all rooms with corridors finding suitable path between the exits.
         /// </summary>
-        /// <param name="position">The position to check.</param>
-        /// <param name="roomSize">The size of the room.</param>
-        /// <returns>True if there is an overlap, false otherwise.</returns>
-        private bool IsOverlapping(Vector3 position, Vector3 roomSize)
+        private void ConnectAllRooms()
         {
-            return _occupiedPositions.Any(occupiedPosition => Vector3.Distance(occupiedPosition, position) < Mathf.Max(roomSize.x, roomSize.z));
+            var counter = 0;
+            while(_unconnectedRooms.Count > 0 && counter < 100)
+            {
+                counter++;
+
+                foreach (var room in _connectedRooms)
+                {
+                    var connected = false;
+                    foreach (var exit in room.Exits)
+                    {
+                        if (exit.isConnected)
+                        {
+                            continue;
+                        }
+                        var (closestExit, closestRoom) = roomManager.FindClosestUnconnectedExitFromUnconnectedRooms(_unconnectedRooms, exit);
+                        if (closestExit == null)
+                        {
+                            continue;
+                        }
+                        var path = GetPath(new Vector2(exit.worldPosition.x, exit.worldPosition.z), new Vector2(closestExit.worldPosition.x, closestExit.worldPosition.z));
+                        if (path == null || path.Count == 0)
+                        {
+                            continue;
+                        }
+                        corridorManager.CreatePath(path, GridOrigin);
+                        GridSystem.ResetVisitedCells();
+                        exit.isConnected = true;
+                        closestExit.isConnected = true;
+                        _connectedRooms.Add(closestRoom);
+                        _unconnectedRooms.Remove(closestRoom);
+                        connected = true;
+                        break;
+                    }
+                    if (connected)
+                    {
+                        break;
+                    }
+                }
+            }
+            if(counter >= 100)
+            {
+                Debug.LogError("Failed to connect all rooms!");
+                DestroyDungeon();
+                InitializeGrid();
+                GenerateDungeon();
+                return;
+            }
+            
+            foreach (var room in roomManager.rooms)
+            {
+                foreach(var exit in room.Exits)
+                {
+                    if(exit.isConnected)
+                    {
+                        continue;
+                    }
+                    var closestExit = roomManager.FindClosestUnconnectedExit(exit);
+                    if(closestExit == null)
+                    {
+                        continue;
+                    }
+                    var path = GetPath(new Vector2(exit.worldPosition.x, exit.worldPosition.z), new Vector2(closestExit.worldPosition.x, closestExit.worldPosition.z));
+                    if (path == null || path.Count == 0)
+                    {
+                        Debug.Log("Unable to find path between exits" + exit.worldPosition + " and " + closestExit.worldPosition);
+                        continue;
+                    }
+                    foreach (var cell in path)
+                    {
+                        GridSystem.GetCellWorldPosition(cell.x, cell.y, GridOrigin);
+                        GridSystem.MarkCellOccupied((int)cell.x, (int)cell.y, GridOrigin);
+                    }
+                    corridorManager.CreatePath(path, GridOrigin);
+                    Debug.Log($"Path from {exit.worldPosition} to {closestExit.worldPosition}: {string.Join(" -> ", path)}");
+                    GridSystem.ResetVisitedCells();
+                    exit.isConnected = true;
+                    closestExit.isConnected = true;
+                }
+            }
         }
+        
+        /// <summary>
+        /// Method to get the path between two exit points.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        private List<Vector2> GetPath(Vector2 start, Vector2 end)
+        {
+            var startX = (int)start.x; 
+            var startY = (int)start.y;
+            var endX = (int)end.x;
+            var endY = (int)end.y;
+            
+            var startIndexes = GridSystem.GetGridCellPositionFromWorldPosition(startX, startY, GridOrigin);
+            var endIndexes = GridSystem.GetGridCellPositionFromWorldPosition(endX, endY, GridOrigin);
+            
+            var result = AStarSearch(startIndexes, endIndexes);
+            
+            return result;
+        }
+        
+        /// <summary>
+        /// Gizmos drawing for the grid system and occupied cells.
+        /// </summary>
+        private void OnDrawGizmos() {
+            if (GridSystem == null) return;
+            for (var x = 0; x <= GridSystem.GridWidth; x++) {
+                for (var y = 0; y <= GridSystem.GridHeight; y++) {
+                    var cellPos = GridSystem.GetCellWorldPosition(x, y, GridOrigin);
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawWireCube(cellPos, new Vector3(GridSystem.CellSize, 0.1f, GridSystem.CellSize));
+                }
+            }
+            GridSystem.DrawOccupiedCellsGizmos(GridOrigin);
+        }
+
+        /*private void OnDisable()
+        {
+            DestroyDungeon();
+        }*/
     }
 }

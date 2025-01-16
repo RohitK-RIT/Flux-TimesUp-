@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Enemy.FSM
@@ -13,13 +15,7 @@ namespace _Project.Scripts.Core.Enemy.FSM
         
         // Flag to prevent multiple transitions at the same time
         private bool _isTransitioningState = false;
-
-        private void Start()
-        {
-            // initializes the first state's entry actions
-            _currentState?.EnterState();
-        }
-
+        
         // handles state transitions and updates
         private void Update()
         {

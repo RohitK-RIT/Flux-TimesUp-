@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: Pistol3
   weaponType: 1
-  weaponName: TBD
+  weaponName: Luger
   damage: 22
   range: 75
   attackSpeed: 3

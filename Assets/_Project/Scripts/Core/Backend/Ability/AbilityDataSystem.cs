@@ -21,7 +21,7 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// </summary>
         /// <param name="type">type of ability</param>
         /// <returns>player ability prefab</returns>
-        public PlayerAbility GetAbilityPrefab(PlayerAbilityType type)
+        public Weapons.Abilities.Ability GetAbilityPrefab(AbilityType type)
         {
             // Get the ability data
             var data = GetAbilityData(type);
@@ -30,7 +30,7 @@ namespace _Project.Scripts.Core.Backend.Ability
                 return null;
 
             // Get the ability prefab
-            var prefab = data.GetAbilityPrefab();
+            var prefab = data.AbilityPrefab;
             // If the prefab is not null, return the prefab
             if (prefab)
                 return prefab;
@@ -39,14 +39,8 @@ namespace _Project.Scripts.Core.Backend.Ability
             Debug.LogError($"Ability prefab for {type} not found.");
             return null;
         }
-        
-        /// <summary>
-        /// Gets the ability stats.
-        /// </summary>
-        /// <param name="type">type of the ability</param>
-        /// <param name="level">level of the ability stat you require</param>
-        /// <returns>ability stats so of the specified type and level</returns>
-        public AbilityStats GetAbilityStats(PlayerAbilityType type, int level)
+
+        public AbilityPickup GetAbilityPickupPrefab(AbilityType type)
         {
             // Get the ability data
             var data = GetAbilityData(type);
@@ -54,14 +48,14 @@ namespace _Project.Scripts.Core.Backend.Ability
             if (data.Equals(null))
                 return null;
 
-            // Get the ability stats
-            var stats = data.GetAbilityStats(level);
-            // If the stats are not null, return the stats
-            if (stats)
-                return stats;
+            // Get the ability pickup
+            var pickup = data.AbilityPickup;
+            // If the pickup is not null, return the pickup
+            if (pickup)
+                return pickup;
 
-            // Log an error if the stats are not found
-            Debug.LogError($"Ability stats for {type} at level {level} not found.");
+            // Log an error if the pickup is not found
+            Debug.LogError($"Ability pickup for {type} not found.");
             return null;
         }
 
@@ -70,7 +64,7 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// </summary>
         /// <param name="type">type of the ability</param>
         /// <returns>ability data of the specified type</returns>
-        private AbilityData GetAbilityData(PlayerAbilityType type)
+        public AbilityData GetAbilityData(AbilityType type)
         {
             // Get the ability data
             var data = abilityData.FirstOrDefault(data => data.Type == type);

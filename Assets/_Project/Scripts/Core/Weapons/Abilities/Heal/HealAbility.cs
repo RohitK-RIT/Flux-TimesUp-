@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using _Project.Scripts.Core.Player_Controllers;
 using UnityEngine;
 
 namespace _Project.Scripts.Core.Weapons.Abilities.Heal
@@ -6,8 +7,13 @@ namespace _Project.Scripts.Core.Weapons.Abilities.Heal
     /// <summary>
     /// Represents the heal ability for the player.
     /// </summary>
-    public class HealAbility : PlayerAbility
+    public class HealAbility : Ability
     {
+        public override AbilityType Type => AbilityType.Heal;
+
+        /// <summary>
+        /// The stats for the heal ability.
+        /// </summary>
         [SerializeField] private HealAbilityStats stats;
 
         /// <summary>
@@ -34,7 +40,8 @@ namespace _Project.Scripts.Core.Weapons.Abilities.Heal
             IsAbilityActive = true;
             //Heal the player
             Debug.Log("Player is using the heal ability!!");
-            CurrentPlayerController.StartCoroutine(DeactivateAbility(stats.AbilityDuration));
+            CurrentPlayerController.Heal(stats.HealValue);
+            CurrentPlayerController.StartCoroutine(DeactivateAbility(0));
         }
 
         /// <summary>

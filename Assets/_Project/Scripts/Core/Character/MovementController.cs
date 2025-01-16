@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Core.Character
 {
@@ -40,11 +39,7 @@ namespace _Project.Scripts.Core.Character
         /// </summary>
         [SerializeField] private Transform weaponParent;
 
-        /// <summary>
-        /// The speed at which the player moves.
-        /// </summary>
-        [SerializeField] private float moveSpeed = 5f;
-
+       
         /// <summary>
         /// The CharacterController component attached to the character.
         /// </summary>
@@ -97,14 +92,15 @@ namespace _Project.Scripts.Core.Character
             if (MoveInput == Vector2.zero) return;
 
             // Assign horizontal and vertical inputs to the movement vector
-            _moveDirection = (body.right * MoveInput.x + body.forward * MoveInput.y) * PlayerController.CharacterStats.movementSpeed;
+            _moveDirection = (body.right * MoveInput.x + body.forward * MoveInput.y) * PlayerController.Stats.movementSpeed;
 
             // Applying gravity for the y value
             HandleGravity();
+            
             // Can add jump here if needed by modifying the y component of the movement vector. 
 
             // Move the character via the character controller.
-            _characterController.Move(_currentMovement * (moveSpeed * Time.deltaTime));
+            _characterController.Move(_currentMovement * (PlayerController.Stats.movementSpeed * Time.deltaTime));
         }
 
         /// <summary>

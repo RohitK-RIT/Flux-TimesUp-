@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using _Project.Scripts.Core.Enemy;
 using _Project.Scripts.Core.Player_Controllers;
+using _Project.Scripts.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -9,33 +9,23 @@ using UnityEngine.SceneManagement;
 namespace _Project.Scripts.Core.Backend.Scene_Control
 {
     //General class to manage the game
-    public class LevelSceneController : MonoBehaviour
+    public class LevelSceneController : BaseSystem<LevelSceneController>
     {
-        public static LevelSceneController Instance { get; private set; }
-        public int NumberOfEnemies => enemies.Count(controller => controller.gameObject.activeSelf);
-        
+        protected override bool IsPersistent => false;
+        public LocalPlayerController Player => player;
         public GameObject WinPage => winPage;
         public GameObject LoosePage => loosePage;
+        public AbilitySelectionPage AbilitySelectionPage => abilitySelectionPage;
+
         [SerializeField] private GameObject pauseMenuPage, winPage, loosePage; // Drag your game scene UI panel here
+        [SerializeField] private AbilitySelectionPage abilitySelectionPage; // Drag your ability selection page here
 
         [Space(25f), Header("Players in Scene")] [SerializeField]
-        private PlayerController player; // Drag your player here
+        private LocalPlayerController player; // Drag your player here
 
-        
-        [SerializeField] private EnemyController[] enemies; // Array to store all enemies in the scene
+        [SerializeField] public EnemyController[] enemies; // Array to store all enemies in the scene
 
         private bool _isPaused; // Variable to check if the game is paused
-
-        private void Awake()
-        {
-            if(Instance && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-        }
 
         private void Start()
         {
@@ -91,21 +81,31 @@ namespace _Project.Scripts.Core.Backend.Scene_Control
         // Call this function to resume the game
         public void Resume()
         {
-            Cursor.visible = false; // Show the cursor
-            Cursor.lockState = CursorLockMode.Locked; // Unlock the cursor
             pauseMenuPage.SetActive(false); // Hide pause menu
-            Time.timeScale = 1f; // Unfreeze the game
-            _isPaused = false; // Update pause state
+            ResumeGame();
         }
 
         // Call this function to pause the game
         public void Pause()
         {
+            PauseGame();
+            pauseMenuPage.SetActive(true); // Show pause menu
+        }
+
+        public void PauseGame()
+        {
             Cursor.visible = true; // Show the cursor
             Cursor.lockState = CursorLockMode.None; // Unlock the cursor
-            pauseMenuPage.SetActive(true); // Show pause menu
             Time.timeScale = 0f; // Freeze the game
             _isPaused = true; // Update pause state
+        }
+
+        public void ResumeGame()
+        {
+            Cursor.visible = false; // Show the cursor
+            Cursor.lockState = CursorLockMode.Locked; // Unlock the cursor
+            Time.timeScale = 1f; // Unfreeze the game
+            _isPaused = false; // Update pause state
         }
 
         // Function to restart the game and go back to the main menu

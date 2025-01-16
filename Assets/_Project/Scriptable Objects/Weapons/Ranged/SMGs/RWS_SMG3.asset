@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: SMG3
   weaponType: 0
-  weaponName: TBD
+  weaponName: MP7
   damage: 20
   range: 75
   attackSpeed: 8

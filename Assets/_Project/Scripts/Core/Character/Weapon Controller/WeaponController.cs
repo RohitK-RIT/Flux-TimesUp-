@@ -61,7 +61,9 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// <summary>
         /// Gets the current ability.
         /// </summary>
-        public PlayerAbility CurrentAbility { get; private set; }
+        public Ability CurrentAbility { get; private set; }
+
+        [SerializeField] private bool hasPreMadeLoadout;
 
         /// <summary>
         /// The index of the current weapon.
@@ -71,19 +73,19 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         public override void Initialize(PlayerController playerController)
         {
             base.Initialize(playerController);
-
-            // The player controller has picked up the ability
-            LoadAbility(playerController.CharacterStats.playerAbilityType);
             
             // Fetch selected weapons from WeaponDataSystem
-            var selectedLoadoutWeaponIDs = WeaponDataSystem.Instance.GetSelectedWeapons();
-            if (selectedLoadoutWeaponIDs != null && selectedLoadoutWeaponIDs.Count > 0)
+            if (!hasPreMadeLoadout)
             {
-                LoadWeapon(selectedLoadoutWeaponIDs);
-            }
-            else
-            {
-                Debug.LogError("No selected weapons found in WeaponDataSystem");
+                var selectedLoadoutWeaponIDs = WeaponDataSystem.Instance.GetSelectedWeapons();
+                if (selectedLoadoutWeaponIDs is { Count: > 0 })
+                {
+                    LoadWeapon(selectedLoadoutWeaponIDs);
+                }
+                else
+                {
+                    Debug.LogError("No selected weapons found in WeaponDataSystem");
+                }
             }
             
             // The player controller has picked up all the weapons
@@ -94,15 +96,15 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// <summary>
         /// Loads an ability by its type.
         /// </summary>
-        /// <param name="playerAbilityType">type of the ability</param>
-        private void LoadAbility(PlayerAbilityType playerAbilityType)
+        /// <param name="abilityType">type of the ability</param>
+        private void LoadAbility(AbilityType abilityType)
         {
             // Check if the player has no ability
-            if (playerAbilityType == PlayerAbilityType.None)
+            if (abilityType == AbilityType.None)
                 return;
 
             // Get the ability prefab
-            var abilityPrefab = AbilityDataSystem.Instance.GetAbilityPrefab(playerAbilityType);
+            var abilityPrefab = AbilityDataSystem.Instance.GetAbilityPrefab(abilityType);
             // Check if the ability prefab is not null
             if (abilityPrefab)
             {
@@ -218,7 +220,7 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// </summary>
         /// <param name="ability">The ability being used.</param>
         /// <returns>An IEnumerator for the coroutine.</returns>
-        private IEnumerator HandleWeaponSwitch(PlayerAbility ability)
+        private IEnumerator HandleWeaponSwitch(Ability ability)
         {
             // Handle weapon switch
             yield return new WaitUntil(() => ability.Used);
@@ -239,6 +241,26 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         public void EndAttack()
         {
             CurrentWeapon.EndAttack();
+        }
+        
+        /// <summary>
+        /// Switches the ability to the specified type.
+        /// </summary>
+        /// <param name="abilityType">type of the ability</param>
+        public void SwitchAbility(AbilityType abilityType)
+        {
+            if (abilityType == AbilityType.None)
+            {
+                Debug.LogError("Ability type is None");
+                return;
+            }
+
+            // Destroy the current ability
+            if (CurrentAbility)
+                Destroy(CurrentAbility.gameObject);
+
+            // Load the new ability
+            LoadAbility(abilityType);
         }
     }
 }

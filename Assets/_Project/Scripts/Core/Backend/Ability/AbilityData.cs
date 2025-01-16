@@ -15,7 +15,7 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// <summary>
         /// The type of the ability.
         /// </summary>
-        public PlayerAbilityType Type => type;
+        public AbilityType Type => type;
 
         /// <summary>
         /// The description of the ability.
@@ -27,24 +27,22 @@ namespace _Project.Scripts.Core.Backend.Ability
         /// </summary>
         public Sprite Icon => icon;
 
+        /// <summary>
+        /// The ability prefab.
+        /// </summary>
+        public Weapons.Abilities.Ability AbilityPrefab => abilityPrefab;
+        
+        /// <summary>
+        /// The ability pickup prefab.
+        /// </summary>
+        public AbilityPickup AbilityPickup => abilityPickup;
+
         [SerializeField] private string name;
-        [SerializeField] private PlayerAbilityType type;
+        [SerializeField] private AbilityType type;
         [SerializeField, Multiline] private string description;
         [SerializeField] private Sprite icon;
 
-        [Space] [SerializeField] private PlayerAbility abilityPrefab;
-
-        [Header("Ability Stats (follow the order of levels)")] [SerializeField]
-        private AbilityStats[] abilityStats;
-
-        internal AbilityStats GetAbilityStats(int level)
-        {
-            return abilityStats[level - 1];
-        }
-
-        internal PlayerAbility GetAbilityPrefab()
-        {
-            return abilityPrefab;
-        }
+        [Space] [SerializeField] private Weapons.Abilities.Ability abilityPrefab;
+        [SerializeField] private AbilityPickup abilityPickup;
     }
 }
