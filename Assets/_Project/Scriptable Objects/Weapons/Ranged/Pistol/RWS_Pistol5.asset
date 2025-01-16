@@ -14,17 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: Pistol5
   weaponType: 1
-  weaponName: TBD
-  damage: 20
+  weaponName: Flintlock
+  damage: 30
   range: 75
   attackSpeed: 9
   fireModes: 01000000
-  reloadTime: 2
-  spread: 0.03
+  reloadTime: 4
+  spread: 0.02
   recoil: 0.02
-  magazineSize: 15
-  maxBulletCount: 75
-  burstAmount: 3
-  burstDuration: 0.15
+  magazineSize: 2
+  maxBulletCount: 80
+  burstAmount: 2
+  burstDuration: 0.01
   trailSpeed: 100
   missDistance: 100

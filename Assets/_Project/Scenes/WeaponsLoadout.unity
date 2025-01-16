@@ -4530,7 +4530,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -50}
+  m_AnchoredPosition: {x: 0, y: -49.999817}
   m_SizeDelta: {x: 0, y: -471.62732}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &320813868
@@ -9266,10 +9266,7 @@ MonoBehaviour:
     icon: {fileID: 0}
     abilityPrefab: {fileID: 6273341532945828471, guid: f974981273515154fa599c4e936c8d71,
       type: 3}
-    abilityStats:
-    - {fileID: 11400000, guid: e7b0573282746e546a6bf8ae4e7f73e2, type: 2}
-    - {fileID: 11400000, guid: 743fac22fab6eb143974320ed5ba8896, type: 2}
-    - {fileID: 11400000, guid: f139e146c2af7c641ba8f3123c462000, type: 2}
+    abilityPickup: {fileID: 0}
 --- !u!4 &759289742
 Transform:
   m_ObjectHideFlags: 0
@@ -13062,30 +13059,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponDatabase:
-  - weaponPrefab: {fileID: 7052611767422597503, guid: aa63e3324934bac429ef80736eae850f,
+  - weaponPrefab: {fileID: 7052611767422597503, guid: ac4f800ebb6e844b6bcbb6990ffb79e1,
       type: 3}
-    icon: {fileID: 21300000, guid: d7fbd86a4b5934d3d9e7d2a74780d0ff, type: 3}
-    weaponStats: {fileID: 11400000, guid: 22bbb6c749db0db488c411f36c9e466c, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: df921edb9f49c4d6db60534cf7030cc6,
-      type: 3}
-    icon: {fileID: 21300000, guid: d7fbd86a4b5934d3d9e7d2a74780d0ff, type: 3}
+    icon: {fileID: 21300000, guid: 7abda8d662a954ae69ed49506d425f78, type: 3}
     weaponStats: {fileID: 11400000, guid: 9206cd9a80cc94535895cc526f898687, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: 2b29e3926fe1e43f2ab1ee7f18898532,
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 27cc7996c9edb47d0a98ca826baed907,
       type: 3}
-    icon: {fileID: 21300000, guid: d7fbd86a4b5934d3d9e7d2a74780d0ff, type: 3}
+    icon: {fileID: 21300000, guid: 81081f91d594b4314a73e27657142a9d, type: 3}
     weaponStats: {fileID: 11400000, guid: b47e1c628636e4dcf9497816a23a3b62, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: c5aa4b92531134ff790546e5fec10324,
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 3b666c12bc590453e9ceba2849629b1e,
+      type: 3}
+    icon: {fileID: 21300000, guid: 882d24d3a01924bfc85d8b8678e3e97f, type: 3}
+    weaponStats: {fileID: 11400000, guid: d36ce94d3671e4c00a2016a6e55456a9, type: 2}
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 805431397e6874625b1706068909502e,
+      type: 3}
+    icon: {fileID: 21300000, guid: bd6bcc46837724a008fdb67c1c9e4930, type: 3}
+    weaponStats: {fileID: 11400000, guid: 9963bc952fe434a73a217f3cb67405a0, type: 2}
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 4e50512c2e44940f0867698bad11ba66,
+      type: 3}
+    icon: {fileID: 21300000, guid: 016ae365e986442a3ba13e4c2d470e16, type: 3}
+    weaponStats: {fileID: 11400000, guid: 9e3a00cfd4cb44694bfbd32d71dcf170, type: 2}
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 9dc561a002f0048b3b8fd4c056eeb51d,
       type: 3}
     icon: {fileID: 21300000, guid: ff01e8ca62bae41c691277c63085aa89, type: 3}
     weaponStats: {fileID: 11400000, guid: cfa420581ccd44113ba917707e2539e0, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: 94c751cde20c341418dd8ecbf7ed29dd,
-      type: 3}
-    icon: {fileID: 21300000, guid: ff01e8ca62bae41c691277c63085aa89, type: 3}
-    weaponStats: {fileID: 11400000, guid: 32d7407868afb401a843cb8671c8fadb, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: b7ada101e3eea4e6aaa8f801e37c600b,
-      type: 3}
-    icon: {fileID: 21300000, guid: ff01e8ca62bae41c691277c63085aa89, type: 3}
-    weaponStats: {fileID: 11400000, guid: 9e3a00cfd4cb44694bfbd32d71dcf170, type: 2}
   - weaponPrefab: {fileID: 1210268584845851345, guid: 12bf25de04169a047b37eb23e5f18c0e,
       type: 3}
     icon: {fileID: 21300000, guid: 1334a11d4674b41858e1e4520b67c8d5, type: 3}
@@ -13098,25 +13095,25 @@ MonoBehaviour:
       type: 3}
     icon: {fileID: 21300000, guid: 1334a11d4674b41858e1e4520b67c8d5, type: 3}
     weaponStats: {fileID: 11400000, guid: 87af9c2bfce48474fae6c5c2394b032a, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: 31f7205e3df0f481fb679004dcd26cd7,
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 37d03597eb8b54a019b3916ca806bb5b,
       type: 3}
-    icon: {fileID: 21300000, guid: d7fbd86a4b5934d3d9e7d2a74780d0ff, type: 3}
-    weaponStats: {fileID: 11400000, guid: 32cdba17ded424638941d380c8a6df12, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: 688bb935fa42a4d66bccd2ecde764dcc,
+    icon: {fileID: 21300000, guid: 01f9b34c79a714854ae203749665de45, type: 3}
+    weaponStats: {fileID: 11400000, guid: 812317910c83442019e5fbe8dd0efc37, type: 2}
+  - weaponPrefab: {fileID: 7052611767422597503, guid: ac1bd259dbc4b48e09ee96c8171c545c,
       type: 3}
-    icon: {fileID: 21300000, guid: d7fbd86a4b5934d3d9e7d2a74780d0ff, type: 3}
-    weaponStats: {fileID: 11400000, guid: 1cc7fbefc78a042aead983efc29f6892, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: 4fc93935cd3ac43b8a0f0e5e75335ba2,
+    icon: {fileID: 21300000, guid: feea48bb057b244c88a6a9fcd5a90d10, type: 3}
+    weaponStats: {fileID: 11400000, guid: d78fa5bbcadb743db9c5dae01e4aa84d, type: 2}
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 9c067a0738fc544a7b0a1b8dcdcd9959,
       type: 3}
-    icon: {fileID: 21300000, guid: d7fbd86a4b5934d3d9e7d2a74780d0ff, type: 3}
+    icon: {fileID: 21300000, guid: deaf3fcfc15704e10921b92fd2825463, type: 3}
     weaponStats: {fileID: 11400000, guid: cfe0d0d2493794ee7b88dde37dffc5ee, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: b223a51d0f8b546bf888a1e2d91563a1,
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 88a3c4441d6a54ce088e5615963ed546,
       type: 3}
-    icon: {fileID: 21300000, guid: ff01e8ca62bae41c691277c63085aa89, type: 3}
-    weaponStats: {fileID: 11400000, guid: 9963bc952fe434a73a217f3cb67405a0, type: 2}
-  - weaponPrefab: {fileID: 7052611767422597503, guid: 7aacec2c53f464c7a9058fecc16d0ea7,
+    icon: {fileID: 21300000, guid: 112ffe08a93144348924724624e2dc8a, type: 3}
+    weaponStats: {fileID: 11400000, guid: 32d7407868afb401a843cb8671c8fadb, type: 2}
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 423471f0815c6492f98b364838db20ed,
       type: 3}
-    icon: {fileID: 21300000, guid: ff01e8ca62bae41c691277c63085aa89, type: 3}
+    icon: {fileID: 21300000, guid: c7f0c3cfbaedc4cc9bff78435ce36bf6, type: 3}
     weaponStats: {fileID: 11400000, guid: 1fd53585693994e3abc034d2f6c21834, type: 2}
   - weaponPrefab: {fileID: 7052611767422597503, guid: 004fdb3aa2f46427d8b00b3ec886c0cf,
       type: 3}
@@ -13134,6 +13131,14 @@ MonoBehaviour:
       type: 3}
     icon: {fileID: 21300000, guid: 1334a11d4674b41858e1e4520b67c8d5, type: 3}
     weaponStats: {fileID: 11400000, guid: a080650ef29c3424180d9452f106ebd7, type: 2}
+  - weaponPrefab: {fileID: 7052611767422597503, guid: d244e8841833549aaa7964378a855d22,
+      type: 3}
+    icon: {fileID: 21300000, guid: d1f5e99868b0141059141e48cd7059c3, type: 3}
+    weaponStats: {fileID: 11400000, guid: 1cc7fbefc78a042aead983efc29f6892, type: 2}
+  - weaponPrefab: {fileID: 7052611767422597503, guid: 25f8f7485858f41fabfc58f6aaad4e48,
+      type: 3}
+    icon: {fileID: 21300000, guid: 993d76ab5469b4f2f8a825c7fb6fecdd, type: 3}
+    weaponStats: {fileID: 11400000, guid: 32cdba17ded424638941d380c8a6df12, type: 2}
 --- !u!4 &1088429466
 Transform:
   m_ObjectHideFlags: 0
@@ -26785,6 +26790,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Loadout 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6970782545665679277, guid: adebaac084a94b94787f50006d15e9f0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 39.999878
       objectReference: {fileID: 0}
     - target: {fileID: 7174420856679993423, guid: adebaac084a94b94787f50006d15e9f0,
         type: 3}
