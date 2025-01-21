@@ -12,5 +12,24 @@ namespace _Project.Scripts.Core.Loadout
         // The type of weapon associated with this slot (Primary, Secondary, or Melee).
         // This helps categorize the weapon and assign it to the correct loadout slot.
         public WeaponType weaponType;
+        
+        //UI Element to display selected loadout weapon feedback
+        [SerializeField] public GameObject overlayImage;
+        
+        public void ShowOverlay()
+        {
+            if (overlayImage != null)
+            {
+                overlayImage.SetActive(true);
+            }
+        }
+
+        public void HideOverlay()
+        {
+            if (overlayImage != null)
+            {
+                overlayImage.SetActive(false);
+            }
+        }
     }
 }

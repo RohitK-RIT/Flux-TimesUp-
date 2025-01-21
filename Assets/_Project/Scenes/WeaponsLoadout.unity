@@ -7328,7 +7328,7 @@ MonoBehaviour:
   weaponSlotPrefab: {fileID: 4710599694130090848, guid: 97933a90332e443b2ab4d6d69d5b0668,
     type: 3}
   feedbackText: {fileID: 0}
-  updateText: {fileID: 0}
+  updateInstructionText: {fileID: 0}
 --- !u!1 &575502398
 GameObject:
   m_ObjectHideFlags: 0
@@ -10804,6 +10804,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &858536542 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2652151839885605557, guid: adebaac084a94b94787f50006d15e9f0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3703968393497010441}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &863253773
 GameObject:
   m_ObjectHideFlags: 0
@@ -26665,6 +26677,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4033729545239977203, guid: adebaac084a94b94787f50006d15e9f0,
+        type: 3}
+      propertyPath: updateInstructionText
+      value: 
+      objectReference: {fileID: 858536542}
     - target: {fileID: 4498618997428987091, guid: adebaac084a94b94787f50006d15e9f0,
         type: 3}
       propertyPath: m_SizeDelta.y
