@@ -1,4 +1,5 @@
 ﻿using System;
+using _Project.Scripts.Core.Backend.Interfaces;
 using _Project.Scripts.Core.Character;
 using _Project.Scripts.Core.Character.Weapon_Controller;
 using _Project.Scripts.Core.Weapons;
@@ -11,7 +12,7 @@ namespace _Project.Scripts.Core.Player_Controllers
     /// Base class for player controllers.
     /// </summary>
     [RequireComponent(typeof(MovementController), typeof(WeaponController), typeof(AnimationController))]
-    public abstract class PlayerController : MonoBehaviour
+    public abstract class PlayerController : MonoBehaviour, IDamageable
     {
         public event Action<PlayerController> OnDeath;
 

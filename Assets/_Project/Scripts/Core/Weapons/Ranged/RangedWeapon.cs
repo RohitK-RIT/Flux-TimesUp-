@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Core.Backend.Interfaces;
 using _Project.Scripts.Core.Player_Controllers;
 using Unity.Mathematics;
 using UnityEngine;
@@ -178,8 +179,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance, CurrentPlayerController.OpponentLayer))
             {
                 StartCoroutine(PlayTrail(muzzle.position, hit.point));
-                var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
-                playerController?.TakeDamage(this, GetDamage());
+                if(hit.transform.TryGetComponent<IDamageable>(out var damageable))
+                    damageable.TakeDamage(this, GetDamage());
             }
             else
             {
@@ -204,6 +205,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
                 return;
             StartCoroutine(ReloadCoroutine());
         }
+        
+        
 
         /// <summary>
         /// Coroutine for playing the trail.
