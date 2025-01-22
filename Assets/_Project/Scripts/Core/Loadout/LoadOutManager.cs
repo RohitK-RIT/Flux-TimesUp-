@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Core.Weapons;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,6 +24,12 @@ namespace _Project.Scripts.Core.Loadout
         
         // List to store the selected weapon IDs for the loadout
         private readonly string[] _loadout = new string[3];
+        
+        //UI Element for providing Feedback of selected loadout
+        [SerializeField] private TMP_Text feedbackText;
+        
+        //UI Element for providing update for selected loadout
+        [SerializeField] private TMP_Text updateInstructionText;
     
         // The name of the next scene to load after selection
         private string _nextSceneName = "PCG-Level";
@@ -33,7 +40,8 @@ namespace _Project.Scripts.Core.Loadout
             PopulateWeaponSlots(primaryWeaponSlotHolder, _primaryRangedWeapons);
             PopulateWeaponSlots(secondaryWeaponSlotHolder, _secondaryRangedWeapons);
             PopulateWeaponSlots(meleeWeaponSlotHolder, _meleeWeapons);
-            
+            updateInstructionText.text = "Please select your Primary Weapon";
+            feedbackText.text = "";
         }
         
         
@@ -86,14 +94,33 @@ namespace _Project.Scripts.Core.Loadout
             if (weaponType == WeaponType.Primary)
             {
                 _loadout[0] = weaponID;
+                feedbackText.text = "You have selected " + weaponID + " as your Primary Weapon";
+                updateInstructionText.text = "Please select your Secondary Weapon";
             }
             else if (weaponType == WeaponType.Secondary)
             {
                 _loadout[1] = weaponID;
+                feedbackText.text = "You have selected " + weaponID + " as your Secondary Weapon";
+                updateInstructionText.text = "Please select your Melee Weapon";
             }
             else if (weaponType == WeaponType.Melee)
             {
                 _loadout[2] = weaponID;
+                feedbackText.text = "You have selected " + weaponID + " as your Melee Weapon";
+                updateInstructionText.text = "Click Continue to proceed";
+            }
+            // Show overlay for the selected weapon and persist previous selections
+            var allWeaponSlots = FindObjectsOfType<WeaponSlots>();
+            foreach (var slot in allWeaponSlots)
+            {
+                if (slot.weaponId == _loadout[0] || slot.weaponId == _loadout[1] || slot.weaponId == _loadout[2])
+                {
+                    slot.ShowOverlay();  // Keep overlay active for selected weapons
+                }
+                else
+                {
+                    slot.HideOverlay();  // Hide overlays for unselected weapons
+                }
             }
         }
         
