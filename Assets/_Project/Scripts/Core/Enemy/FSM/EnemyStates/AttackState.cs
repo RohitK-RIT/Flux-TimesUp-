@@ -23,11 +23,15 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         {
             // Stop any ongoing attack actions
             _enemyInputController.StopAttack();
+            _enemyInputController.StopChasing();
+
         }
 
         // Called every frame while the enemy is in the AttackState
         public override void UpdateState()
         {
+            _enemyInputController.StopChasing();
+
             // Check if the player health is low
             if (_enemyInputController.EnemyHUD.enemy.CurrentHealth < 50)
             {
@@ -62,7 +66,7 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         public override EnemyState GetNextState()
         {
             // If a player is still in attack range, stay in attack state
-            if (_enemyInputController.CanAttack())
+            if (_enemyInputController.IsPlayerInAttackRange())
             {
                 return EnemyState.Attack;
             }
