@@ -28,6 +28,7 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         public override void ExitState()
         {
             Debug.Log("Exiting Patrol State");
+            _enemyInputController.StopChasing();
         }
 
         // Called every frame while the enemy is in the ChaseState
@@ -46,7 +47,7 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         public override EnemyState GetNextState()
         {
             // Check if players are in the detection range
-            return _enemyInputController.IsPlayerInDetectionRange()? EnemyState.Detect :
+            return _enemyInputController.FindPlayer()? EnemyState.Detect :
                 EnemyState.Patrol;
         }
     }

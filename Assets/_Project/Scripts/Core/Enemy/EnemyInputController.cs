@@ -129,25 +129,18 @@ namespace _Project.Scripts.Core.Enemy
             return isOnNavMesh;
         }
         
-        
         // Method to find the closest player and check if its in detection range and in conical field of view
         internal bool FindPlayer()
         {
             ClosestPlayer = _playerDetection.FindClosestPlayerInRange();
             return ClosestPlayer && IsPlayerInCone();
         }
-
-        // Method to check if any players are in range
-        internal bool IsPlayerInDetectionRange()
-        {
-            return (_playerDetection._playersInRange.Count > 0);
-        }
-
+        
         // Method to check if player is in chase range and conical field of view
         internal bool CanChasePlayer()
         {
             if (!IsPlayerInCone()) return false;
-            var distance = Vector3.Distance(transform.position, ClosestPlayer.position);
+            var distance = Vector3.Distance(Enemy.transform.position, ClosestPlayer.position);
             return distance <= ChaseRange; // Return true if within chase range
         }
 
@@ -172,20 +165,21 @@ namespace _Project.Scripts.Core.Enemy
         internal void StopChasing()
         {
             Enemy.ResetPath(); // Stop following the player
+            Enemy.velocity = Vector3.zero;
         }
 
         // Method to check if the player is in attack range and conical field of view
         // ReSharper disable Unity.PerformanceAnalysis
         internal bool CanAttack()
         {
-            return IsPlayerInCone() && IsPlayerInAttackRange(ClosestPlayer) && IsPlayerOnNavMesh(); // Check if the player is within attack range
+            return IsPlayerInCone() && IsPlayerInAttackRange() && IsPlayerOnNavMesh(); // Check if the player is within attack range
         }
 
         //method to check if the player is within attack range and cool down is not active
         // ReSharper disable Unity.PerformanceAnalysis
         internal void TryAttack()
         {
-            if (IsPlayerInAttackRange(ClosestPlayer) && !_isCooldownActive)
+            if (CanAttack() && !_isCooldownActive)
             {
                 // start attacking when the player is in range and not in cooldown
                 StartAttack();
@@ -200,9 +194,9 @@ namespace _Project.Scripts.Core.Enemy
         }
 
         // method to check if player is in attack range
-        private bool IsPlayerInAttackRange(Transform player)
+        internal bool IsPlayerInAttackRange()
         {
-            var distanceToPlayer = Vector3.Distance(transform.position, player.position);
+            var distanceToPlayer = Vector3.Distance(Enemy.transform.position, ClosestPlayer.position);
             return distanceToPlayer <= _attackRange;
         }
 
@@ -330,6 +324,9 @@ namespace _Project.Scripts.Core.Enemy
             // Visualization of the chase range (sphere)
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(PlayerController.MovementController.Body.position, ChaseRange);
+            
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(PlayerController.MovementController.Body.position, PlayerDetection._detectionRange);
 
             // Visualization of the attack range (sphere)
             Gizmos.color = Color.red;
@@ -358,7 +355,6 @@ namespace _Project.Scripts.Core.Enemy
         private void Update()
         {
             OnMoveInputUpdated?.Invoke(Enemy.velocity.normalized);
-            //IsPlayerOnNavMesh();
         }
     }
 }

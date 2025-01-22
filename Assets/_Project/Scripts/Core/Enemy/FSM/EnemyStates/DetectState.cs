@@ -4,9 +4,6 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
 {
     public class DetectState : BaseState
     {
-        // Tracks if the player is within detection range
-        private bool _isPlayerInRange; 
-        
         // Reference to the enemy's input controller
         private readonly EnemyInputController _enemyInputController;
     
@@ -19,8 +16,8 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         // Called when the enemy enters the DetectState
         public override void EnterState()
         {
-            // Resets player detection status when entering the state
-            _isPlayerInRange = false;
+            // Resets player movement when entering the state
+            _enemyInputController.StopChasing(); 
         }
 
         // Called when the enemy exits the DetectState
@@ -33,26 +30,21 @@ namespace _Project.Scripts.Core.Enemy.FSM.EnemyStates
         // ReSharper disable Unity.PerformanceAnalysis
         public override void UpdateState()
         {
-            // Continuously checks if the player is in detection range
-            _isPlayerInRange = _enemyInputController.FindPlayer();
-
-            if (_isPlayerInRange)
-            {
-                // If the player is detected, rotate towards them
-                _enemyInputController.RotateTowardsPlayer();
-            }
+            _enemyInputController.StartChasing();
+            // If the player is detected, rotate towards them
+            _enemyInputController.RotateTowardsPlayer();
         }
         
         public override EnemyState GetNextState()
         {
             // check if the closest player in range
-            if (_isPlayerInRange)
+            if (_enemyInputController.CanChasePlayer())
             {
                 return EnemyState.Chase;
             }
             
             // check if any player is in the player detection range
-            return _enemyInputController.IsPlayerInDetectionRange()? 
+            return _enemyInputController.FindPlayer()? 
                 // If player is in Detect range, stay in detected state
                 EnemyState.Detect :
                 EnemyState.Patrol;

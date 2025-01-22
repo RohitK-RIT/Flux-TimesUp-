@@ -6,7 +6,7 @@ namespace _Project.Scripts.Core.Enemy
 {
     public class PlayerDetection : CharacterComponent
     {
-        private readonly float _detectionRange = 20f;  // The distance at which the enemy detects the player
+        internal static readonly float _detectionRange = 20f;  // The distance at which the enemy detects the player
         public float fieldOfViewAngle = 60f; // The conical angle at which the enemy detects the player
         
         public LayerMask layerMask; // A LayerMask to specify which layers the detection should interact with
@@ -112,33 +112,5 @@ namespace _Project.Scripts.Core.Enemy
             // Check if the player is within the field of view angle
             return angleToPlayer <= fieldOfViewAngle;
         }
-        
-        // Method to visualize the detect, chase, attack and conical FOV for testing purpose
-        private void OnDrawGizmos()
-        {
-            // Visualization of the detection range (sphere)
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(PlayerController.MovementController.Body.position, _detectionRange);
-
-            // Visualization of the chase range (sphere)
-            Gizmos.color = Color.blue;
-            //Gizmos.DrawWireSphere(PlayerController.MovementController.Body.position, 15f); // Chase range (you can also add this to your EnemyInputController)
-
-            // Visualization of the field of view (cone)
-            Gizmos.color = Color.yellow;
-            Vector3 forwardDirection = PlayerController.MovementController.Body.forward * _detectionRange;
-            float fovHalfAngle = fieldOfViewAngle * 0.5f;
-            float coneAngle = Mathf.Deg2Rad * fovHalfAngle; // Convert to radians
-
-            // Draw the sides of the cone using lines
-            Vector3 leftBoundary = Quaternion.Euler(0, -fovHalfAngle, 0) * forwardDirection;
-            Vector3 rightBoundary = Quaternion.Euler(0, fovHalfAngle, 0) * forwardDirection;
-            Gizmos.DrawLine(PlayerController.MovementController.Body.position, PlayerController.MovementController.Body.position + leftBoundary); // Left boundary
-            Gizmos.DrawLine(PlayerController.MovementController.Body.position, PlayerController.MovementController.Body.position + rightBoundary); // Right boundary
-
-            // Draw the front line of the cone
-            Gizmos.DrawLine(PlayerController.MovementController.Body.position, PlayerController.MovementController.Body.position + forwardDirection); // Forward direction line
-        }
-
     }
 }
