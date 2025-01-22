@@ -3260,7 +3260,7 @@ MonoBehaviour:
   weaponSlotPrefab: {fileID: 4710599694130090848, guid: 97933a90332e443b2ab4d6d69d5b0668,
     type: 3}
   feedbackText: {fileID: 5677958684964727732}
-  updateText: {fileID: 2652151839885605557}
+  updateInstructionText: {fileID: 2652151839885605557}
 --- !u!1 &5419346699034289769
 GameObject:
   m_ObjectHideFlags: 0
