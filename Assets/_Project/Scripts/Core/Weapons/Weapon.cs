@@ -23,7 +23,9 @@ namespace _Project.Scripts.Core.Weapons
         /// Current player controller.
         /// </summary>
         public PlayerController CurrentPlayerController { get; private set; }
-
+        
+        public abstract string WeaponID { get; }
+        
         public virtual void OnPickup(PlayerController currentPlayerController)
         {
             CurrentPlayerController = currentPlayerController;

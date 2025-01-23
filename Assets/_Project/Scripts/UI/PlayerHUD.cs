@@ -1,4 +1,4 @@
-using _Project.Scripts.Core.Backend.Scene_Control;
+using _Project.Scripts.Core.Loadout;
 using _Project.Scripts.Core.Player_Controllers;
 using _Project.Scripts.Core.Weapons.Ranged;
 using TMPro;
@@ -17,12 +17,18 @@ namespace _Project.Scripts.UI
         [SerializeField] public TMP_Text currAmmo;
         [SerializeField] public TMP_Text maxAmmo;
         [SerializeField] public LocalPlayerController player;
+        
+        [SerializeField] public Image primaryWeaponSlotHolder;
+        [SerializeField] public Image secondaryWeaponSlotHolder;
+        [SerializeField] public Image meleeWeaponSlotHolder;
+        //[SerializeField] public Image abilitySlotHolder;
 
         [SerializeField] public GameObject reloadingText;
 
         //[SerializeField] private TMP_Text objectiveText;
         [SerializeField] private TMP_Text coinsText;
 
+        //private WeaponDataSystem weaponDataSystem;
         private void Start()
         {
             // Initialize the health bar and ammo display with the player's starting values
@@ -38,6 +44,22 @@ namespace _Project.Scripts.UI
             UpdateReloadingText();
             //UpdateObjectiveText();
             UpdateCoinsText();
+            UpdateLoadoutInfo();
+        }
+        
+        //Updates the current loadout of the player in real-time.
+        // ReSharper disable Unity.PerformanceAnalysis
+        private void UpdateLoadoutInfo()
+        {
+            if (player == null) return;
+
+            primaryWeaponSlotHolder.sprite = WeaponDataSystem.Instance.GetWeaponIcon(player.WeaponController.Weapons[0].WeaponID);
+            
+            secondaryWeaponSlotHolder.sprite = WeaponDataSystem.Instance.GetWeaponIcon(player.WeaponController.Weapons[1].WeaponID);
+            meleeWeaponSlotHolder.sprite = WeaponDataSystem.Instance.GetWeaponIcon(player.WeaponController.Weapons[2].WeaponID);
+            primaryWeaponSlotHolder.enabled = true;
+            secondaryWeaponSlotHolder.enabled = true;
+            meleeWeaponSlotHolder.enabled = true;
         }
 
         // Updates the health bar based on the player's current and max health

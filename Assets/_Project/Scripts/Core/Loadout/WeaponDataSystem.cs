@@ -29,6 +29,21 @@ namespace _Project.Scripts.Core.Loadout
             Debug.LogWarning($"Weapon with ID {weaponID} not found in the database!");
             return null;
         }
+        
+        // Fetches the weapon icon based on the provided WeaponID
+        public Sprite GetWeaponIcon(string weaponID)
+        {
+            foreach (var weaponData in weaponDatabase) // Iterate through weapon database
+            {
+                if (weaponData.weaponStats.WeaponID == weaponID) // Check the WeaponID property
+                {
+                    return weaponData.icon; // Return the icon from the current weapon data
+                }
+                
+            }
+            Debug.LogWarning($"Weapon with ID {weaponID} not found in the database!");
+            return null;
+        }
 
         protected override bool IsPersistent => true;
         
