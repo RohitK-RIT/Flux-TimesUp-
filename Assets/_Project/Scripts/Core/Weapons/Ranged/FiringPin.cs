@@ -7,21 +7,23 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// <summary>
     /// Interface for fire mode strategies.
     /// </summary>
-    public interface IFireModeStrategy
+    public abstract class FiringPin
     {
+        protected DateTime LastFireTime;
+        
         /// <summary>
         /// Fire the weapon.
         /// </summary>
         /// <param name="stats">stats of the weapon</param>
         /// <param name="fireAction">the function that fires the bullet</param>
-        public IEnumerator Fire(RangedWeaponStats stats, Action fireAction);
+        public abstract IEnumerator Fire(RangedWeaponStats stats, Action fireAction);
 
         /// <summary>
         /// Get the fire mode strategy based on the fire mode.
         /// </summary>
         /// <param name="mode">fire mode</param>
         /// <returns>strategy based on the fire mode</returns>
-        public static IFireModeStrategy GetFireModeStrategy(FireModes mode)
+        public static FiringPin GetFireModeStrategy(FireModes mode)
         {
             return mode switch
             {
@@ -36,14 +38,14 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// <summary>
     /// Single fire mode strategy.
     /// </summary>
-    public class SingleFireMode : IFireModeStrategy
+    public sealed class SingleFireMode : FiringPin
     {
         /// <summary>
         /// Fire the weapon.
         /// </summary>
         /// <param name="stats">stats of the weapon</param>
         /// <param name="fireAction">the function that fires the bullet</param>
-        public IEnumerator Fire(RangedWeaponStats stats, Action fireAction)
+        public override IEnumerator Fire(RangedWeaponStats stats, Action fireAction)
         {
             fireAction?.Invoke();
             yield break;
@@ -53,19 +55,24 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// <summary>
     /// Auto fire mode strategy.
     /// </summary>
-    public class AutoFireMode : IFireModeStrategy
+    public class AutoFireMode : FiringPin
     {
         /// <summary>
         /// Fire the weapon.
         /// </summary>
         /// <param name="stats">stats of the weapon</param>
         /// <param name="fireAction">the function that fires the bullet</param>
-        public IEnumerator Fire(RangedWeaponStats stats, Action fireAction)
+        public override IEnumerator Fire(RangedWeaponStats stats, Action fireAction)
         {
+            // Wait for the attack speed and then fire the bullet.
+            yield return new WaitWhile(() => (DateTime.Now - LastFireTime).Seconds < 1 / stats.AttackSpeed);
+            
             // Keep on firing until the coroutine is stopped.
             while (true)
             {
-                yield return FireCoroutine(stats, fireAction);
+                yield return InternalFire(stats, fireAction);
+                LastFireTime = DateTime.Now;
+                
                 yield return new WaitForSeconds(1 / stats.AttackSpeed);
             }
         }
@@ -75,7 +82,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         /// <param name="stats">stats of the weapon</param>
         /// <param name="fireAction">the function that fires the bullet</param>
-        protected virtual IEnumerator FireCoroutine(RangedWeaponStats stats, Action fireAction)
+        protected virtual IEnumerator InternalFire(RangedWeaponStats stats, Action fireAction)
         {
             fireAction?.Invoke();
             yield break;
@@ -85,14 +92,14 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// <summary>
     /// Burst fire mode strategy.
     /// </summary>
-    public class BurstFireMode : AutoFireMode
+    public sealed class BurstFireMode : AutoFireMode
     {
         /// <summary>
         /// What happens when the weapon is fired.
         /// </summary>
         /// <param name="stats">stats of the weapon</param>
         /// <param name="fireAction">the function that fires the bullet</param>
-        protected override IEnumerator FireCoroutine(RangedWeaponStats stats, Action fireAction)
+        protected override IEnumerator InternalFire(RangedWeaponStats stats, Action fireAction)
         {
             // Fire the weapon for the amount of bursts.
             for (var burstNumber = 0; burstNumber < stats.BurstAmount; burstNumber++)
