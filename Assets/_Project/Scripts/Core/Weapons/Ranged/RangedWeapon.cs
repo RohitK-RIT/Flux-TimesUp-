@@ -88,10 +88,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         private LayerMask _opponentLayer;
 
         /// <summary>
-        /// Last time the weapon was shot.
+        /// Coroutine for reloading.
         /// </summary>
-        private DateTime _lastShootTime = DateTime.MinValue;
-
         private Coroutine _reloadCoroutine;
 
         private void Start()
@@ -198,9 +196,6 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// <returns></returns>
         protected override IEnumerator OnAttack()
         {
-            // Wait for the attack speed and then fire the bullet.
-            // yield return new WaitWhile(() => (DateTime.Now - _lastShootTime).Seconds < 1 / stats.AttackSpeed);
-
             // Find a fire mode strategy and wait for it to finish, else show an error.
             if (_fireModeStrategies.TryGetValue(_currentFireMode, out var strategy))
                 yield return strategy.Fire(stats, FireBullet);
