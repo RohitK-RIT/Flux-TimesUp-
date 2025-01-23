@@ -70,7 +70,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// <summary>
         /// Dictionary of fire mode strategies.
         /// </summary>
-        private Dictionary<FireModes, IFireModeStrategy> _fireModeStrategies;
+        private Dictionary<FireModes, FiringPin> _fireModeStrategies;
 
         /// <summary>
         /// Object pool for trail renderers.
@@ -97,9 +97,9 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         private void Start()
         {
             // Initialize the dictionary of fire mode strategies
-            _fireModeStrategies = new Dictionary<FireModes, IFireModeStrategy>();
+            _fireModeStrategies = new Dictionary<FireModes, FiringPin>();
             foreach (var mode in stats.FireModes)
-                _fireModeStrategies.TryAdd(mode, IFireModeStrategy.GetFireModeStrategy(mode));
+                _fireModeStrategies.TryAdd(mode, FiringPin.GetFireModeStrategy(mode));
 
             // Set the default fire mode and magazine count.
             _currentFireMode = _fireModeStrategies.First().Key;
@@ -199,7 +199,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         protected override IEnumerator OnAttack()
         {
             // Wait for the attack speed and then fire the bullet.
-            yield return new WaitWhile(() => (DateTime.Now - _lastShootTime).Seconds < 1 / stats.AttackSpeed);
+            // yield return new WaitWhile(() => (DateTime.Now - _lastShootTime).Seconds < 1 / stats.AttackSpeed);
 
             // Find a fire mode strategy and wait for it to finish, else show an error.
             if (_fireModeStrategies.TryGetValue(_currentFireMode, out var strategy))
@@ -245,8 +245,6 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             {
                 StartCoroutine(PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
             }
-
-            _lastShootTime = DateTime.Now;
 
             // Decrease the magazine count and reload if it's empty.
             if (--CurrentAmmo != 0)
