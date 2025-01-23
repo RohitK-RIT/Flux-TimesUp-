@@ -176,6 +176,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             _currentFireMode = stats.FireModes[indexOf];
         }
 
+        public override string WeaponID  => stats.WeaponID;
+
         /// <summary>
         /// Start attacking.
         /// </summary>
