@@ -97,7 +97,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             // Initialize the dictionary of fire mode strategies
             _fireModeStrategies = new Dictionary<FireModes, FiringPin>();
             foreach (var mode in stats.FireModes)
-                _fireModeStrategies.TryAdd(mode, FiringPin.GetFireModeStrategy(mode));
+                _fireModeStrategies.TryAdd(mode, FiringPin.GetFiringPin(mode));
 
             // Set the default fire mode and magazine count.
             _currentFireMode = _fireModeStrategies.First().Key;

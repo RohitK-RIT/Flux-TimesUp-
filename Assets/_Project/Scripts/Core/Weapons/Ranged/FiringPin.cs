@@ -21,14 +21,14 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         /// <param name="mode">fire mode</param>
         /// <returns>strategy based on the fire mode</returns>
-        public static FiringPin GetFireModeStrategy(FireModes mode)
+        public static FiringPin GetFiringPin(FireModes mode)
         {
             return mode switch
             {
-                FireModes.Single => new SingleFireMode(),
-                FireModes.Burst => new BurstFireMode(),
-                FireModes.Auto => new AutoFireMode(),
-                _ => new SingleFireMode()
+                FireModes.Single => new SingleFirePin(),
+                FireModes.Burst => new BurstFirePin(),
+                FireModes.Auto => new AutoFirePin(),
+                _ => new SingleFirePin()
             };
         }
     }
@@ -36,7 +36,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// <summary>
     /// Single fire mode strategy.
     /// </summary>
-    public sealed class SingleFireMode : FiringPin
+    public sealed class SingleFirePin : FiringPin
     {
         /// <summary>
         /// Fire the weapon.
@@ -53,7 +53,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// <summary>
     /// Auto fire mode strategy.
     /// </summary>
-    public class AutoFireMode : FiringPin
+    public class AutoFirePin : FiringPin
     {
         /// <summary>
         /// Last time the weapon was fired.
@@ -95,7 +95,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// <summary>
     /// Burst fire mode strategy.
     /// </summary>
-    public sealed class BurstFireMode : AutoFireMode
+    public sealed class BurstFirePin : AutoFirePin
     {
         /// <summary>
         /// What happens when the weapon is fired.
