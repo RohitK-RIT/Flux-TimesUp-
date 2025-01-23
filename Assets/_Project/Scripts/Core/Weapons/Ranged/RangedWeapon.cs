@@ -92,6 +92,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// </summary>
         private DateTime _lastShootTime = DateTime.MinValue;
 
+        private Coroutine _reloadCoroutine;
+
         private void Start()
         {
             // Initialize the dictionary of fire mode strategies
@@ -141,6 +143,26 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         {
             base.OnDrop();
             _opponentLayer = 0;
+        }
+
+        public override void OnEquip()
+        {
+            base.OnEquip();
+            
+            if(CurrentAmmo == 0)
+                Reload();
+        }
+
+
+        public override void OnUnequip()
+        {
+            base.OnUnequip();
+            
+            if(IsReloading)
+            {
+                StopCoroutine(_reloadCoroutine);
+                _reloading = false;
+            }
         }
 
         /// <summary>
@@ -229,17 +251,17 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             if (--CurrentAmmo != 0)
                 return;
 
-            StartCoroutine(ReloadCoroutine());
+            Reload();
         }
 
         /// <summary>
         /// Reload the weapon.
         /// </summary>
-        public void OnReload()
+        public void Reload()
         {
             if (CurrentAmmo == stats.MagazineSize || _reloading || MaxAmmo == 0)
                 return;
-            StartCoroutine(ReloadCoroutine());
+            _reloadCoroutine = StartCoroutine(ReloadCoroutine());
         }
 
         /// <summary>
