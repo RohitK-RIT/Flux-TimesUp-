@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using _Project.Scripts.Core.Backend.Interfaces;
 using _Project.Scripts.Core.Player_Controllers;
 using Unity.Mathematics;
@@ -30,6 +31,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Trail renderer prefab.
         /// </summary>
         [SerializeField] private TrailRenderer trailRendererPrefab;
+
+        /// <summary>
+        /// Bullet impact prefab.
+        /// </summary>
+        [SerializeField] private GameObject bulletImpactPrefab;
 
         /// <summary>
         /// Property to access current number of bullets in the magazine.
@@ -72,6 +78,16 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         private ObjectPool<TrailRenderer> _trailRendererPool;
 
         /// <summary>
+        /// Object pool for bullet impacts.
+        /// </summary>
+        private ObjectPool<GameObject> _bulletImpactPool;
+
+        /// <summary>
+        /// Layer mask for the opponent.
+        /// </summary>
+        private LayerMask _opponentLayer;
+
+        /// <summary>
         /// Last time the weapon was shot.
         /// </summary>
         private DateTime _lastShootTime = DateTime.MinValue;
@@ -90,6 +106,15 @@ namespace _Project.Scripts.Core.Weapons.Ranged
 
             // Initialize the trail renderer pool.
             _trailRendererPool = new ObjectPool<TrailRenderer>(CreateTrail);
+            _bulletImpactPool = new ObjectPool<GameObject>(CreateBulletImpact);
+        }
+
+        private GameObject CreateBulletImpact()
+        {
+            var impact = Instantiate(bulletImpactPrefab);
+            impact.SetActive(false);
+
+            return impact;
         }
 
         /// <summary>
@@ -104,6 +129,18 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
             return trail;
+        }
+
+        public override void OnPickup(PlayerController currentPlayerController)
+        {
+            base.OnPickup(currentPlayerController);
+            _opponentLayer = ~currentPlayerController.FriendlyLayer;
+        }
+
+        public override void OnDrop()
+        {
+            base.OnDrop();
+            _opponentLayer = 0;
         }
 
         /// <summary>
@@ -142,8 +179,6 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             // Wait for the attack speed and then fire the bullet.
             yield return new WaitWhile(() => (DateTime.Now - _lastShootTime).Seconds < 1 / stats.AttackSpeed);
 
-            // yield return new WaitUntil(() => (DateTime.Now - _lastShootTime).Seconds >= 1 / stats.AttackSpeed);
-
             // Find a fire mode strategy and wait for it to finish, else show an error.
             if (_fireModeStrategies.TryGetValue(_currentFireMode, out var strategy))
                 yield return strategy.Fire(stats, FireBullet);
@@ -175,11 +210,13 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             fireDirection = (fireDirection + spreadOffset).normalized;
             fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
 
+
             // Raycast to check if the bullet hits something. If it does, play the trail to that point, else play the trail to the miss distance.
-            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance, CurrentPlayerController.OpponentLayer))
+            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance, _opponentLayer))
             {
                 StartCoroutine(PlayTrail(muzzle.position, hit.point));
-                if(hit.transform.TryGetComponent<IDamageable>(out var damageable))
+                OnBulletImpact(hit.point, hit.normal);
+                if (hit.transform.TryGetComponent<IDamageable>(out var damageable))
                     damageable.TakeDamage(this, GetDamage());
             }
             else
@@ -205,8 +242,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
                 return;
             StartCoroutine(ReloadCoroutine());
         }
-        
-        
+
 
         /// <summary>
         /// Coroutine for playing the trail.
@@ -241,6 +277,24 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             trail.emitting = false;
             trail.gameObject.SetActive(false);
             _trailRendererPool.Release(trail);
+        }
+
+        /// <summary>
+        /// Function to show the impact of the bullet.
+        /// </summary>
+        /// <param name="impactPoint">the point at which the bullet is impacted</param>
+        /// <param name="impactNormal"></param>
+        private async void OnBulletImpact(Vector3 impactPoint, Vector3 impactNormal)
+        {
+            var impact = _bulletImpactPool.Get();
+            impact.transform.position = impactPoint + impactNormal * 0.01f;
+            impact.transform.rotation = Quaternion.LookRotation(impactNormal);
+            impact.SetActive(true);
+
+            await Task.Delay(3000);
+
+            impact.SetActive(false);
+            _bulletImpactPool.Release(impact);
         }
 
         /// <summary>
