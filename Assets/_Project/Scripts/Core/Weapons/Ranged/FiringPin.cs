@@ -9,8 +9,6 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     /// </summary>
     public abstract class FiringPin
     {
-        protected DateTime LastFireTime;
-        
         /// <summary>
         /// Fire the weapon.
         /// </summary>
@@ -58,6 +56,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
     public class AutoFireMode : FiringPin
     {
         /// <summary>
+        /// Last time the weapon was fired.
+        /// </summary>
+        private DateTime _lastFireTime = DateTime.MinValue;
+        
+        /// <summary>
         /// Fire the weapon.
         /// </summary>
         /// <param name="stats">stats of the weapon</param>
@@ -65,13 +68,13 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         public override IEnumerator Fire(RangedWeaponStats stats, Action fireAction)
         {
             // Wait for the attack speed and then fire the bullet.
-            yield return new WaitWhile(() => (DateTime.Now - LastFireTime).Seconds < 1 / stats.AttackSpeed);
+            yield return new WaitWhile(() => (DateTime.Now - _lastFireTime).Seconds < 1 / stats.AttackSpeed);
             
             // Keep on firing until the coroutine is stopped.
             while (true)
             {
                 yield return InternalFire(stats, fireAction);
-                LastFireTime = DateTime.Now;
+                _lastFireTime = DateTime.Now;
                 
                 yield return new WaitForSeconds(1 / stats.AttackSpeed);
             }
