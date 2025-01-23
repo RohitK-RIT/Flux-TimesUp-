@@ -81,6 +81,8 @@ MonoBehaviour:
   muzzle: {fileID: 1619547666470843636}
   trailRendererPrefab: {fileID: 3577689957102526741, guid: 86b5e158990bad84f84846c77f2c6e70,
     type: 3}
+  bulletImpactPrefab: {fileID: 5801626513479221714, guid: 53708d74893f0a24f80e4bd6e265d798,
+    type: 3}
 --- !u!1001 &694204463488325211
 PrefabInstance:
   m_ObjectHideFlags: 0

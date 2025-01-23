@@ -217,7 +217,7 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         public void ReloadWeapon()
         {
             if (currentWeapon is RangedWeapon rangedWeapon)
-                rangedWeapon.OnReload();
+                rangedWeapon.Reload();
         }
 
         /// <summary>

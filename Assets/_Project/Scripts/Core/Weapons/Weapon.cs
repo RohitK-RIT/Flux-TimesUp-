@@ -26,18 +26,32 @@ namespace _Project.Scripts.Core.Weapons
         
         public abstract string WeaponID { get; }
         
+
+        /// <summary>
+        /// Function called when the weapon is picked up.
+        /// </summary>
+        /// <param name="currentPlayerController">the player controller that will control the weapon</param>
         public virtual void OnPickup(PlayerController currentPlayerController)
         {
             CurrentPlayerController = currentPlayerController;
         }
 
+        /// <summary>
+        /// Function called when the weapon is dropped.
+        /// </summary>
         public virtual void OnDrop()
         {
             CurrentPlayerController = null;
         }
 
+        /// <summary>
+        /// Function called when the weapon is equipped.
+        /// </summary>
         public virtual void OnEquip() { }
 
+        /// <summary>
+        /// Function called when the weapon is unequipped.
+        /// </summary>
         public virtual void OnUnequip() { }
 
         /// <summary>
