@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponID: Rifle3
   weaponType: 0
-  weaponName: TBD
-  damage: 15
+  weaponName: Crossbow
+  damage: 60
   range: 100
   attackSpeed: 4
   fireModes: 00000000
-  reloadTime: 3.5
-  spread: 0.05
-  recoil: 0.02
-  magazineSize: 15
-  maxBulletCount: 120
+  reloadTime: 4
+  spread: 0
+  recoil: 0
+  magazineSize: 1
+  maxBulletCount: 39
   burstAmount: 3
   burstDuration: 0.01
   trailSpeed: 100

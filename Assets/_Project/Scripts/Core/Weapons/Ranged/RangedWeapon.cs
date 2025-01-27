@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using _Project.Scripts.Core.Backend.Interfaces;
 using _Project.Scripts.Core.Player_Controllers;
 using Unity.Mathematics;
 using UnityEngine;
@@ -29,6 +31,11 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// Trail renderer prefab.
         /// </summary>
         [SerializeField] private TrailRenderer trailRendererPrefab;
+
+        /// <summary>
+        /// Bullet impact prefab.
+        /// </summary>
+        [SerializeField] private GameObject bulletImpactPrefab;
 
         /// <summary>
         /// Property to access current number of bullets in the magazine.
@@ -63,7 +70,7 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// <summary>
         /// Dictionary of fire mode strategies.
         /// </summary>
-        private Dictionary<FireModes, IFireModeStrategy> _fireModeStrategies;
+        private Dictionary<FireModes, FiringPin> _fireModeStrategies;
 
         /// <summary>
         /// Object pool for trail renderers.
@@ -71,16 +78,26 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         private ObjectPool<TrailRenderer> _trailRendererPool;
 
         /// <summary>
-        /// Last time the weapon was shot.
+        /// Object pool for bullet impacts.
         /// </summary>
-        private DateTime _lastShootTime = DateTime.MinValue;
+        private ObjectPool<GameObject> _bulletImpactPool;
+
+        /// <summary>
+        /// Layer mask for the opponent.
+        /// </summary>
+        private LayerMask _opponentLayer;
+
+        /// <summary>
+        /// Coroutine for reloading.
+        /// </summary>
+        private Coroutine _reloadCoroutine;
 
         private void Start()
         {
             // Initialize the dictionary of fire mode strategies
-            _fireModeStrategies = new Dictionary<FireModes, IFireModeStrategy>();
+            _fireModeStrategies = new Dictionary<FireModes, FiringPin>();
             foreach (var mode in stats.FireModes)
-                _fireModeStrategies.TryAdd(mode, IFireModeStrategy.GetFireModeStrategy(mode));
+                _fireModeStrategies.TryAdd(mode, FiringPin.GetFiringPin(mode));
 
             // Set the default fire mode and magazine count.
             _currentFireMode = _fireModeStrategies.First().Key;
@@ -89,6 +106,15 @@ namespace _Project.Scripts.Core.Weapons.Ranged
 
             // Initialize the trail renderer pool.
             _trailRendererPool = new ObjectPool<TrailRenderer>(CreateTrail);
+            _bulletImpactPool = new ObjectPool<GameObject>(CreateBulletImpact);
+        }
+
+        private GameObject CreateBulletImpact()
+        {
+            var impact = Instantiate(bulletImpactPrefab);
+            impact.SetActive(false);
+
+            return impact;
         }
 
         /// <summary>
@@ -105,6 +131,38 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             return trail;
         }
 
+        public override void OnPickup(PlayerController currentPlayerController)
+        {
+            base.OnPickup(currentPlayerController);
+            _opponentLayer = ~currentPlayerController.FriendlyLayer;
+        }
+
+        public override void OnDrop()
+        {
+            base.OnDrop();
+            _opponentLayer = 0;
+        }
+
+        public override void OnEquip()
+        {
+            base.OnEquip();
+            
+            if(CurrentAmmo == 0)
+                Reload();
+        }
+
+
+        public override void OnUnequip()
+        {
+            base.OnUnequip();
+            
+            if(IsReloading)
+            {
+                StopCoroutine(_reloadCoroutine);
+                _reloading = false;
+            }
+        }
+
         /// <summary>
         /// Cycle through the allowed fire modes.
         /// </summary>
@@ -117,6 +175,8 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             var indexOf = (Array.IndexOf(stats.FireModes, _currentFireMode) + 1) % stats.FireModes.Length;
             _currentFireMode = stats.FireModes[indexOf];
         }
+
+        public override string WeaponID  => stats.WeaponID;
 
         /// <summary>
         /// Start attacking.
@@ -138,11 +198,6 @@ namespace _Project.Scripts.Core.Weapons.Ranged
         /// <returns></returns>
         protected override IEnumerator OnAttack()
         {
-            // Wait for the attack speed and then fire the bullet.
-            yield return new WaitWhile(() => (DateTime.Now - _lastShootTime).Seconds < 1 / stats.AttackSpeed);
-
-            // yield return new WaitUntil(() => (DateTime.Now - _lastShootTime).Seconds >= 1 / stats.AttackSpeed);
-
             // Find a fire mode strategy and wait for it to finish, else show an error.
             if (_fireModeStrategies.TryGetValue(_currentFireMode, out var strategy))
                 yield return strategy.Fire(stats, FireBullet);
@@ -175,34 +230,33 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             fireDirection = (fireDirection + recoilOffset * _recoilFactor).normalized;
 
             // Raycast to check if the bullet hits something. If it does, play the trail to that point, else play the trail to the miss distance.
-            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance, CurrentPlayerController.OpponentLayer))
+            if (Physics.Raycast(muzzle.position, fireDirection, out var hit, stats.MissDistance, _opponentLayer))
             {
                 StartCoroutine(PlayTrail(muzzle.position, hit.point));
-                var playerController = hit.transform.gameObject.GetComponent<PlayerController>();
-                playerController?.TakeDamage(this, GetDamage());
+                OnBulletImpact(hit.point, hit.normal);
+                if (hit.transform.TryGetComponent<IDamageable>(out var damageable))
+                    damageable.TakeDamage(this, GetDamage());
             }
             else
             {
                 StartCoroutine(PlayTrail(muzzle.position, muzzle.position + fireDirection * stats.MissDistance));
             }
 
-            _lastShootTime = DateTime.Now;
-
             // Decrease the magazine count and reload if it's empty.
             if (--CurrentAmmo != 0)
                 return;
 
-            StartCoroutine(ReloadCoroutine());
+            Reload();
         }
 
         /// <summary>
         /// Reload the weapon.
         /// </summary>
-        public void OnReload()
+        public void Reload()
         {
             if (CurrentAmmo == stats.MagazineSize || _reloading || MaxAmmo == 0)
                 return;
-            StartCoroutine(ReloadCoroutine());
+            _reloadCoroutine = StartCoroutine(ReloadCoroutine());
         }
 
         /// <summary>
@@ -238,6 +292,24 @@ namespace _Project.Scripts.Core.Weapons.Ranged
             trail.emitting = false;
             trail.gameObject.SetActive(false);
             _trailRendererPool.Release(trail);
+        }
+
+        /// <summary>
+        /// Function to show the impact of the bullet.
+        /// </summary>
+        /// <param name="impactPoint">the point at which the bullet is impacted</param>
+        /// <param name="impactNormal"></param>
+        private async void OnBulletImpact(Vector3 impactPoint, Vector3 impactNormal)
+        {
+            var impact = _bulletImpactPool.Get();
+            impact.transform.position = impactPoint + impactNormal * 0.01f;
+            impact.transform.rotation = Quaternion.LookRotation(impactNormal);
+            impact.SetActive(true);
+
+            await Task.Delay(3000);
+
+            impact.SetActive(false);
+            _bulletImpactPool.Release(impact);
         }
 
         /// <summary>

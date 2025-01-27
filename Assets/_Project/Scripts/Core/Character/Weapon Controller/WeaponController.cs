@@ -25,7 +25,12 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         /// The currently equipped weapon.
         /// </summary>
         [SerializeField] private Weapon currentWeapon;
-
+        
+        ///<summary>
+        /// Property to access the weapons.
+        /// </summary>
+        public Weapon[] Weapons => weapons;
+        
         /// <summary>
         /// Array of all available weapons.
         /// </summary>
@@ -212,7 +217,7 @@ namespace _Project.Scripts.Core.Character.Weapon_Controller
         public void ReloadWeapon()
         {
             if (currentWeapon is RangedWeapon rangedWeapon)
-                rangedWeapon.OnReload();
+                rangedWeapon.Reload();
         }
 
         /// <summary>

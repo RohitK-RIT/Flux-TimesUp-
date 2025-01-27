@@ -15,11 +15,11 @@ MonoBehaviour:
   weaponID: Pistol6
   weaponType: 1
   weaponName: TBD
-  damage: 25
+  damage: 10
   range: 75
   attackSpeed: 9
   fireModes: 01000000
-  reloadTime: 2
+  reloadTime: 5
   spread: 0.03
   recoil: 0.02
   magazineSize: 15

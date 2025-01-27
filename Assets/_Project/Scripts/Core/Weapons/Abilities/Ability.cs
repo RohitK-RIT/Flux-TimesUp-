@@ -12,6 +12,7 @@ namespace _Project.Scripts.Core.Weapons.Abilities
         /// The type of the ability.
         /// </summary>
         public abstract AbilityType Type { get; }
+        public override string WeaponID  => Type.ToString();
 
         /// <summary>
         /// Indicates if the cooldown is active.
