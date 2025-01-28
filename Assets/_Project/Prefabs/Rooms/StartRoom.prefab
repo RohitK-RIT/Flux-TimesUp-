@@ -79,7 +79,7 @@ Transform:
   m_GameObject: {fileID: 853963156336960557}
   serializedVersion: 2
   m_LocalRotation: {x: 0.00080769527, y: 0.9988874, z: -0.04331808, w: 0.01862494}
-  m_LocalPosition: {x: -10.01, y: 1.636, z: 5.3999996}
+  m_LocalPosition: {x: -10.51, y: 1.886, z: 6.8999996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1173,13 +1173,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damping: {x: 0, y: 0, z: 0}
-  ShoulderOffset: {x: 1, y: 0.25, z: -2.5}
+  ShoulderOffset: {x: 0.5, y: 0.5, z: 0}
   VerticalArmLength: 0
   CameraSide: 1
-  CameraDistance: 3
+  CameraDistance: 4
   CameraCollisionFilter:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 72
   IgnoreTag: 
   CameraRadius: 0.2
   DampingIntoCollision: 0
@@ -4589,6 +4589,11 @@ PrefabInstance:
     - target: {fileID: 4523705889241013417, guid: 2041220817e0aac4397c8677b2777ca2,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4578189152159313980, guid: 2041220817e0aac4397c8677b2777ca2,
+        type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8297689663837041693, guid: 2041220817e0aac4397c8677b2777ca2,
