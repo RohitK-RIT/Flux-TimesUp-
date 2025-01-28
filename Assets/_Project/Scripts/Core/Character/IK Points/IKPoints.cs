@@ -28,26 +28,37 @@ public class IKPoints : MonoBehaviour
         // Assign transforms to each Two Bone IK Constraint
         foreach (var ikConstraint in ikConstraints)
         {
-            // // Example: Dynamically fetch transforms based on naming conventions or hierarchy paths
-            // string constraintName = ikConstraint.gameObject.name; // Name of the GameObject with the constraint
-            //
-            // Debug.LogWarning($"Transforms for constraint {constraintName} could not be found in the prefab!");
-            // // Fetch source, target, and hint transforms based on the prefab structure
-            // //Transform sourceObject = prefab.transform.Find($"IK Points/{constraintName}_target");
-            // Transform targetObject = prefab.transform.Find($"EmptyGameObject/{constraintName}_target");
-            // Transform hintObject = prefab.transform.Find($"EmptyGameObject/{constraintName}_hint");
-            //
-            // if (hintObject == null || targetObject == null)
-            // {
-            //     Debug.LogWarning($"Transforms for constraint {constraintName} could not be found in the prefab!");
-            //     continue;
-            // }
-            //
-            // // Assign the transforms to the constraint
-            // ikConstraint.data.target = targetObject;
-            // ikConstraint.data.hint = hintObject; // Optional, can be null
-            //
-            // Debug.Log($"Assigned transforms for {constraintName} successfully.");
+            // Example: Dynamically fetch transforms based on naming conventions or hierarchy paths
+            string constraintName = ikConstraint.gameObject.name; // Name of the GameObject with the constraint
+
+            Debug.LogWarning($"Transforms for constraint {constraintName} could not be found in the prefab!");
+            // Fetch source, target, and hint transforms based on the prefab structure
+            //Transform sourceObject = prefab.transform.Find($"IK Points/{constraintName}_target");
+            Transform targetObject = prefab.transform.Find($"IK Points/{constraintName}_target");
+            Transform hintObject = prefab.transform.Find($"IK Points/{constraintName}_hint");
+            
+            Debug.LogWarning($"Transforms for target object {targetObject} could not be found in the prefab!");
+            
+            if (hintObject == null || targetObject == null)
+            {
+                Debug.LogWarning($"Transforms for constraint {constraintName} could not be found in the prefab!");
+                continue;
+            }
+            
+            // Assign the transforms to the constraint
+            ikConstraint.data.target = targetObject;
+            ikConstraint.data.hint = hintObject; // Optional, can be null
+            
+            Debug.Log($"Assigned transforms for {constraintName} successfully.");
         }
+        
+        // Refresh the rig to apply changes
+        RigBuilder rigBuilder = rigRoot.GetComponentInParent<RigBuilder>();
+        if (rigBuilder != null)
+        {
+            rigBuilder.Build();
+        }
+
+        Debug.Log("All Two Bone IK Constraints assigned successfully!");
     }
 }
