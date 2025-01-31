@@ -6,27 +6,25 @@ namespace _Project.Scripts.Core.Character.IK_Points
 {
     public class IKPoints : MonoBehaviour
     {
-        public GameObject rigRoot; // Reference to the root of the rig (or parent containing the constraints)
-        //public GameObject prefab;  // Reference to the prefab containing the transforms
-        private WeaponController weaponController;
+        [SerializeField]
+        private GameObject rigRoot; // Reference to the root of the rig
+        private WeaponController _weaponController;
 
         void Awake()
         {
-            weaponController = GetComponent<WeaponController>(); // Fetch the singleton instance of WeaponController
+            _weaponController = GetComponent<WeaponController>();
         }
-        void Update()
-        {
-            //Debug.LogError("current weapon ="+weaponController.CurrentWeapon.gameObject.name);
-        }
-
+        
         void Start()
         {
             UpdateIKPoints();
         }
+        
+        //Method to assign and update the IK points as per the current weapon
         internal void UpdateIKPoints()
         {
             
-            if (rigRoot == null || weaponController == null)
+            if (!rigRoot || !_weaponController)
             {
                 Debug.LogError("Rig root or prefab is not assigned!");
                 return;
@@ -41,22 +39,17 @@ namespace _Project.Scripts.Core.Character.IK_Points
                 return;
             }
             
-            Debug.LogError("current weapon ="+weaponController.CurrentWeapon.gameObject.name);
             // Assign transforms to each Two Bone IK Constraint
             foreach (var ikConstraint in ikConstraints)
             {
                 // Example: Dynamically fetch transforms based on naming conventions or hierarchy paths
                 string constraintName = ikConstraint.gameObject.name; // Name of the GameObject with the constraint
             
-                Debug.LogWarning($"Transforms for constraint {constraintName} could not be found in the prefab!");
                 // Fetch source, target, and hint transforms based on the prefab structure
-                //Transform sourceObject = prefab.transform.Find($"IK Points/{constraintName}_target");
-                Transform targetObject = weaponController.CurrentWeapon.transform.Find($"IK Points/{constraintName}_target");
-                Transform hintObject = weaponController.CurrentWeapon.transform.Find($"IK Points/{constraintName}_hint");
+                Transform targetObject = _weaponController.CurrentWeapon.transform.Find($"IK Points/{constraintName}_target");
+                Transform hintObject = _weaponController.CurrentWeapon.transform.Find($"IK Points/{constraintName}_hint");
                 
-                Debug.LogWarning($"Transforms for target object {targetObject} could not be found in the prefab!");
-                
-                if (hintObject == null || targetObject == null)
+                if (!hintObject || !targetObject)
                 {
                     Debug.LogWarning($"Transforms for constraint {constraintName} could not be found in the prefab!");
                     continue;
@@ -64,19 +57,18 @@ namespace _Project.Scripts.Core.Character.IK_Points
                 
                 // Assign the transforms to the constraint
                 ikConstraint.data.target = targetObject;
-                ikConstraint.data.hint = hintObject; // Optional, can be null
-                
-                Debug.Log($"Assigned transforms for {constraintName} successfully.");
+                ikConstraint.data.hint = hintObject;
             }
 
-            RwfreshRig();
+            RefreshRig();
         }
 
-        internal void RwfreshRig()
+        //Method to Refresh the Rig after updating the IK points as per the current weapon
+        private void RefreshRig()
         {
             // Refresh the rig to apply changes
             RigBuilder rigBuilder = rigRoot.GetComponentInParent<RigBuilder>();
-            if (rigBuilder != null)
+            if (rigBuilder)
             {
                 rigBuilder.Build();
             }
